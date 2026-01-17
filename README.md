@@ -61,7 +61,7 @@ Follow these instructions to set up the project locally on your machine.
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Mohit30121011/Needful.git
+git clone https://github.com/Codewithjainam7/NeedFul.git
 cd Needful/localserve
 ```
 
