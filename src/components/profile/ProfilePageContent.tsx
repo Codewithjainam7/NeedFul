@@ -57,58 +57,72 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
                 <div className="flex flex-col md:flex-row gap-8 items-start">
 
                     {/* Sidebar / User Card */}
-                    <div className="w-full md:w-72 flex-shrink-0 space-y-6">
-                        <Card className="border-0 shadow-sm overflow-hidden">
-                            <div className="bg-[#FF5200] h-24 relative">
-                                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
-                                    <div className="w-20 h-20 rounded-full bg-white p-1 shadow-md">
-                                        <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                    <div className="w-full md:w-80 flex-shrink-0 space-y-6">
+                        <Card className="border-0 shadow-lg shadow-orange-500/5 overflow-hidden bg-white">
+                            <div className="bg-gradient-to-br from-[#FF5200] via-orange-500 to-amber-500 h-28 relative">
+                                {/* Decorative pattern */}
+                                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_20%,white_0%,transparent_50%)]"></div>
+                                <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
+                                    <div className="w-24 h-24 rounded-full bg-white p-1.5 shadow-xl ring-4 ring-white">
+                                        <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center overflow-hidden">
                                             {user?.user_metadata?.avatar_url ? (
                                                 <img src={user.user_metadata.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                                             ) : (
-                                                <User className="h-8 w-8 text-gray-400" />
+                                                <User className="h-10 w-10 text-gray-400" />
                                             )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="pt-12 pb-6 px-6 text-center">
-                                <h1 className="font-bold text-xl text-gray-900">
+                            <div className="pt-16 pb-8 px-6 text-center">
+                                <h1 className="font-bold text-xl text-gray-900 mb-1">
                                     {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
                                 </h1>
                                 <p className="text-sm text-gray-500">{user?.email}</p>
                             </div>
                         </Card>
 
-                        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden text-sm font-medium">
-                            <button
-                                onClick={() => router.push('/profile?tab=profile')}
-                                className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-orange-50 transition-colors ${defaultTab === 'profile' ? 'text-[#FF5200] bg-orange-50' : 'text-gray-700'}`}
-                            >
-                                <User className="h-4 w-4" />
-                                Personal Information
-                            </button>
-                            <button
-                                onClick={() => router.push('/profile?tab=favorites')}
-                                className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-orange-50 transition-colors ${defaultTab === 'favorites' ? 'text-[#FF5200] bg-orange-50' : 'text-gray-700'}`}
-                            >
-                                <Heart className="h-4 w-4" />
-                                My Favorites
-                            </button>
-                            <button className="w-full text-left px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-orange-50 transition-colors">
-                                <Settings className="h-4 w-4" />
-                                Account Settings
-                            </button>
-                            <button className="w-full text-left px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-orange-50 transition-colors">
-                                <Shield className="h-4 w-4" />
-                                Privacy & Security
-                            </button>
-                            <div className="h-px bg-gray-100 my-1"></div>
+                        <div className="bg-white rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100 overflow-hidden">
+                            <div className="text-sm font-medium">
+                                <button
+                                    onClick={() => router.push('/profile?tab=profile')}
+                                    className={`w-full text-left px-5 py-4 flex items-center gap-4 transition-all ${defaultTab === 'profile' ? 'text-[#FF5200] bg-orange-50 border-l-4 border-[#FF5200]' : 'text-gray-700 hover:bg-gray-50 border-l-4 border-transparent'}`}
+                                >
+                                    <div className={`p-2 rounded-lg ${defaultTab === 'profile' ? 'bg-orange-100' : 'bg-gray-100'}`}>
+                                        <User className={`h-4 w-4 ${defaultTab === 'profile' ? 'text-[#FF5200]' : 'text-gray-500'}`} />
+                                    </div>
+                                    Personal Information
+                                </button>
+                                <button
+                                    onClick={() => router.push('/profile?tab=favorites')}
+                                    className={`w-full text-left px-5 py-4 flex items-center gap-4 transition-all ${defaultTab === 'favorites' ? 'text-[#FF5200] bg-orange-50 border-l-4 border-[#FF5200]' : 'text-gray-700 hover:bg-gray-50 border-l-4 border-transparent'}`}
+                                >
+                                    <div className={`p-2 rounded-lg ${defaultTab === 'favorites' ? 'bg-orange-100' : 'bg-gray-100'}`}>
+                                        <Heart className={`h-4 w-4 ${defaultTab === 'favorites' ? 'text-[#FF5200]' : 'text-gray-500'}`} />
+                                    </div>
+                                    My Favorites
+                                </button>
+                                <button className="w-full text-left px-5 py-4 flex items-center gap-4 text-gray-700 hover:bg-gray-50 transition-all border-l-4 border-transparent">
+                                    <div className="p-2 rounded-lg bg-gray-100">
+                                        <Settings className="h-4 w-4 text-gray-500" />
+                                    </div>
+                                    Account Settings
+                                </button>
+                                <button className="w-full text-left px-5 py-4 flex items-center gap-4 text-gray-700 hover:bg-gray-50 transition-all border-l-4 border-transparent">
+                                    <div className="p-2 rounded-lg bg-gray-100">
+                                        <Shield className="h-4 w-4 text-gray-500" />
+                                    </div>
+                                    Privacy & Security
+                                </button>
+                            </div>
+                            <div className="h-px bg-gray-100"></div>
                             <button
                                 onClick={handleLogout}
-                                className="w-full text-left px-4 py-3 flex items-center gap-3 text-red-600 hover:bg-red-50 transition-colors"
+                                className="w-full text-left px-5 py-4 flex items-center gap-4 text-red-600 hover:bg-red-50 transition-all"
                             >
-                                <LogOut className="h-4 w-4" />
+                                <div className="p-2 rounded-lg bg-red-50">
+                                    <LogOut className="h-4 w-4 text-red-500" />
+                                </div>
                                 Log Out
                             </button>
                         </div>
@@ -118,32 +132,32 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
                     <div className="flex-1 min-w-0">
                         <Tabs defaultValue={defaultTab} className="w-full" onValueChange={(val) => router.push(`/profile?tab=${val}`)}>
                             <TabsContent value="profile" className="mt-0 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <Card className="border-0 shadow-sm">
-                                    <CardHeader>
-                                        <CardTitle>Personal Information</CardTitle>
+                                <Card className="border-0 shadow-lg shadow-gray-100/50 bg-white rounded-2xl">
+                                    <CardHeader className="pb-2">
+                                        <CardTitle className="text-xl">Personal Information</CardTitle>
                                         <CardDescription>Manage your personal details and preferences.</CardDescription>
                                     </CardHeader>
-                                    <CardContent className="space-y-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <CardContent className="space-y-6 pt-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="name">Full Name</Label>
+                                                <Label htmlFor="name" className="text-sm font-semibold text-gray-700">Full Name</Label>
                                                 <Input id="name" defaultValue={user?.user_metadata?.full_name || ''} placeholder="John Doe" />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label htmlFor="email">Email Address</Label>
-                                                <Input id="email" defaultValue={user?.email || ''} disabled readOnly className="bg-gray-50" />
+                                                <Label htmlFor="email" className="text-sm font-semibold text-gray-700">Email Address</Label>
+                                                <Input id="email" defaultValue={user?.email || ''} disabled readOnly className="bg-gray-100 cursor-not-allowed opacity-70" />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label htmlFor="phone">Phone Number</Label>
+                                                <Label htmlFor="phone" className="text-sm font-semibold text-gray-700">Phone Number</Label>
                                                 <Input id="phone" placeholder="+91 98765 43210" />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label htmlFor="city">City</Label>
+                                                <Label htmlFor="city" className="text-sm font-semibold text-gray-700">City</Label>
                                                 <Input id="city" defaultValue="Mumbai" />
                                             </div>
                                         </div>
-                                        <div className="pt-4 flex justify-end">
-                                            <Button className="bg-[#FF5200] hover:bg-[#E04800] text-white">Save Changes</Button>
+                                        <div className="pt-4 flex justify-end border-t border-gray-100">
+                                            <Button className="bg-[#FF5200] hover:bg-[#E04800] text-white px-8 h-11 font-semibold shadow-lg shadow-orange-500/20">Save Changes</Button>
                                         </div>
                                     </CardContent>
                                 </Card>

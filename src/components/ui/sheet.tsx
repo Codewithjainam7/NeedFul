@@ -66,19 +66,19 @@ function SheetContent({
 
           // Right Side (Mobile Navbar)
           side === "right" && [
-            "inset-y-0 right-0 h-full w-3/4 sm:max-w-sm border-l border-gray-200",
+            "inset-y-0 right-0 h-full w-3/4 sm:max-w-sm",
             "data-[state=open]:animate-in data-[state=closed]:animate-out",
             "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
-            "data-[state=open]:duration-500 data-[state=closed]:duration-300",
+            "data-[state=open]:duration-400 data-[state=closed]:duration-250",
             "data-[state=open]:ease-[cubic-bezier(0.32,0.72,0,1)]"
           ],
 
           // Left Side (Mobile Filter)
           side === "left" && [
-            "inset-y-0 left-0 h-full w-[85%] sm:max-w-[320px] border-r border-gray-200",
+            "inset-y-0 left-0 h-full w-[85%] sm:max-w-[320px]",
             "data-[state=open]:animate-in data-[state=closed]:animate-out",
             "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
-            "data-[state=open]:duration-500 data-[state=closed]:duration-300",
+            "data-[state=open]:duration-400 data-[state=closed]:duration-250",
             "data-[state=open]:ease-[cubic-bezier(0.32,0.72,0,1)]"
           ],
 
@@ -95,16 +95,16 @@ function SheetContent({
         )}
         {...props}
       >
-        {/* Subtle accent line */}
+        {/* Orange gradient border - connects to outside */}
         {side === 'right' && (
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#FF5200] via-orange-400 to-amber-400"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#FF5200] via-orange-400 to-[#FF5200] shadow-[0_0_10px_rgba(255,82,0,0.5)]"></div>
         )}
         {side === 'left' && (
-          <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#FF5200] via-orange-400 to-amber-400"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#FF5200] via-orange-400 to-[#FF5200] shadow-[0_0_10px_rgba(255,82,0,0.5)]"></div>
         )}
         {children}
-        <SheetPrimitive.Close className="absolute top-4 right-4 rounded-full p-2 opacity-70 transition-all hover:opacity-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#FF5200] focus:ring-offset-2 z-[60]">
-          <XIcon className="size-5 text-gray-600" />
+        <SheetPrimitive.Close className="absolute top-4 right-4 rounded-full p-2 opacity-70 transition-all hover:opacity-100 hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF5200] focus:ring-offset-2 z-[60] border-2 border-[#FF5200]">
+          <XIcon className="size-5 text-[#FF5200]" />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>
