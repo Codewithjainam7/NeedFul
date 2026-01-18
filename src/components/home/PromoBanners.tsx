@@ -27,8 +27,8 @@ const banners: Banner[] = [
     {
         title: "Spa & Beauty",
         subtitle: "Luxury Salons & Home Services",
-        gradient: "from-pink-600/90 via-pink-600/60 to-transparent", // Changed to Pink
-        image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600",
+        gradient: "from-pink-600/90 via-pink-600/60 to-transparent",
+        image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=600",
         cta: "Book Appointment",
         link: "/search?category=salons",
         icon: Scissors
@@ -54,8 +54,8 @@ const banners: Banner[] = [
     {
         title: "Pest Control",
         subtitle: "Protect Your Home from Pests",
-        gradient: "from-purple-600/90 via-purple-600/60 to-transparent", // Changed to Purple
-        image: "https://images.unsplash.com/photo-1632759560207-68b315668798?auto=format&fit=crop&q=80&w=600",
+        gradient: "from-purple-600/90 via-purple-600/60 to-transparent",
+        image: "https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&q=80&w=600", // Clean home interior
         cta: "Get Safe",
         link: "/search?category=pest-control",
         icon: Bug
@@ -64,7 +64,7 @@ const banners: Banner[] = [
         title: "Packers & Movers",
         subtitle: "Hassle-free Relocation Support",
         gradient: "from-indigo-600/90 via-indigo-600/60 to-transparent",
-        image: "https://images.unsplash.com/photo-1620641785835-1a84da0a2333?auto=format&fit=crop&q=80&w=600",
+        image: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=600", // Moving boxes
         cta: "Move Easy",
         link: "/search?category=movers",
         icon: Truck
@@ -72,8 +72,8 @@ const banners: Banner[] = [
     {
         title: "Professional Photography",
         subtitle: "Capture Your Best Moments",
-        gradient: "from-rose-600/90 via-rose-600/60 to-transparent", // Changed to Rose to differentiate coverage
-        image: "https://images.unsplash.com/photo-1554048612-387768052bf7?auto=format&fit=crop&q=80&w=600",
+        gradient: "from-rose-600/90 via-rose-600/60 to-transparent",
+        image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=600", // Camera
         cta: "Book Shoots",
         link: "/search?category=photography",
         icon: Camera

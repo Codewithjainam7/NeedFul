@@ -61,22 +61,21 @@ export function BootAnimation() {
 
 
 
-                    <div className="relative flex flex-col items-center justify-center">
-                        <div className="relative flex items-center justify-center">
+                    <div className="relative flex flex-col items-center justify-center w-full max-w-[300px] mx-auto">
+                        <div className="flex items-center justify-center gap-2 mb-8">
                             {/* 1. Icon Animation */}
                             <motion.div
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{
-                                    scale: [0.8, 1.1, 1], // Pulse effect
-                                    opacity: 1,
-                                    x: -50 // Move left less aggressively
+                                    scale: [0.8, 1.1, 1],
+                                    opacity: 1
                                 }}
                                 transition={{
-                                    // scale: { duration: 0.8, times: [0, 0.6, 1], ease: "easeOut" }, // Removed scale transition to allow x to control timing
-                                    opacity: { duration: 0.5 },
-                                    x: { delay: 0.5, duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+                                    duration: 0.5,
+                                    times: [0, 0.6, 1],
+                                    ease: "easeOut"
                                 }}
-                                className="relative z-10 w-24 h-24"
+                                className="relative z-10 w-20 h-20 flex-shrink-0"
                             >
                                 <Image
                                     src="/assets/logo-icon.png"
@@ -87,51 +86,53 @@ export function BootAnimation() {
                                 />
                             </motion.div>
 
-                            {/* 2. Text Reveal with Shimmer */}
+                            {/* 2. Text Reveal (Width Expansion) */}
                             <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
+                                initial={{ width: 0, opacity: 0 }}
+                                animate={{ width: "auto", opacity: 1 }}
                                 transition={{
-                                    delay: 0.7,
-                                    duration: 0.4,
-                                    ease: "easeOut"
+                                    delay: 0.4,
+                                    duration: 0.6,
+                                    ease: "easeInOut"
                                 }}
-                                className="relative h-16 w-48 -ml-20" // Slightly relaxed margin (was -24)
+                                className="relative h-12 overflow-hidden flex items-center justify-start ml-2" // Reduced height slightly, added margin
                             >
-                                <Image
-                                    src="/assets/logo-text.png"
-                                    alt="NeedFul Text"
-                                    fill
-                                    className="object-contain z-10 relative"
-                                    priority
-                                />
-                                {/* Shimmer Overlay */}
-                                <motion.div
-                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12 z-20"
-                                    initial={{ x: '-150%' }}
-                                    animate={{ x: '150%' }}
-                                    transition={{
-                                        delay: 1.2,
-                                        duration: 0.6,
-                                        ease: "easeInOut"
-                                    }}
-                                />
+                                <div className="relative w-40 h-full"> {/* Fixed width inner container for image */}
+                                    <Image
+                                        src="/assets/logo-text.png"
+                                        alt="NeedFul Text"
+                                        fill
+                                        className="object-contain object-left" // Align left so it reveals from left
+                                        priority
+                                    />
+                                    {/* Shimmer Overlay */}
+                                    <motion.div
+                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12 z-20"
+                                        initial={{ x: '-150%' }}
+                                        animate={{ x: '150%' }}
+                                        transition={{
+                                            delay: 0.8,
+                                            duration: 0.6,
+                                            ease: "easeInOut"
+                                        }}
+                                    />
+                                </div>
                             </motion.div>
                         </div>
 
-                        {/* 3. Linear Progress Bar (0% -> 100%) */}
+                        {/* 3. Linear Progress Bar */}
                         <motion.div
-                            className="h-1 bg-orange-100 rounded-full mt-3 overflow-hidden w-56 -ml-14" // Moved left (-ml-14) to align with visual center
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3, duration: 0.4 }}
+                            className="h-1.5 bg-orange-100 rounded-full overflow-hidden w-64" // Centered by parent flex-col
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.4 }}
                         >
                             <motion.div
                                 className="h-full bg-orange-500 rounded-full"
                                 initial={{ width: "0%" }}
                                 animate={{ width: "100%" }}
                                 transition={{
-                                    duration: 1.8, // Faster fill
+                                    duration: 1.8,
                                     ease: "linear"
                                 }}
                             />
