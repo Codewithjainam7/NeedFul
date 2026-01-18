@@ -46,7 +46,7 @@ const banners: Banner[] = [
         title: "Home Cleaning",
         subtitle: "Deep Cleaning & Disinfection Services",
         gradient: "from-teal-600/90 via-teal-600/60 to-transparent",
-        image: "https://images.unsplash.com/photo-1581578731117-104529302f28?auto=format&fit=crop&q=80&w=600",
+        image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?auto=format&fit=crop&q=80&w=600",
         cta: "Book Now",
         link: "/search?category=cleaning",
         icon: Sparkles
@@ -55,7 +55,7 @@ const banners: Banner[] = [
         title: "Pest Control",
         subtitle: "Protect Your Home from Pests",
         gradient: "from-purple-600/90 via-purple-600/60 to-transparent",
-        image: "https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&q=80&w=600", // Clean home interior
+        image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=600", // Darker aesthetic room (better contrast with purple)
         cta: "Get Safe",
         link: "/search?category=pest-control",
         icon: Bug
