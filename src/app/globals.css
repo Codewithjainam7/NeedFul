@@ -69,15 +69,31 @@
 
   html {
     scroll-behavior: smooth;
-    scrollbar-width: none;
+    scrollbar-width: thin;
     /* Firefox */
-    -ms-overflow-style: none;
-    /* IE and Edge */
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    /* Firefox */
   }
 
+  /* Webkit / Chrome / Safari Scrollbar */
   html::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, Opera */
+    width: 6px;
+    height: 6px;
+    background-color: transparent;
+  }
+
+  html::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+
+  html::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 82, 0, 0.8);
+    /* NeedFul Orange on hover */
   }
 
   body {
