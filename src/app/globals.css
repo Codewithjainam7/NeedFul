@@ -257,11 +257,23 @@
 @keyframes float-slow {
 
   0%,
+  0%,
   100% {
     transform: translateY(0) scale(1);
   }
 
   50% {
     transform: translateY(-15px) scale(1.02);
+  }
+}
+
+/* Spin animation for avatar ring */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }
