@@ -205,61 +205,12 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                                 const [searchQuery, setSearchQuery] = useState('')
                                                 const [isOpen, setIsOpen] = useState(false)
 
-                                                // Extended categories - combines database + local fallbacks
-                                                const allCategories = [
-                                                    ...categories,
-                                                    // Add missing categories if not in database
-                                                    ...[
-                                                        { id: 'jewellers', name: 'Jewellers', slug: 'jewellers' },
-                                                        { id: 'tailors', name: 'Tailors & Boutiques', slug: 'tailors' },
-                                                        { id: 'photographers', name: 'Photographers', slug: 'photographers' },
-                                                        { id: 'event-planners', name: 'Event Planners', slug: 'event-planners' },
-                                                        { id: 'caterers', name: 'Caterers', slug: 'caterers' },
-                                                        { id: 'florists', name: 'Florists', slug: 'florists' },
-                                                        { id: 'packers-movers', name: 'Packers & Movers', slug: 'packers-movers' },
-                                                        { id: 'interior-designers', name: 'Interior Designers', slug: 'interior-designers' },
-                                                        { id: 'architects', name: 'Architects', slug: 'architects' },
-                                                        { id: 'lawyers', name: 'Lawyers & Advocates', slug: 'lawyers' },
-                                                        { id: 'insurance-agents', name: 'Insurance Agents', slug: 'insurance-agents' },
-                                                        { id: 'real-estate', name: 'Real Estate Agents', slug: 'real-estate' },
-                                                        { id: 'travel-agents', name: 'Travel Agents', slug: 'travel-agents' },
-                                                        { id: 'pet-services', name: 'Pet Services', slug: 'pet-services' },
-                                                        { id: 'fitness-trainers', name: 'Fitness Trainers', slug: 'fitness-trainers' },
-                                                        { id: 'music-teachers', name: 'Music Teachers', slug: 'music-teachers' },
-                                                        { id: 'dance-classes', name: 'Dance Classes', slug: 'dance-classes' },
-                                                        { id: 'driving-schools', name: 'Driving Schools', slug: 'driving-schools' },
-                                                        { id: 'laundry', name: 'Laundry & Dry Cleaning', slug: 'laundry' },
-                                                        { id: 'security-services', name: 'Security Services', slug: 'security-services' },
-                                                        { id: 'courier-services', name: 'Courier Services', slug: 'courier-services' },
-                                                        { id: 'printing-services', name: 'Printing Services', slug: 'printing-services' },
-                                                        { id: 'mobile-repair', name: 'Mobile Repair', slug: 'mobile-repair' },
-                                                        { id: 'computer-repair', name: 'Computer Repair', slug: 'computer-repair' },
-                                                        { id: 'home-appliance-repair', name: 'Home Appliance Repair', slug: 'home-appliance-repair' },
-                                                        { id: 'tuition-classes', name: 'Tuition Classes', slug: 'tuition-classes' },
-                                                        { id: 'coaching-centers', name: 'Coaching Centers', slug: 'coaching-centers' },
-                                                        { id: 'bakery', name: 'Bakery & Confectionery', slug: 'bakery' },
-                                                        { id: 'grocery', name: 'Grocery Stores', slug: 'grocery' },
-                                                        { id: 'pharmacy', name: 'Pharmacy', slug: 'pharmacy' },
-                                                        { id: 'opticians', name: 'Opticians', slug: 'opticians' },
-                                                        { id: 'dentists', name: 'Dentists', slug: 'dentists' },
-                                                        { id: 'veterinary', name: 'Veterinary Clinics', slug: 'veterinary' },
-                                                        { id: 'physiotherapy', name: 'Physiotherapy', slug: 'physiotherapy' },
-                                                        { id: 'diagnostic-centers', name: 'Diagnostic Centers', slug: 'diagnostic-centers' },
-                                                        { id: 'pathology-labs', name: 'Pathology Labs', slug: 'pathology-labs' },
-                                                        { id: 'furniture', name: 'Furniture Shops', slug: 'furniture' },
-                                                        { id: 'electronics', name: 'Electronics Stores', slug: 'electronics' },
-                                                        { id: 'stationery', name: 'Stationery & Books', slug: 'stationery' },
-                                                        { id: 'sports-goods', name: 'Sports Goods', slug: 'sports-goods' },
-                                                        { id: 'toy-stores', name: 'Toy Stores', slug: 'toy-stores' },
-                                                        { id: 'gift-shops', name: 'Gift Shops', slug: 'gift-shops' },
-                                                    ].filter(c => !categories.some(dbCat => dbCat.slug === c.slug))
-                                                ]
-
-                                                const filteredCategories = allCategories.filter(cat =>
+                                                // Use only database categories (no local fallbacks to avoid validation errors)
+                                                const filteredCategories = categories.filter(cat =>
                                                     cat.name.toLowerCase().includes(searchQuery.toLowerCase())
                                                 )
 
-                                                const selectedCat = allCategories.find(c => c.id === field.value)
+                                                const selectedCat = categories.find(c => c.id === field.value)
 
                                                 return (
                                                     <div className="relative">
