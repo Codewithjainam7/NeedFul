@@ -246,7 +246,7 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
                                         </p>
                                         <Button
                                             onClick={() => router.push('/search')}
-                                            className="bg-[#FF5200] hover:bg-[#E04800] text-white"
+                                            className="bg-[#FF5200] hover:bg-[#E04800] text-white px-8"
                                         >
                                             Explore Services
                                         </Button>

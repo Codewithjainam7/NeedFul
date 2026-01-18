@@ -19,9 +19,9 @@ export function SectionHeading({
         <div className={`mb-6 ${align === 'center' ? 'text-center' : ''} ${className}`}>
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 relative inline-block">
                 {children}
-                {/* Orange underline - darker than hero */}
+                {/* Orange underline - bold and visible */}
                 <svg
-                    className="absolute w-full h-2 -bottom-1 left-0 text-[#FF5200]/60"
+                    className="absolute w-full h-2 -bottom-1 left-0 text-[#FF5200]/80"
                     viewBox="0 0 100 10"
                     preserveAspectRatio="none"
                 >

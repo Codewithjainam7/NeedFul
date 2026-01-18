@@ -24,9 +24,13 @@ export default function AboutPage() {
 
                     <div className="container mx-auto px-4 relative z-10 text-center">
                         <span className="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 font-bold text-xs uppercase tracking-wider mb-6">Our Story</span>
-                        <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight leading-tight">
+                        <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight leading-tight relative inline-block">
                             Empowering <span className="text-[#FF5200]">Local Experts.</span><br />
                             Simplifying Your Life.
+                            {/* Orange underline */}
+                            <svg className="absolute w-full h-3 -bottom-2 left-0 text-[#FF5200]/80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="6" fill="none" />
+                            </svg>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
                             Needful is on a mission to connect reliable service professionals with the people who need them most – instanly, securely, and seamlessly.

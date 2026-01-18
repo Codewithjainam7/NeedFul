@@ -43,12 +43,16 @@ export default function CategoriesPage() {
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-100/60 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-100/60 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
 
-                <div className="container mx-auto px-4 pt-32 pb-16 relative z-10">
+                <div className="container mx-auto px-4 pt-8 pb-16 relative z-10">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">
+                        <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight relative inline-block">
                             Explore All <span className="text-[#FF5200]">Categories</span>
+                            {/* Orange underline */}
+                            <svg className="absolute w-full h-3 -bottom-2 left-0 text-[#FF5200]/80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="6" fill="none" />
+                            </svg>
                         </h1>
-                        <p className="text-lg text-gray-600">
+                        <p className="text-lg text-gray-600 mt-4">
                             Find trusted experts and services for every need. From daily essentials to luxury experiences.
                         </p>
                     </div>

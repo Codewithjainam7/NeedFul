@@ -40,17 +40,20 @@ export default function FAQPage() {
         <div className="min-h-screen flex flex-col bg-white">
             <Header />
 
-            <main className="flex-1 bg-[#FFFBF7] py-20 lg:py-32 relative overflow-hidden">
+            <main className="flex-1 bg-[#FFFBF7] pt-28 py-16 lg:py-24 relative overflow-hidden">
                 {/* Background Blobs */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-orange-100/40 rounded-full blur-[120px] pointer-events-none" />
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center max-w-2xl mx-auto mb-16">
                         <span className="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-600 font-bold text-xs uppercase tracking-wider mb-6">Support</span>
-                        <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">
+                        <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight relative inline-block">
                             Frequently Asked <span className="text-[#FF5200]">Questions</span>
+                            <svg className="absolute w-full h-3 -bottom-2 left-0 text-[#FF5200]/80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="6" fill="none" />
+                            </svg>
                         </h1>
-                        <p className="text-lg text-gray-600">
+                        <p className="text-lg text-gray-600 mt-4">
                             Everything you need to know about the product and billing. Can't find the answer you're looking for? Please contact our friendly team.
                         </p>
                     </div>

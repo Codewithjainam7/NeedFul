@@ -10,7 +10,7 @@ export default function ContactPage() {
         <div className="min-h-screen flex flex-col bg-white">
             <Header />
 
-            <main className="flex-1 bg-[#FFFBF7] relative overflow-hidden py-20 lg:py-32">
+            <main className="flex-1 bg-[#FFFBF7] relative overflow-hidden pt-28 py-16 lg:py-24">
                 {/* Background Gradients */}
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-100/60 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-100/60 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
@@ -19,10 +19,13 @@ export default function ContactPage() {
                     <div className="max-w-5xl mx-auto">
                         <div className="text-center mb-16">
                             <span className="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 font-bold text-xs uppercase tracking-wider mb-6">Get in Touch</span>
-                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">
+                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight relative inline-block">
                                 We'd Love to <span className="text-[#FF5200]">Hear From You</span>
+                                <svg className="absolute w-full h-3 -bottom-2 left-0 text-[#FF5200]/80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="6" fill="none" />
+                                </svg>
                             </h1>
-                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                            <p className="text-lg text-gray-600 max-w-2xl mx-auto mt-4">
                                 Have a question about a service? Want to join as a pro? Or just want to say hi? Drop us a message.
                             </p>
                         </div>
