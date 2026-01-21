@@ -60,7 +60,7 @@ export default async function DashboardPage() {
 
                 {/* Stats Cards */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <div className="rounded-2xl bg-gradient-to-br from-[#FF5200] to-orange-600 p-6 shadow-lg shadow-orange-500/20 text-white">
+                    <div className="rounded-3xl bg-gradient-to-br from-[#FF5200] to-orange-600 p-6 shadow-xl shadow-orange-500/20 text-white hover:scale-[1.02] transition-transform duration-300">
                         <div className="flex items-center justify-between pb-2">
                             <h3 className="tracking-tight text-sm font-medium text-white/80">Total Businesses</h3>
                             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
                         </div>
                     </div>
 
-                    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="rounded-3xl border border-white/60 bg-white/60 backdrop-blur-xl p-6 shadow-md hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] hover:bg-white group">
                         <div className="flex items-center justify-between pb-2">
                             <h3 className="tracking-tight text-sm font-medium text-gray-500">Total Users</h3>
                             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
                         </div>
                     </div>
 
-                    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="rounded-3xl border border-white/60 bg-white/60 backdrop-blur-xl p-6 shadow-md hover:shadow-xl hover:shadow-yellow-500/10 transition-all duration-300 hover:scale-[1.02] hover:bg-white group">
                         <div className="flex items-center justify-between pb-2">
                             <h3 className="tracking-tight text-sm font-medium text-gray-500">Total Reviews</h3>
                             <div className="w-10 h-10 rounded-xl bg-yellow-50 flex items-center justify-center">
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
                         </div>
                     </div>
 
-                    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="rounded-3xl border border-white/60 bg-white/60 backdrop-blur-xl p-6 shadow-md hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 hover:scale-[1.02] hover:bg-white group">
                         <div className="flex items-center justify-between pb-2">
                             <h3 className="tracking-tight text-sm font-medium text-gray-500">Active Now</h3>
                             <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
@@ -148,7 +148,7 @@ export default async function DashboardPage() {
                             </Link>
                         </div>
 
-                        <div className="border border-gray-100 rounded-2xl bg-white shadow-sm overflow-hidden">
+                        <div className="border border-white/20 rounded-3xl bg-white/70 backdrop-blur-xl shadow-2xl shadow-orange-500/5 overflow-hidden ring-1 ring-black/5">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm text-left">
                                     <thead className="text-xs text-gray-500 uppercase bg-gray-50/50">

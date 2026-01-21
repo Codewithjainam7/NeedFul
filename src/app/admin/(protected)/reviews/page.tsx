@@ -87,7 +87,8 @@ export default function ReviewsPage() {
                         </div>
                     ) : (
                         filteredReviews.map((review) => (
-                            <div key={review.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:border-orange-100 group">
+                            <div key={review.id} className="bg-white/80 backdrop-blur-xl p-5 rounded-3xl border border-white/50 shadow-lg shadow-gray-100/50 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 hover:scale-[1.02] hover:bg-white group ring-1 ring-black/5 hover:ring-orange-100 relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-100 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center text-[#FF5200] font-bold border border-orange-100">

@@ -60,10 +60,10 @@ export function BusinessTable({ businesses }: { businesses: Business[] }) {
 
     return (
         <div className="space-y-4">
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+            <div className="border border-white/20 rounded-3xl bg-white/70 backdrop-blur-xl shadow-2xl shadow-orange-500/5 overflow-hidden ring-1 ring-black/5">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
-                        <thead className="bg-gray-50 text-gray-500 font-medium border-b border-gray-200">
+                        <thead className="bg-gradient-to-r from-orange-50/50 to-white backdrop-blur-md sticky top-0 z-10 text-gray-700 font-semibold border-b border-gray-200/50">
                             <tr>
                                 <th className="px-6 py-4">Business</th>
                                 <th className="px-6 py-4">Location</th>

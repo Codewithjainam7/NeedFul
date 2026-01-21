@@ -79,15 +79,15 @@ function UsersContent() {
                     </div>
                 </div>
 
-                <div className="border border-gray-100 rounded-2xl bg-white shadow-sm overflow-hidden">
+                <div className="border border-white/20 rounded-3xl bg-white/70 backdrop-blur-xl shadow-2xl shadow-orange-500/5 overflow-hidden ring-1 ring-black/5">
                     <Table>
-                        <TableHeader className="bg-gray-50/50">
-                            <TableRow className="hover:bg-transparent border-gray-100">
-                                <TableHead className="w-[300px]">User</TableHead>
-                                <TableHead>Role</TableHead>
-                                <TableHead>Location</TableHead>
-                                <TableHead>Joined</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                        <TableHeader className="bg-gradient-to-r from-orange-50/50 to-white backdrop-blur-md sticky top-0 z-10">
+                            <TableRow className="hover:bg-transparent border-gray-100/50">
+                                <TableHead className="w-[300px] font-bold text-gray-700">User</TableHead>
+                                <TableHead className="font-semibold text-gray-700">Role</TableHead>
+                                <TableHead className="font-semibold text-gray-700">Location</TableHead>
+                                <TableHead className="font-semibold text-gray-700">Joined</TableHead>
+                                <TableHead className="text-right font-semibold text-gray-700">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
