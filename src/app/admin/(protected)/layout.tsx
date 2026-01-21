@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { AdminBackground } from '@/components/admin/AdminBackground';
+import { AdminChatboxWrapper } from '@/components/admin/AdminChatboxWrapper';
 
 export default async function AdminLayout({
     children,
@@ -28,6 +29,7 @@ export default async function AdminLayout({
                     </div>
                 </main>
             </div>
+            <AdminChatboxWrapper />
         </div>
     );
 }

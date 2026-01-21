@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import { MessageCircle, X, Send, Loader2, Bot, User, Sparkles, MapPin, Minimize2, RefreshCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
+import { createClient } from '@/lib/supabase/client'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 interface Message {
     id: string
@@ -62,8 +64,21 @@ export function AIChatbox() {
     ])
     const [input, setInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [currentUser, setCurrentUser] = useState<SupabaseUser | null>(null)
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+
+    // Fetch current user for avatar
+    useEffect(() => {
+        const supabase = createClient()
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            setCurrentUser(user)
+            // Debug log - remove after testing
+            if (user) {
+                console.log('User metadata:', user.user_metadata)
+            }
+        })
+    }, [])
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -252,8 +267,16 @@ export function AIChatbox() {
                                         <RichTextRenderer content={message.content} isUser={message.role === 'user'} />
                                     </div>
                                     {message.role === 'user' && (
-                                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 mt-1">
-                                            <User className="w-5 h-5 text-gray-500" />
+                                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden">
+                                            {currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture ? (
+                                                <img
+                                                    src={currentUser.user_metadata.avatar_url || currentUser.user_metadata.picture}
+                                                    alt="User"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <User className="w-5 h-5 text-gray-500" />
+                                            )}
                                         </div>
                                     )}
                                 </motion.div>
