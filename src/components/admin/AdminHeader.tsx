@@ -1,19 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { Bell, Search } from "lucide-react";
 
 export function AdminHeader() {
+    const [searchQuery, setSearchQuery] = useState("");
+
     return (
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm">
             <div className="flex items-center gap-4">
-                <div className="relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <form onSubmit={(e) => { e.preventDefault(); console.log('Searching for:', searchQuery); }} className="relative">
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     <input
-                        type="text"
+                        type="search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search..."
                         className="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5200]/30 focus:border-[#FF5200] w-64 transition-all"
                     />
-                </div>
+                </form>
             </div>
 
             <div className="flex items-center gap-4">

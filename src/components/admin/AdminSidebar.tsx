@@ -18,11 +18,11 @@ const sidebarItems = [
         href: "/admin/dashboard",
         icon: LayoutDashboard,
     },
-    {
-        title: "Businesses",
-        href: "/admin/dashboard", // Temporarily pointing to dashboard, will update later if needed or split
-        icon: Store,
-    },
+    // {
+    //     title: "Businesses",
+    //     href: "/admin/dashboard",
+    //     icon: Store,
+    // },
     {
         title: "Users",
         href: "/admin/users",
@@ -46,11 +46,12 @@ export function AdminSidebar() {
     return (
         <div className="h-screen w-64 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex flex-col fixed left-0 top-0 z-40 shadow-xl">
             <div className="p-6 border-b border-white/10">
-                <Link href="/" className="flex items-center gap-2">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FF5200] to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                        <span className="text-white font-bold text-xl">N</span>
-                    </div>
-                    <span className="text-xl font-bold text-white">NeedFul</span>
+                <Link href="/" className="flex items-center gap-3">
+                    <img
+                        src="/brand-logo.png"
+                        alt="NeedFul"
+                        className="h-8 w-auto object-contain brightness-0 invert"
+                    />
                 </Link>
             </div>
 
