@@ -9,12 +9,12 @@ export async function trackAnalyticsEvent(providerId: string, eventType: EventTy
         const supabase = await createClient()
 
         const { error } = await supabase
-            .from('analytics_events')
+            .from('analytics_events') as any)
             .insert({
                 provider_id: providerId,
                 event_type: eventType,
                 metadata: metadata || null
-            }) as any
+            })
 
         if (error) {
             console.error('Failed to track analytics:', error)
