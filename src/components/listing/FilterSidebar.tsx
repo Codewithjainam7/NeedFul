@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
     Check, ChevronDown, ChevronUp, Star, X,
     Zap, Wrench, AirVent, UtensilsCrossed, Sparkles, Stethoscope, HardHat, Hotel,
@@ -218,7 +219,7 @@ export function FilterSidebar({
             {/* Header */}
             <div className={cn(
                 "px-5 py-4 border-b border-gray-100 bg-gradient-to-b from-orange-50/60 to-transparent backdrop-blur-sm",
-                isMobile && "pt-6" // Extra padding for mobile if needed
+                isMobile && "pt-6 pr-14" // Extra right padding to avoid close button overlap
             )}>
                 <div className={cn(
                     "flex items-center justify-between transition-opacity duration-300",
@@ -260,7 +261,11 @@ export function FilterSidebar({
                     isCollapsed && "opacity-0 pointer-events-none"
                 )}>
                     {/* Sort By Section - Drodown */}
-                    <div>
+                    <motion.div
+                        initial={isMobile ? { opacity: 0, x: -50 } : {}}
+                        animate={isMobile ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0, duration: 0.2 }}
+                    >
                         <button
                             onClick={() => toggleSection('sortBy')}
                             className="flex items-center justify-between w-full py-2 group"
@@ -296,12 +301,16 @@ export function FilterSidebar({
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     <div className="h-px bg-gray-200"></div>
 
                     {/* Category Section */}
-                    <div>
+                    <motion.div
+                        initial={isMobile ? { opacity: 0, x: -50 } : {}}
+                        animate={isMobile ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0, duration: 0.2 }}
+                    >
                         <div className="flex items-center justify-between w-full py-2">
                             <span className="font-black text-base text-gray-900 relative">
                                 Category
@@ -374,12 +383,16 @@ export function FilterSidebar({
                                 })}
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     <div className="h-px bg-gray-200"></div>
 
                     {/* Location Section */}
-                    <div>
+                    <motion.div
+                        initial={isMobile ? { opacity: 0, x: -50 } : {}}
+                        animate={isMobile ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.05, duration: 0.2 }}
+                    >
                         <button
                             onClick={() => toggleSection('location')}
                             className="flex items-center justify-between w-full py-2 group"
@@ -415,14 +428,18 @@ export function FilterSidebar({
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     <div className="h-px bg-gray-200"></div>
 
                     <div className="h-px bg-gray-200"></div>
 
                     {/* Distance Section */}
-                    <div>
+                    <motion.div
+                        initial={isMobile ? { opacity: 0, x: -50 } : {}}
+                        animate={isMobile ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.1, duration: 0.2 }}
+                    >
                         <button
                             onClick={() => toggleSection('distance' as any)}
                             className="flex items-center justify-between w-full py-2 group"
@@ -468,12 +485,16 @@ export function FilterSidebar({
                                 </p>
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     <div className="h-px bg-gray-200"></div>
 
                     {/* Cost Section */}
-                    <div>
+                    <motion.div
+                        initial={isMobile ? { opacity: 0, x: -50 } : {}}
+                        animate={isMobile ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.25, duration: 0.3 }}
+                    >
                         <button
                             onClick={() => toggleSection('cost' as any)}
                             className="flex items-center justify-between w-full py-2 group"
@@ -520,12 +541,16 @@ export function FilterSidebar({
                                 })}
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     <div className="h-px bg-gray-200"></div>
 
                     {/* Rating Section */}
-                    <div>
+                    <motion.div
+                        initial={isMobile ? { opacity: 0, x: -50 } : {}}
+                        animate={isMobile ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.3, duration: 0.3 }}
+                    >
                         <button
                             onClick={() => toggleSection('rating')}
                             className="flex items-center justify-between w-full py-2 group"
@@ -558,12 +583,16 @@ export function FilterSidebar({
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     <div className="h-px bg-gray-200"></div>
 
                     {/* Additional Filters */}
-                    <div>
+                    <motion.div
+                        initial={isMobile ? { opacity: 0, x: -50 } : {}}
+                        animate={isMobile ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.35, duration: 0.3 }}
+                    >
                         <button
                             onClick={() => toggleSection('filters')}
                             className="flex items-center justify-between w-full py-2 group"
@@ -612,10 +641,10 @@ export function FilterSidebar({
                                 </button>
                             </div>
                         )}
-                    </div>
+                    </motion.div>
                 </div>
-            </ScrollArea>
-        </div>
+            </ScrollArea >
+        </div >
     )
 }
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
     Search,
     MapPin,
@@ -71,6 +72,7 @@ export function Header({ user }: HeaderProps) {
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedCity, setSelectedCity] = useState('Mumbai')
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
     const [currentUser, setCurrentUser] = useState<SupabaseUser | null>(null)
     const supabase = createClient()
@@ -225,6 +227,20 @@ export function Header({ user }: HeaderProps) {
 
                     {/* Right Section - Actions */}
                     <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                        {/* Mobile Search Toggle */}
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="md:hidden h-9 w-9 rounded-full hover:bg-orange-50 text-gray-700 transition-all duration-200 active:scale-95"
+                            onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                        >
+                            {mobileSearchOpen ? (
+                                <X className="h-5 w-5 text-orange-600" />
+                            ) : (
+                                <Search className="h-5 w-5" />
+                            )}
+                        </Button>
+
                         {/* Add business Button */}
                         <Link href="/business/add" className="hidden md:block">
                             <Button
@@ -329,51 +345,121 @@ export function Header({ user }: HeaderProps) {
                                         {[
                                             { name: 'Home', href: '/', icon: Home },
                                             ...navItems
-                                        ].map((item) => {
+                                        ].map((item, index) => {
                                             const isActive = pathname === item.href
                                             return (
-                                                <Link
+                                                <motion.div
                                                     key={item.name}
-                                                    href={item.href}
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className={cn(
-                                                        "flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all border",
-                                                        isActive
-                                                            ? "bg-orange-50 text-orange-600 border-orange-100 shadow-sm"
-                                                            : "bg-gray-50 text-gray-900 border-transparent hover:bg-white hover:border-orange-100 hover:text-orange-600"
-                                                    )}
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: 0.1 + (index * 0.05), duration: 0.3 }}
                                                 >
-                                                    <item.icon className={cn("w-5 h-5", isActive ? "text-orange-600" : "text-gray-400 group-hover:text-orange-600")} strokeWidth={isActive ? 2.5 : 2} />
-                                                    {item.name}
-                                                </Link>
+                                                    <Link
+                                                        href={item.href}
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                        className={cn(
+                                                            "flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all border",
+                                                            isActive
+                                                                ? "bg-orange-50 text-orange-600 border-orange-100 shadow-sm"
+                                                                : "bg-gray-50 text-gray-900 border-transparent hover:bg-white hover:border-orange-100 hover:text-orange-600"
+                                                        )}
+                                                    >
+                                                        <item.icon className={cn("w-5 h-5", isActive ? "text-orange-600" : "text-gray-400 group-hover:text-orange-600")} strokeWidth={isActive ? 2.5 : 2} />
+                                                        {item.name}
+                                                    </Link>
+                                                </motion.div>
                                             )
                                         })}
                                     </nav>
 
                                     {/* Actions */}
                                     <div className="mt-auto flex flex-col gap-4 border-t border-gray-100 pt-8 pb-4">
-                                        <Link href="/business/add" onClick={() => setMobileMenuOpen(false)}>
-                                            <Button variant="outline" className="w-full justify-start gap-3 h-14 text-gray-800 font-bold border-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 shadow-sm rounded-xl">
-                                                <div className="bg-orange-100 p-1.5 rounded-full text-[#FF5200]">
-                                                    <Plus className="h-4 w-4" strokeWidth={3} />
-                                                </div>
-                                                Add Business
-                                            </Button>
-                                        </Link>
-
-                                        {!currentUser && (
-                                            <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                                                <Button className="w-full h-14 bg-[#FF5200] hover:bg-[#E04800] text-white font-bold text-lg shadow-xl shadow-orange-500/20 rounded-xl">
-                                                    Login / Sign up
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.4, duration: 0.3 }}
+                                        >
+                                            <Link href="/business/add" onClick={() => setMobileMenuOpen(false)}>
+                                                <Button variant="outline" className="w-full justify-start gap-3 h-14 text-gray-800 font-bold border-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 shadow-sm rounded-xl">
+                                                    <div className="bg-orange-100 p-1.5 rounded-full text-[#FF5200]">
+                                                        <Plus className="h-4 w-4" strokeWidth={3} />
+                                                    </div>
+                                                    Add Business
                                                 </Button>
                                             </Link>
+                                        </motion.div>
+
+                                        {!currentUser && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.5, duration: 0.3 }}
+                                            >
+                                                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                                                    <Button className="w-full h-14 bg-[#FF5200] hover:bg-[#E04800] text-white font-bold text-lg shadow-xl shadow-orange-500/20 rounded-xl">
+                                                        Login / Sign up
+                                                    </Button>
+                                                </Link>
+                                            </motion.div>
                                         )}
                                     </div>
                                 </div>
                             </SheetContent>
                         </Sheet>
                     </div>
+
+                    {/* Mobile Search Bar Expansion */}
+                    {mobileSearchOpen && (
+                        <div className="absolute top-full left-0 right-0 p-4 bg-white/95 backdrop-blur-xl border-t border-orange-100 shadow-xl md:hidden animate-in slide-in-from-top-2 duration-200">
+                            <form
+                                onSubmit={(e) => {
+                                    handleSearch(e)
+                                    setMobileSearchOpen(false)
+                                }}
+                                className="flex flex-col gap-3"
+                            >
+                                <div className="flex items-center w-full shadow-sm border border-orange-100/50 rounded-xl overflow-hidden bg-white">
+                                    {/* City Selector Mobile */}
+                                    <div className="relative border-r border-orange-50">
+                                        <Select value={selectedCity} onValueChange={setSelectedCity}>
+                                            <SelectTrigger className="w-[110px] h-12 border-0 rounded-none bg-transparent focus:ring-0 text-gray-800 font-bold text-sm pl-3 pr-1">
+                                                <MapPin className="h-4 w-4 text-[#FF5200] mr-1.5" />
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent position="popper" className="bg-white/95 backdrop-blur-xl border-orange-100 shadow-xl rounded-2xl z-[200] p-1 min-w-[200px]">
+                                                {cities.map((city) => (
+                                                    <SelectItem
+                                                        key={city.name}
+                                                        value={city.name}
+                                                        disabled={!city.available}
+                                                        className="text-sm font-medium cursor-pointer pl-4 py-2.5 my-0.5 rounded-lg focus:bg-orange-50 focus:text-orange-700 data-[state=checked]:bg-orange-50 data-[state=checked]:text-orange-700"
+                                                    >
+                                                        <span className="flex items-center justify-between w-full gap-4">
+                                                            <span>{city.name}</span>
+                                                            {!city.available && <span className="text-[10px] uppercase font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full tracking-wide">Soon</span>}
+                                                        </span>
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <Input
+                                        type="text"
+                                        placeholder="Search services..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="h-12 border-0 rounded-none focus-visible:ring-0 text-base"
+                                        autoFocus
+                                    />
+                                </div>
+                                <Button type="submit" className="w-full bg-[#FF5200] text-white font-bold h-11 rounded-xl">
+                                    Search
+                                </Button>
+                            </form>
+                        </div>
+                    )}
                 </div>
+
             </div>
         </header>
     )

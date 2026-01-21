@@ -34,8 +34,8 @@ export function BusinessTabs({ provider }: BusinessTabsProps) {
     ]
 
     return (
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="sticky top-[72px] md:top-[84px] z-30 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm transition-all duration-300">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full overflow-visible">
+            <div className="sticky top-[72px] md:top-[96px] z-40 bg-white shadow-sm border-b border-gray-100 transition-all duration-300">
                 <TabsList className="w-full justify-start h-auto p-0 bg-transparent gap-8 overflow-x-auto scrollbar-hide px-2">
                     {tabs.map((tab) => (
                         <TabsTrigger
