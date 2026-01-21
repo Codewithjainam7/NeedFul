@@ -189,7 +189,7 @@ export function Header({ user }: HeaderProps) {
                             {/* City Selector */}
                             <div className="relative border-r border-orange-100/50">
                                 <Select value={selectedCity} onValueChange={setSelectedCity}>
-                                    <SelectTrigger className="w-[140px] h-12 border-0 rounded-none bg-transparent focus:ring-0 text-gray-800 font-bold hover:bg-orange-50/30 transition-colors text-sm pl-4 pr-2 focus:ring-offset-0">
+                                    <SelectTrigger className="w-[140px] h-12 border-0 rounded-none bg-white focus:ring-0 text-gray-800 font-bold hover:bg-orange-50 transition-colors text-sm pl-4 pr-2 focus:ring-offset-0">
                                         <MapPin className="h-4 w-4 text-[#FF5200] mr-2" fill="currentColor" fillOpacity={0.2} />
                                         <SelectValue />
                                     </SelectTrigger>
@@ -422,7 +422,7 @@ export function Header({ user }: HeaderProps) {
                                     {/* City Selector Mobile */}
                                     <div className="relative border-r border-orange-50">
                                         <Select value={selectedCity} onValueChange={setSelectedCity}>
-                                            <SelectTrigger className="w-[110px] h-12 border-0 rounded-none bg-transparent focus:ring-0 text-gray-800 font-bold text-sm pl-3 pr-1">
+                                            <SelectTrigger className="w-[110px] h-12 border-0 rounded-none bg-white focus:ring-0 text-gray-800 font-bold text-sm pl-3 pr-1">
                                                 <MapPin className="h-4 w-4 text-[#FF5200] mr-1.5" />
                                                 <SelectValue />
                                             </SelectTrigger>

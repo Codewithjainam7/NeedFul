@@ -1,6 +1,6 @@
 'use client'
 
-import { Share2, Heart, Star, MapPin, Clock, CheckCircle2, Phone, MessageCircle } from 'lucide-react'
+import { Share2, Heart, Star, MapPin, Clock, CheckCircle2, Phone, MessageCircle, Mail, Globe, Tag, DollarSign, Instagram, Facebook, Twitter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/client'
@@ -45,7 +45,6 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
         }
 
         if (isSaved) {
-            // Remove
             const { error } = await supabase
                 .from('favorites')
                 .delete()
@@ -57,7 +56,6 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
                 toast.success("Removed from favorites")
             }
         } else {
-            // Add
             const { error } = await supabase
                 .from('favorites')
                 .insert({
@@ -108,8 +106,8 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
         workerCategories.includes(provider.categories?.name?.toLowerCase() || '')
 
     return (
-        <div className="bg-white pb-4">
-            {/* Breadcrumb - Simplified */}
+        <div className="bg-white pb-6">
+            {/* Breadcrumb */}
             <div className="text-xs text-gray-500 mb-4 flex items-center gap-2">
                 <span>Mumbai</span>
                 <span>/</span>
@@ -121,12 +119,11 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col items-start gap-4">
                     <div className="w-full">
-                        {/* Line 1: Name */}
+                        {/* Business Name */}
                         <div className="flex items-center gap-2 mb-3 flex-wrap">
                             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
                                 {provider.business_name}
                             </h1>
-                            {/* Blue Verified Badge for Workers - Inline */}
                             {provider.is_verified && isWorker && (
                                 <div className="ml-1.5 translate-y-[2px]" title="Verified Professional">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
@@ -137,7 +134,7 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
                             )}
                         </div>
 
-                        {/* Line 2: Rating Badge | Count | Verified */}
+                        {/* Rating & Reviews */}
                         <div className="flex items-center gap-3 mb-4 flex-wrap">
                             <div className="flex items-center gap-1.5 bg-[#0F9D58] text-white px-2 py-1 rounded-md font-bold text-sm shadow-sm">
                                 <span>{provider.rating}</span>
@@ -147,7 +144,6 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
                                 {provider.review_count} Ratings
                             </span>
 
-                            {/* Standard Verified Badge for Businesses (kept on 2nd line) */}
                             {provider.is_verified && !isWorker && (
                                 <div className="flex items-center gap-1.5 ml-2">
                                     <CheckCircle2 className="w-4 h-4 fill-black text-white" />
@@ -156,8 +152,8 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
                             )}
                         </div>
 
-                        {/* Line 3: Address & Status */}
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-gray-600 mb-6">
+                        {/* Address & Quick Info */}
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-gray-600 mb-4">
                             <div className="flex items-center gap-1">
                                 <MapPin className="w-4 h-4 text-gray-500" />
                                 <span className="font-medium text-gray-900">{provider.address}, {provider.city}</span>
@@ -170,6 +166,110 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
                             <span className="text-gray-300">•</span>
                             <span className="text-gray-500">5 Years in Business</span>
                         </div>
+
+                        {/* Enhanced Contact Info & Details */}
+                        <div className="flex flex-wrap items-center gap-3 mb-4">
+                            {/* Email */}
+                            {provider.email && (
+                                <a
+                                    href={`mailto:${provider.email}`}
+                                    className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                                >
+                                    <Mail className="w-4 h-4" />
+                                    <span>{provider.email}</span>
+                                </a>
+                            )}
+
+                            {/* Website */}
+                            {provider.website && (
+                                <>
+                                    <span className="text-gray-300">•</span>
+                                    <a
+                                        href={provider.website}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                                    >
+                                        <Globe className="w-4 h-4" />
+                                        <span>Website</span>
+                                    </a>
+                                </>
+                            )}
+
+                            {/* Pricing */}
+                            {provider.pricing && (
+                                <>
+                                    <span className="text-gray-300">•</span>
+                                    <div className="flex items-center gap-1.5 text-sm text-gray-700">
+                                        <DollarSign className="w-4 h-4 text-green-600" />
+                                        <span className="font-medium">{provider.pricing}</span>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* GST Number */}
+                            {provider.gst_number && (
+                                <>
+                                    <span className="text-gray-300">•</span>
+                                    <div className="text-sm text-gray-600">
+                                        <span className="font-medium">GST:</span> {provider.gst_number}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Tags */}
+                        {provider.tags && provider.tags.length > 0 && (
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
+                                <Tag className="w-4 h-4 text-[#FF5200]" />
+                                {provider.tags.map((tag: string, index: number) => (
+                                    <Badge
+                                        key={index}
+                                        variant="secondary"
+                                        className="bg-orange-50 text-[#FF5200] border border-orange-200 hover:bg-orange-100 font-medium px-3 py-1"
+                                    >
+                                        {tag}
+                                    </Badge>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Social Media Links */}
+                        {(provider.social_instagram || provider.social_facebook || provider.social_twitter) && (
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className="text-sm text-gray-600 font-medium">Follow Us:</span>
+                                {provider.social_instagram && (
+                                    <a
+                                        href={provider.social_instagram.startsWith('http') ? provider.social_instagram : `https://instagram.com/${provider.social_instagram.replace('@', '')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1 text-pink-600 hover:text-pink-700 transition-colors"
+                                    >
+                                        <Instagram className="w-5 h-5" />
+                                    </a>
+                                )}
+                                {provider.social_facebook && (
+                                    <a
+                                        href={provider.social_facebook.startsWith('http') ? provider.social_facebook : `https://facebook.com/${provider.social_facebook}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1 text-blue-600 hover:text-blue-700 transition-colors"
+                                    >
+                                        <Facebook className="w-5 h-5" />
+                                    </a>
+                                )}
+                                {provider.social_twitter && (
+                                    <a
+                                        href={provider.social_twitter.startsWith('http') ? provider.social_twitter : `https://twitter.com/${provider.social_twitter.replace('@', '')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1 text-sky-500 hover:text-sky-600 transition-colors"
+                                    >
+                                        <Twitter className="w-5 h-5" />
+                                    </a>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
 
