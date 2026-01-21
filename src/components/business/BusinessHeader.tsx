@@ -115,54 +115,47 @@ export function BusinessHeader({ provider }: BusinessHeaderProps) {
             </div>
 
             <div className="flex flex-col gap-4">
-                <div className="flex justify-between items-start gap-4">
-                    <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2 flex-wrap">
-                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                <div className="flex flex-col items-start gap-4">
+                    <div className="w-full">
+                        {/* Line 1: Name */}
+                        <div className="flex items-center gap-3 mb-3">
+                            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
                                 {provider.business_name}
                             </h1>
-                            {provider.is_verified && (
-                                <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200 gap-1 h-6">
-                                    <CheckCircle2 className="w-3.5 h-3.5 fill-green-100" />
-                                    Verified
-                                </Badge>
-                            )}
                         </div>
 
-                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-                            <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
-                            <span className="line-clamp-1">{provider.address}</span>
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm mb-4">
-                            <div className="flex items-center gap-2">
-                                <span className="text-green-600 font-semibold">Open Now</span>
-                                <span className="text-gray-400">|</span>
-                                <span className="text-gray-600">Until 11:30 PM</span>
-                            </div>
-                        </div>
-
-                        {/* Ratings Mobile View - Inline */}
-                        <div className="flex items-center gap-3 md:hidden mb-4">
-                            <div className="flex items-center gap-1.5 bg-green-700 text-white px-2 py-1 rounded w-fit font-bold text-sm">
+                        {/* Line 2: Rating Badge | Count | Verified */}
+                        <div className="flex items-center gap-3 mb-4 flex-wrap">
+                            <div className="flex items-center gap-1.5 bg-[#0F9D58] text-white px-2 py-1 rounded-md font-bold text-sm shadow-sm">
                                 <span>{provider.rating}</span>
                                 <Star className="w-3 h-3 fill-white" />
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-sm font-semibold underline decoration-dotted text-gray-900">{provider.review_count} Ratings</span>
-                            </div>
-                        </div>
-                    </div>
+                            <span className="text-sm font-medium text-gray-600 underline decoration-dotted decoration-gray-400 underline-offset-4">
+                                {provider.review_count} Ratings
+                            </span>
 
-                    {/* Desktop Rating Box */}
-                    <div className="hidden md:flex flex-col items-end gap-1">
-                        <div className="flex items-center gap-2 bg-[#24963F] text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-[#1e8235] transition-colors">
-                            <span className="text-xl font-bold">{provider.rating}</span>
-                            <div className="flex flex-col items-center">
-                                <Star className="w-4 h-4 fill-white" />
-                            </div>
+                            {provider.is_verified && (
+                                <div className="flex items-center gap-1.5 ml-2">
+                                    <CheckCircle2 className="w-4 h-4 fill-black text-white" />
+                                    <span className="text-sm font-semibold text-gray-900">Verified</span>
+                                </div>
+                            )}
                         </div>
-                        <span className="text-xs text-gray-500 font-medium">{provider.review_count} Ratings</span>
+
+                        {/* Line 3: Address & Status */}
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-gray-600 mb-6">
+                            <div className="flex items-center gap-1">
+                                <MapPin className="w-4 h-4 text-gray-500" />
+                                <span className="font-medium text-gray-900">{provider.address}, {provider.city}</span>
+                            </div>
+                            <span className="hidden md:inline text-gray-300">•</span>
+                            <div className="flex items-center gap-1 text-green-700 font-medium">
+                                <span className="font-bold">Open Now</span>
+                                <span className="text-gray-500 font-normal">at 09:30 AM</span>
+                            </div>
+                            <span className="text-gray-300">•</span>
+                            <span className="text-gray-500">5 Years in Business</span>
+                        </div>
                     </div>
                 </div>
 

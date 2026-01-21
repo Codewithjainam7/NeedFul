@@ -474,7 +474,22 @@ function SearchPageContent() {
                             {!loading && !error && (
                                 <>
                                     {filteredProviders.length > 0 ? (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                        <div className={cn(
+                                            "grid gap-4",
+                                            (() => {
+                                                const workerCategories = ['plumbers', 'electricians', 'carpenters', 'painters', 'ac-repair', 'cleaning', 'salon', 'massage']
+                                                // Check if we are in a "worker" context (based on selected category or if mixed content is predominantly workers)
+                                                // For now, if any selected category is a worker category, use the 3-col layout.
+                                                // Or better: check if the first provider is a worker (since list is usually homogeneous)
+                                                if (filteredProviders.length > 0) {
+                                                    const firstSlug = filteredProviders[0].categories?.slug || ''
+                                                    if (workerCategories.includes(firstSlug)) {
+                                                        return "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+                                                    }
+                                                }
+                                                return "grid-cols-1 xl:grid-cols-2"
+                                            })()
+                                        )}>
                                             {filteredProviders.map((provider) => {
                                                 // Check if category is a "Worker" type
                                                 const workerCategories = ['plumbers', 'electricians', 'carpenters', 'painters', 'ac-repair', 'cleaning', 'salon', 'massage']

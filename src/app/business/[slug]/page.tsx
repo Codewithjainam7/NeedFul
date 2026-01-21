@@ -123,7 +123,7 @@ export default function BusinessDetailPage() {
                     {/* 4. Sidebar (Right Column) - Sticky on Desktop */}
                     <div className="w-full lg:w-[350px] space-y-6">
                         <div className="sticky top-24">
-                            <div className="bg-white border boundary-orange-200 rounded-xl shadow-sm p-4 mb-6 hidden md:block border-orange-100">
+                            <div className="bg-white border border-orange-200 rounded-xl shadow-sm p-4 mb-6 hidden md:block border-orange-100">
                                 <h3 className="font-bold text-gray-900 mb-2">Contact Business</h3>
                                 <p className="text-sm text-gray-600 mb-4">Get the best deal by contacting the business directly.</p>
                                 <div className="space-y-3">
