@@ -310,6 +310,7 @@ export function ProfilePageContent({ favorites: initialFavorites, user, myBusine
                                                     key={provider.id}
                                                     provider={provider}
                                                     isSaved={false} // Can't save your own
+                                                    isOwner={true}
                                                 />
                                             ))}
                                         </div>

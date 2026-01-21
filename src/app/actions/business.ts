@@ -100,3 +100,42 @@ export async function createBusiness(prevState: any, formData: any) {
     // We can return the slug to redirect client-side
     return { success: true, slug: providerData.slug };
 }
+
+export async function deleteBusiness(providerId: string) {
+    const supabase = await createClient();
+
+    // 1. Check Auth
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+        return { error: "Unauthorized" };
+    }
+
+    // 2. Verify Ownership
+    const { data: provider, error: fetchError } = await supabase
+        .from('providers')
+        .select('id, user_id')
+        .eq('id', providerId)
+        .single();
+
+    if (fetchError || !provider) {
+        return { error: "Business not found" };
+    }
+
+    if (provider.user_id !== user.id) {
+        return { error: "You do not have permission to delete this business" };
+    }
+
+    // 3. Delete
+    const { error: deleteError } = await supabase
+        .from('providers')
+        .delete()
+        .eq('id', providerId);
+
+    if (deleteError) {
+        return { error: "Failed to delete business: " + deleteError.message };
+    }
+
+    revalidatePath('/profile');
+    revalidatePath('/search');
+    return { success: true };
+}
