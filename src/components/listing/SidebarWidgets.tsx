@@ -51,68 +51,75 @@ export function EnquiryForm({ categoryName = 'Electrician' }: EnquiryFormProps) 
     }
 
     return (
-        <Card className="p-5 bg-white border border-gray-100 shadow-xl shadow-orange-500/5 rounded-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF5200] to-orange-400" />
+        <Card className="p-6 bg-white/90 backdrop-blur-xl border border-gray-100 shadow-2xl shadow-orange-500/10 rounded-2xl relative overflow-hidden">
+            {/* Decorative gradient elements */}
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-orange-200/30 to-transparent rounded-full blur-2xl" />
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-tr from-blue-200/20 to-transparent rounded-full blur-2xl" />
 
-            <h3 className="font-bold text-gray-900 mb-1 text-lg">
-                Get Best Quotes
-            </h3>
-            <p className="text-sm text-gray-500 mb-6 font-medium">
-                Connect with top {categoryName}s instantly
-            </p>
+            {/* Top accent bar */}
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#FF5200] via-orange-400 to-amber-400" />
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="bg-gray-50 p-1 rounded-xl border border-gray-100 focus-within:ring-2 ring-[#FF5200]/20 transition-all">
-                    <div className="px-3 py-1 border-b border-gray-200/50">
-                        <Label className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Name</Label>
-                        <input
-                            required
-                            placeholder="Your Name"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 placeholder:font-normal"
-                        />
-                    </div>
-                    <div className="px-3 py-1">
-                        <Label className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Mobile</Label>
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold text-gray-500">+91</span>
+            <div className="relative">
+                <h3 className="font-bold text-gray-900 text-xl mb-1">
+                    Get Best Quotes
+                </h3>
+                <p className="text-sm text-gray-500 mb-6 font-medium">
+                    Connect with top {categoryName}s instantly
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="bg-gradient-to-br from-gray-50 to-white p-1 rounded-xl border border-gray-100 shadow-inner">
+                        <div className="px-4 py-3 border-b border-gray-100">
+                            <Label className="text-[11px] uppercase font-bold text-[#FF5200] tracking-wider">Name</Label>
                             <input
                                 required
-                                type="tel"
-                                placeholder="98765 43210"
-                                value={formData.mobile}
-                                onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                                className="w-full bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 placeholder:font-normal"
+                                placeholder="Your Name"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                className="w-full bg-transparent border-none p-0 text-base font-semibold text-gray-900 focus:ring-0 placeholder:font-normal placeholder:text-gray-400 mt-1"
                             />
                         </div>
+                        <div className="px-4 py-3">
+                            <Label className="text-[11px] uppercase font-bold text-[#FF5200] tracking-wider">Mobile</Label>
+                            <div className="flex items-center gap-2 mt-1">
+                                <span className="text-base font-semibold text-gray-400">+91</span>
+                                <input
+                                    required
+                                    type="tel"
+                                    placeholder="98765 43210"
+                                    value={formData.mobile}
+                                    onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                                    className="w-full bg-transparent border-none p-0 text-base font-semibold text-gray-900 focus:ring-0 placeholder:font-normal placeholder:text-gray-400"
+                                />
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-gray-600 ml-1">Requirements (Optional)</Label>
-                    <textarea
-                        rows={2}
-                        placeholder="Describe what you need..."
-                        value={formData.requirements}
-                        onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
-                        className="w-full rounded-xl border-gray-200 bg-gray-50 text-sm focus:border-[#FF5200] focus:ring-[#FF5200] resize-none"
-                    />
-                </div>
+                    <div className="space-y-2">
+                        <Label className="text-xs font-semibold text-gray-600 ml-1">Requirements (Optional)</Label>
+                        <textarea
+                            rows={3}
+                            placeholder="Describe what you need..."
+                            value={formData.requirements}
+                            onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                            className="w-full rounded-xl border-gray-200 bg-gray-50/50 text-sm focus:border-[#FF5200] focus:ring-[#FF5200]/20 resize-none p-3"
+                        />
+                    </div>
 
-                <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-[#FF5200] to-orange-600 hover:from-orange-600 hover:to-[#FF5200] text-white font-bold gap-2 h-12 rounded-xl border-0 shadow-lg shadow-orange-500/20"
-                >
-                    {isSubmitting ? 'Sending...' : 'Get Free Quotes'}
-                    {!isSubmitting && <Send className="h-4 w-4" />}
-                </Button>
+                    <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-gradient-to-r from-[#FF5200] via-orange-500 to-amber-500 hover:from-orange-600 hover:via-[#FF5200] hover:to-orange-500 text-white font-bold gap-2 h-14 rounded-xl border-0 shadow-xl shadow-orange-500/25 text-base transition-all duration-300 hover:shadow-orange-500/40 hover:scale-[1.02]"
+                    >
+                        {isSubmitting ? 'Sending...' : 'Get Free Quotes'}
+                        {!isSubmitting && <Send className="h-5 w-5" />}
+                    </Button>
 
-                <p className="text-[10px] text-center text-gray-400">
-                    By submitting, you agree to our Terms of Use
-                </p>
-            </form>
+                    <p className="text-[11px] text-center text-gray-400">
+                        By submitting, you agree to our Terms of Use
+                    </p>
+                </form>
+            </div>
         </Card>
     )
 }

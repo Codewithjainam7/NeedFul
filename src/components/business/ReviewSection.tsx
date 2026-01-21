@@ -198,23 +198,24 @@ export function ReviewSection({ providerId }: ReviewSectionProps) {
                             Write a Review
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>Rate your experience</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="flex justify-center gap-2">
+                    <DialogContent className="sm:max-w-[480px] bg-white/95 backdrop-blur-xl border-0 shadow-2xl rounded-2xl p-0 overflow-hidden">
+                        <div className="bg-gradient-to-r from-[#FF5200] to-orange-400 p-6 text-white">
+                            <DialogTitle className="text-xl font-bold">Rate your experience</DialogTitle>
+                            <p className="text-white/80 text-sm mt-1">Share your feedback to help others</p>
+                        </div>
+                        <div className="p-6 space-y-6">
+                            <div className="flex justify-center gap-3">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
                                         key={star}
                                         type="button"
                                         onClick={() => setNewRating(star)}
-                                        className="focus:outline-none transition-transform active:scale-95"
+                                        className="focus:outline-none transition-all active:scale-90 hover:scale-110"
                                     >
                                         <Star
                                             className={cn(
-                                                "w-8 h-8 transition-colors",
-                                                star <= newRating ? "fill-[#FFCE00] text-[#FFCE00]" : "text-gray-300"
+                                                "w-10 h-10 transition-colors drop-shadow-sm",
+                                                star <= newRating ? "fill-[#FFCE00] text-[#FFCE00]" : "text-gray-200 hover:text-yellow-200"
                                             )}
                                         />
                                     </button>
@@ -224,14 +225,14 @@ export function ReviewSection({ providerId }: ReviewSectionProps) {
                                 placeholder="Share details of your own experience at this place..."
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
-                                className="min-h-[100px]"
+                                className="min-h-[120px] rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 resize-none bg-gray-50"
                             />
                         </div>
-                        <DialogFooter>
-                            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                        <DialogFooter className="p-6 pt-0 gap-3">
+                            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-xl h-11 px-6">Cancel</Button>
                             <Button
                                 onClick={handleSubmitReview}
-                                className="bg-[#FF5200] hover:bg-[#E04800] text-white"
+                                className="bg-gradient-to-r from-[#FF5200] to-orange-500 hover:from-orange-600 hover:to-[#FF5200] text-white rounded-xl h-11 px-8 shadow-lg shadow-orange-500/20"
                                 disabled={submitting}
                             >
                                 {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}

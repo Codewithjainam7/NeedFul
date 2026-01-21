@@ -28,7 +28,7 @@ interface Business {
     slug: string
 }
 
-const ITEMS_PER_PAGE = 10
+const ITEMS_PER_PAGE = 50
 
 export default function BusinessesPage() {
     const [businesses, setBusinesses] = useState<Business[]>([])
