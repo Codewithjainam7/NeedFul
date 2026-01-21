@@ -373,79 +373,97 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
 
                                 {/* DYNAMIC FORM LOGIC (Re-styled inputs) */}
                                 {selectedCategory?.slug === 'restaurants' && (
-                                    <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4">
-                                        <div className="space-y-2">
-                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Cuisines (Comma separated)</Label>
+                                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                                        <div className="space-y-3">
+                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Cuisines</Label>
                                             <Input
                                                 placeholder="e.g. North Indian, Chinese, Italian"
                                                 onChange={(e) => {
                                                     const val = e.target.value.split(',').map(s => s.trim())
                                                     setValue('details.cuisines', val)
                                                 }}
-                                                className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm"
+                                                className="h-14 rounded-xl bg-white border-2 border-gray-100 focus:border-[#FF5200] focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm text-base"
                                             />
+                                            <p className="text-xs text-gray-400">Separate multiple cuisines with commas</p>
                                         </div>
-                                        <div className="space-y-2">
-                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Average Cost (for two)</Label>
-                                            <Input
-                                                placeholder="e.g. ₹800"
-                                                {...register('details.avg_cost')}
-                                                className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm"
-                                            />
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <div className="space-y-3">
+                                                <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Average Cost (for two)</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">₹</span>
+                                                    <Input
+                                                        placeholder="800"
+                                                        {...register('details.avg_cost')}
+                                                        className="h-14 pl-8 rounded-xl bg-white border-2 border-gray-100 focus:border-[#FF5200] focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm text-base"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-3">
+                                                <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Type</Label>
+                                                <Select onValueChange={(val) => setValue('details.veg_non_veg', val)}>
+                                                    <SelectTrigger className="h-14 rounded-xl bg-white border-2 border-gray-100 focus:border-[#FF5200] focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm text-base">
+                                                        <SelectValue placeholder="Select Type" />
+                                                    </SelectTrigger>
+                                                    <SelectContent position="popper" className="max-h-[200px] overflow-y-auto rounded-xl border-orange-100 shadow-xl">
+                                                        <SelectItem value="Veg" className="focus:bg-orange-50 focus:text-orange-700 cursor-pointer py-3 rounded-lg my-1">Pure Veg</SelectItem>
+                                                        <SelectItem value="Non-Veg" className="focus:bg-orange-50 focus:text-orange-700 cursor-pointer py-3 rounded-lg my-1">Non-Veg</SelectItem>
+                                                        <SelectItem value="Both" className="focus:bg-orange-50 focus:text-orange-700 cursor-pointer py-3 rounded-lg my-1">Both</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
                                         </div>
-                                        <div className="space-y-2">
-                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Type</Label>
-                                            <Select onValueChange={(val) => setValue('details.veg_non_veg', val)}>
-                                                <SelectTrigger className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm"><SelectValue placeholder="Select Type" /></SelectTrigger>
-                                                <SelectContent position="popper">
-                                                    <SelectItem value="Veg">Pure Veg</SelectItem>
-                                                    <SelectItem value="Non-Veg">Non-Veg</SelectItem>
-                                                    <SelectItem value="Both">Both</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
+                                        <div className="pb-4"></div>
                                     </div>
                                 )}
 
                                 {selectedCategory?.slug === 'doctors' && (
-                                    <div className="space-y-5">
-                                        <div className="space-y-2">
+                                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                                        <div className="space-y-3">
                                             <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Specialization</Label>
-                                            <Input {...register('details.specialization')} placeholder="e.g. Cardiologist" className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm" />
+                                            <Input {...register('details.specialization')} placeholder="e.g. Cardiologist" className="h-14 rounded-xl bg-white border-2 border-gray-100 focus:border-[#FF5200] focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm text-base" />
                                         </div>
-                                        <div className="space-y-2">
-                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Experience (Years)</Label>
-                                            <Input type="number" {...register('details.experience_years')} placeholder="e.g. 10" className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm" />
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <div className="space-y-3">
+                                                <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Experience (Years)</Label>
+                                                <Input type="number" {...register('details.experience_years')} placeholder="10" className="h-14 rounded-xl bg-white border-2 border-gray-100 focus:border-[#FF5200] focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm text-base" />
+                                            </div>
+                                            <div className="space-y-3">
+                                                <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Consultation Fee</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">₹</span>
+                                                    <Input type="number" {...register('details.consultation_fee')} placeholder="500" className="h-14 pl-8 rounded-xl bg-white border-2 border-gray-100 focus:border-[#FF5200] focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm text-base" />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="space-y-2">
-                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Consultation Fee</Label>
-                                            <Input type="number" {...register('details.consultation_fee')} placeholder="e.g. 500" className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm" />
-                                        </div>
+                                        <div className="pb-4"></div>
                                     </div>
                                 )}
 
                                 {selectedCategory?.slug === 'hotels' && (
-                                    <div className="space-y-5">
-                                        <div className="space-y-2">
+                                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                                        <div className="space-y-3">
                                             <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Star Rating</Label>
                                             <Select onValueChange={(val) => setValue('details.star_rating', parseInt(val))}>
-                                                <SelectTrigger className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm"><SelectValue placeholder="Select Star Rating" /></SelectTrigger>
-                                                <SelectContent position="popper">
-                                                    {[1, 2, 3, 4, 5].map(n => <SelectItem key={n} value={n.toString()}>{n} Star</SelectItem>)}
+                                                <SelectTrigger className="h-14 rounded-xl bg-white border-2 border-gray-100 focus:border-[#FF5200] focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm text-base"><SelectValue placeholder="Select Star Rating" /></SelectTrigger>
+                                                <SelectContent position="popper" className="rounded-xl border-orange-100 shadow-xl">
+                                                    {[1, 2, 3, 4, 5].map(n => <SelectItem key={n} value={n.toString()} className="focus:bg-orange-50 focus:text-orange-700 cursor-pointer py-3 rounded-lg my-1">{n} Star</SelectItem>)}
                                                 </SelectContent>
                                             </Select>
                                         </div>
-                                        <div className="space-y-2">
-                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Amenities (Comma separated)</Label>
+                                        <div className="space-y-3">
+                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Amenities</Label>
                                             <Input
                                                 placeholder="e.g. WiFi, Pool, Gym"
                                                 onChange={(e) => {
                                                     const val = e.target.value.split(',').map(s => s.trim())
                                                     setValue('details.amenities', val)
                                                 }}
-                                                className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm"
+                                                className="h-14 rounded-xl bg-white border-2 border-gray-100 focus:border-[#FF5200] focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm text-base"
                                             />
+                                            <p className="text-xs text-gray-400">Separate multiple amenities with commas</p>
                                         </div>
+                                        <div className="pb-4"></div>
                                     </div>
                                 )}
 
@@ -460,7 +478,7 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                                     const val = e.target.value.split(',').map(s => s.trim())
                                                     setValue('details.services_offered', val)
                                                 }}
-                                                className="h-12 rounded-xl bg-white border-orange-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                                className="h-14 rounded-xl bg-white border-2 border-orange-200 focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 text-base"
                                             />
                                         </div>
                                     </div>
