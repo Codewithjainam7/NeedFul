@@ -56,7 +56,8 @@ export function EditBusinessForm({ provider, categories }: EditBusinessFormProps
         try {
             const supabase = createClient()
 
-            const { error } = await supabase
+            // TYPE FIX: Cast supabase to any to bypass strict type inference
+            const { error } = await (supabase as any)
                 .from('providers')
                 .update({
                     business_name: data.business_name,
@@ -65,7 +66,7 @@ export function EditBusinessForm({ provider, categories }: EditBusinessFormProps
                     phone: data.phone,
                     address: data.address,
                     operating_hours: data.operating_hours
-                } as any)
+                })
                 .eq('id', provider.id)
 
             if (error) throw error
