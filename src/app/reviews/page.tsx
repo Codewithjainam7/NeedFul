@@ -1,7 +1,7 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { createClient } from '@/lib/supabase/server'
-import { Star } from 'lucide-react'
+import { Star, Quote } from 'lucide-react'
 
 export default async function ReviewsPage() {
     const supabase = await createClient()
@@ -13,11 +13,17 @@ export default async function ReviewsPage() {
         userData = data
     }
 
-    // Mock Reviews
+    // Expanded Reviews
     const reviews = [
-        { name: "Sarah J.", city: "Mumbai", rating: 5, text: "NeedFul helped me find a plumber in 10 minutes. The service was excellent and verified!" },
-        { name: "Rahul M.", city: "Bangalore", rating: 5, text: "Best platform for local services. I hired a cleaner and the experience was seamless." },
-        { name: "Priya S.", city: "Delhi", rating: 4, text: "Great interface and easy to use. Found a good electrician quickly." },
+        { name: "Sarah J.", city: "Mumbai", rating: 5, text: "NeedFul helped me find a plumber in 10 minutes. The service was excellent and verified!", service: "Plumbing", color: "bg-blue-100 text-blue-600" },
+        { name: "Rahul M.", city: "Bangalore", rating: 5, text: "Best platform for local services. I hired a cleaner and the experience was seamless.", service: "Cleaning", color: "bg-green-100 text-green-600" },
+        { name: "Priya S.", city: "Delhi", rating: 4, text: "Great interface and easy to use. Found a good electrician quickly.", service: "Electrical", color: "bg-yellow-100 text-yellow-600" },
+        { name: "Amit K.", city: "Pune", rating: 5, text: "Booked an AC service through NeedFul. The technician was professional and fixed the issue in no time!", service: "AC Repair", color: "bg-purple-100 text-purple-600" },
+        { name: "Neha R.", city: "Chennai", rating: 5, text: "Found an amazing wedding photographer. The quality of professionals on this platform is outstanding.", service: "Photography", color: "bg-pink-100 text-pink-600" },
+        { name: "Vikram P.", city: "Hyderabad", rating: 4, text: "Used NeedFul for pest control. Quick response and effective treatment. Will use again!", service: "Pest Control", color: "bg-orange-100 text-orange-600" },
+        { name: "Ananya G.", city: "Kolkata", rating: 5, text: "The best part is the verified reviews. Helped me find a trusted carpenter for my new home.", service: "Carpentry", color: "bg-teal-100 text-teal-600" },
+        { name: "Rajesh T.", city: "Ahmedabad", rating: 5, text: "Excellent platform! Got my car serviced through a NeedFul listed garage. Very professional.", service: "Auto Service", color: "bg-red-100 text-red-600" },
+        { name: "Meera B.", city: "Jaipur", rating: 4, text: "Found a great caterer for my daughter's birthday party. The food was delicious!", service: "Catering", color: "bg-indigo-100 text-indigo-600" },
     ]
 
     return (
@@ -41,17 +47,43 @@ export default async function ReviewsPage() {
                         </p>
                     </div>
 
+                    {/* Stats Section */}
+                    <div className="flex justify-center gap-8 md:gap-16 mb-16">
+                        <div className="text-center">
+                            <div className="text-4xl font-black text-[#FF5200]">50K+</div>
+                            <div className="text-sm text-gray-500 font-medium">Happy Users</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-4xl font-black text-[#FF5200]">4.8</div>
+                            <div className="text-sm text-gray-500 font-medium">Average Rating</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-4xl font-black text-[#FF5200]">100K+</div>
+                            <div className="text-sm text-gray-500 font-medium">Jobs Done</div>
+                        </div>
+                    </div>
+
                     <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                         {reviews.map((review, idx) => (
-                            <div key={idx} className="p-8 rounded-3xl bg-gray-50 border border-transparent hover:border-yellow-200 transition-colors">
+                            <div key={idx} className="p-6 rounded-3xl bg-white shadow-lg shadow-gray-200/50 border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative">
+                                {/* Quote Icon */}
+                                <div className="absolute top-4 right-4 text-gray-100">
+                                    <Quote className="w-8 h-8 fill-current" />
+                                </div>
+
+                                {/* Service Badge */}
+                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 ${review.color}`}>
+                                    {review.service}
+                                </span>
+
                                 <div className="flex gap-1 mb-4">
                                     {[...Array(5)].map((_, i) => (
-                                        <Star key={i} className={`w-5 h-5 ${i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                                        <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`} />
                                     ))}
                                 </div>
-                                <p className="text-gray-700 text-lg mb-6 leading-relaxed">"{review.text}"</p>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">
+                                <p className="text-gray-700 mb-6 leading-relaxed">"{review.text}"</p>
+                                <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                                    <div className={`w-10 h-10 rounded-full ${review.color} flex items-center justify-center font-bold`}>
                                         {review.name[0]}
                                     </div>
                                     <div>
@@ -63,8 +95,12 @@ export default async function ReviewsPage() {
                         ))}
                     </div>
 
-                    <div className="text-center mt-12 bg-white/50 p-8 rounded-2xl border border-dashed border-gray-200">
-                        <p className="text-gray-400 font-medium">All reviews are from verified users.</p>
+                    <div className="text-center mt-12 p-8 bg-gradient-to-r from-[#FF5200] to-orange-400 rounded-3xl max-w-2xl mx-auto">
+                        <h3 className="text-2xl font-bold text-white mb-3">Share Your Experience</h3>
+                        <p className="text-white/80 mb-6">Help others find the best services by leaving a review.</p>
+                        <button className="px-6 py-3 bg-white text-[#FF5200] font-bold rounded-xl hover:bg-gray-100 transition-colors">
+                            Write a Review
+                        </button>
                     </div>
                 </div>
             </main>
@@ -72,3 +108,4 @@ export default async function ReviewsPage() {
         </div>
     )
 }
+
