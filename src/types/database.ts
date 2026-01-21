@@ -231,6 +231,29 @@ export type Database = {
                     created_at?: string
                 }
             }
+            analytics_events: {
+                Row: {
+                    id: string
+                    provider_id: string
+                    event_type: string
+                    metadata: Json | null
+                    created_at: string
+                }
+                Insert: {
+                    id?: string
+                    provider_id: string
+                    event_type: string
+                    metadata?: Json | null
+                    created_at?: string
+                }
+                Update: {
+                    id?: string
+                    provider_id?: string
+                    event_type?: string
+                    metadata?: Json | null
+                    created_at?: string
+                }
+            }
         }
         Views: {
             [_ in never]: never
