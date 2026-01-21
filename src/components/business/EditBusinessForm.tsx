@@ -65,7 +65,7 @@ export function EditBusinessForm({ provider, categories }: EditBusinessFormProps
                     phone: data.phone,
                     address: data.address,
                     operating_hours: data.operating_hours
-                })
+                } as any)
                 .eq('id', provider.id)
 
             if (error) throw error
