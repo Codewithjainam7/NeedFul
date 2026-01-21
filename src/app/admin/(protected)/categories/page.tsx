@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Plus, Edit2, Trash2, FolderTree, Search } from 'lucide-react'
+import { Plus, Edit2, Trash2, Search, Wrench, Car, Palette, Sparkles, Hammer, Calculator, Shirt, HardHat, Stethoscope, GraduationCap, Zap, Music, Gift, Scissors, UtensilsCrossed, Home, Briefcase, Camera, Heart, ShoppingBag, Plane, Dumbbell, Tv, Book, Coffee, Pizza, Flower2, Dog, Baby, Bike, Bus, Building, Landmark, Trees, Waves } from 'lucide-react'
 import { toast } from 'sonner'
 import { AdminPageTransition } from '@/components/admin/AdminPageTransition'
 
@@ -16,6 +15,46 @@ interface Category {
     slug: string
     icon: string
     description: string
+}
+
+// Map icon names to Lucide components
+const iconMap: { [key: string]: any } = {
+    'Armchair': Home,
+    'Car': Car,
+    'Palette': Palette,
+    'Sparkles': Sparkles,
+    'Hammer': Hammer,
+    'Calculator': Calculator,
+    'Shirt': Shirt,
+    'HardHat': HardHat,
+    'Stethoscope': Stethoscope,
+    'GraduationCap': GraduationCap,
+    'Zap': Zap,
+    'Music': Music,
+    'Gift': Gift,
+    'Scissors': Scissors,
+    'UtensilsCrossed': UtensilsCrossed,
+    'Home': Home,
+    'Briefcase': Briefcase,
+    'Camera': Camera,
+    'Heart': Heart,
+    'ShoppingBag': ShoppingBag,
+    'Plane': Plane,
+    'Dumbbell': Dumbbell,
+    'Tv': Tv,
+    'Book': Book,
+    'Coffee': Coffee,
+    'Pizza': Pizza,
+    'Flower2': Flower2,
+    'Dog': Dog,
+    'Baby': Baby,
+    'Bike': Bike,
+    'Bus': Bus,
+    'Building': Building,
+    'Landmark': Landmark,
+    'Trees': Trees,
+    'Waves': Waves,
+    'Wrench': Wrench,
 }
 
 export default function CategoriesPage() {
@@ -47,6 +86,11 @@ export default function CategoriesPage() {
         c.name?.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
+    const getIcon = (iconName: string) => {
+        const IconComponent = iconMap[iconName] || Wrench
+        return <IconComponent className="w-6 h-6 text-[#FF5200]" />
+    }
+
     return (
         <AdminPageTransition>
             <div className="space-y-6">
@@ -65,44 +109,43 @@ export default function CategoriesPage() {
                                 className="pl-9 border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/30 rounded-xl bg-white"
                             />
                         </div>
-                        <Button className="bg-[#FF5200] hover:bg-[#E04800] text-white rounded-xl">
+                        <Button className="bg-[#FF5200] hover:bg-[#E04800] text-white rounded-xl shadow-lg shadow-orange-500/20">
                             <Plus className="w-4 h-4 mr-2" />
                             Add Category
                         </Button>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {loading ? (
                         <div className="col-span-full text-center py-12 text-gray-500">Loading categories...</div>
                     ) : filteredCategories.length === 0 ? (
                         <div className="col-span-full text-center py-12 text-gray-500">No categories found.</div>
                     ) : (
                         filteredCategories.map((category) => (
-                            <Card key={category.id} className="border-none shadow-md hover:shadow-lg transition-shadow group">
-                                <CardContent className="p-6">
+                            <Card key={category.id} className="border border-gray-100 bg-white hover:shadow-xl hover:border-orange-200 transition-all duration-300 group rounded-2xl overflow-hidden">
+                                <CardContent className="p-5">
                                     <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-2xl">
-                                                {category.icon || '📁'}
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-14 h-14 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                                {getIcon(category.icon)}
                                             </div>
                                             <div>
-                                                <h3 className="font-semibold text-gray-900">{category.name}</h3>
-                                                <p className="text-sm text-gray-500">{category.slug}</p>
+                                                <h3 className="font-bold text-gray-900 group-hover:text-[#FF5200] transition-colors">{category.name}</h3>
+                                                <p className="text-xs text-gray-400 font-medium">{category.slug}</p>
                                             </div>
                                         </div>
-                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-[#FF5200] hover:bg-orange-50 rounded-lg">
-                                                <Edit2 className="h-4 w-4" />
-                                            </Button>
-                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </div>
                                     </div>
-                                    {category.description && (
-                                        <p className="text-sm text-gray-500 mt-3 line-clamp-2">{category.description}</p>
-                                    )}
+                                    <div className="flex gap-1 mt-4 pt-3 border-t border-gray-100">
+                                        <Button variant="ghost" size="sm" className="flex-1 h-9 text-gray-500 hover:text-[#FF5200] hover:bg-orange-50 rounded-lg text-xs font-medium">
+                                            <Edit2 className="h-3.5 w-3.5 mr-1.5" />
+                                            Edit
+                                        </Button>
+                                        <Button variant="ghost" size="sm" className="flex-1 h-9 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg text-xs font-medium">
+                                            <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                                            Delete
+                                        </Button>
+                                    </div>
                                 </CardContent>
                             </Card>
                         ))

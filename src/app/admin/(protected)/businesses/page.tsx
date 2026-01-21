@@ -245,17 +245,17 @@ export default function BusinessesPage() {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex items-center justify-between px-1">
-                    <span className="text-sm text-gray-500">
-                        Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, filteredBusinesses.length)} of {filteredBusinesses.length}
+                <div className="flex items-center justify-between px-1 bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-gray-100">
+                    <span className="text-sm text-gray-500 font-medium">
+                        Showing <span className="text-gray-900 font-semibold">{startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, filteredBusinesses.length)}</span> of <span className="text-gray-900 font-semibold">{filteredBusinesses.length}</span>
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                             disabled={currentPage === 1}
-                            className="rounded-lg"
+                            className="rounded-xl h-10 w-10 border-gray-200 hover:border-[#FF5200] hover:bg-orange-50 hover:text-[#FF5200] disabled:opacity-40"
                         >
                             <ChevronLeft className="h-4 w-4" />
                         </Button>
@@ -276,7 +276,10 @@ export default function BusinessesPage() {
                                     variant={currentPage === pageNum ? "default" : "outline"}
                                     size="sm"
                                     onClick={() => setCurrentPage(pageNum)}
-                                    className={`rounded-lg w-9 ${currentPage === pageNum ? 'bg-[#FF5200] hover:bg-[#E04800]' : ''}`}
+                                    className={`rounded-xl h-10 w-10 font-semibold transition-all ${currentPage === pageNum
+                                            ? 'bg-gradient-to-r from-[#FF5200] to-orange-500 hover:from-orange-600 hover:to-[#FF5200] text-white shadow-lg shadow-orange-500/30 border-0'
+                                            : 'border-gray-200 hover:border-[#FF5200] hover:bg-orange-50 hover:text-[#FF5200]'
+                                        }`}
                                 >
                                     {pageNum}
                                 </Button>
@@ -287,7 +290,7 @@ export default function BusinessesPage() {
                             size="sm"
                             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                             disabled={currentPage === totalPages || totalPages === 0}
-                            className="rounded-lg"
+                            className="rounded-xl h-10 w-10 border-gray-200 hover:border-[#FF5200] hover:bg-orange-50 hover:text-[#FF5200] disabled:opacity-40"
                         >
                             <ChevronRight className="h-4 w-4" />
                         </Button>
