@@ -13,7 +13,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search, Loader2, Eye, Trash2, CheckCircle, XCircle, MapPin, Phone } from 'lucide-react'
+import { Search, Loader2, Eye, Trash2, CheckCircle, XCircle, MapPin, Phone, ChevronLeft, ChevronRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { AdminPageTransition } from '@/components/admin/AdminPageTransition'
 import Link from 'next/link'
@@ -28,10 +28,14 @@ interface Business {
     slug: string
 }
 
+const ITEMS_PER_PAGE = 10
+
 export default function BusinessesPage() {
     const [businesses, setBusinesses] = useState<Business[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
+    const [currentPage, setCurrentPage] = useState(1)
+    const [updating, setUpdating] = useState<string | null>(null)
     const supabase = createClient()
 
     useEffect(() => {
@@ -47,6 +51,7 @@ export default function BusinessesPage() {
 
         if (error) {
             toast.error('Failed to load businesses')
+            console.error('Fetch error:', error)
         } else {
             setBusinesses(data || [])
         }
@@ -54,23 +59,66 @@ export default function BusinessesPage() {
     }
 
     const toggleVerification = async (id: string, currentStatus: boolean) => {
-        const { error } = await (supabase as any)
-            .from('providers')
-            .update({ is_verified: !currentStatus })
-            .eq('id', id)
+        setUpdating(id)
+        try {
+            const { data, error } = await (supabase as any)
+                .from('providers')
+                .update({ is_verified: !currentStatus })
+                .eq('id', id)
+                .select()
 
-        if (error) {
-            toast.error('Failed to update status')
-        } else {
-            toast.success(`Business ${!currentStatus ? 'verified' : 'unverified'}`)
-            fetchBusinesses()
+            if (error) {
+                console.error('Update error:', error)
+                toast.error('Failed to update: ' + error.message)
+            } else {
+                // Update local state immediately
+                setBusinesses(prev => prev.map(b =>
+                    b.id === id ? { ...b, is_verified: !currentStatus } : b
+                ))
+                toast.success(`Business ${!currentStatus ? 'verified' : 'unverified'} successfully!`)
+            }
+        } catch (err: any) {
+            console.error('Toggle error:', err)
+            toast.error('An error occurred')
+        } finally {
+            setUpdating(null)
         }
     }
 
+    const deleteBusiness = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this business?')) return
+
+        try {
+            const { error } = await (supabase as any)
+                .from('providers')
+                .delete()
+                .eq('id', id)
+
+            if (error) {
+                toast.error('Failed to delete: ' + error.message)
+            } else {
+                setBusinesses(prev => prev.filter(b => b.id !== id))
+                toast.success('Business deleted successfully!')
+            }
+        } catch (err) {
+            toast.error('An error occurred')
+        }
+    }
+
+    // Filter and paginate
     const filteredBusinesses = businesses.filter(b =>
         b.business_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         b.city?.toLowerCase().includes(searchQuery.toLowerCase())
     )
+
+    const totalPages = Math.ceil(filteredBusinesses.length / ITEMS_PER_PAGE)
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+    const paginatedBusinesses = filteredBusinesses.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+
+    // Reset to page 1 when search changes
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchQuery])
 
     return (
         <AdminPageTransition>
@@ -110,14 +158,14 @@ export default function BusinessesPage() {
                                         <Loader2 className="h-6 w-6 animate-spin text-[#FF5200] mx-auto" />
                                     </TableCell>
                                 </TableRow>
-                            ) : filteredBusinesses.length === 0 ? (
+                            ) : paginatedBusinesses.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
                                         No businesses found.
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                filteredBusinesses.map((business) => (
+                                paginatedBusinesses.map((business) => (
                                     <TableRow key={business.id} className="hover:bg-orange-50/30 transition-colors border-gray-50 group">
                                         <TableCell>
                                             <span className="font-semibold text-gray-900 group-hover:text-[#FF5200] transition-colors">
@@ -158,7 +206,7 @@ export default function BusinessesPage() {
                                             </span>
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex justify-end gap-1">
                                                 <Link href={`/business/${business.slug}`} target="_blank">
                                                     <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg">
                                                         <Eye className="h-4 w-4" />
@@ -169,10 +217,22 @@ export default function BusinessesPage() {
                                                     size="icon"
                                                     className={`h-8 w-8 rounded-lg ${business.is_verified ? 'text-yellow-500 hover:bg-yellow-50' : 'text-green-500 hover:bg-green-50'}`}
                                                     onClick={() => toggleVerification(business.id, business.is_verified)}
+                                                    disabled={updating === business.id}
                                                 >
-                                                    {business.is_verified ? <XCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
+                                                    {updating === business.id ? (
+                                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                                    ) : business.is_verified ? (
+                                                        <XCircle className="h-4 w-4" />
+                                                    ) : (
+                                                        <CheckCircle className="h-4 w-4" />
+                                                    )}
                                                 </Button>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-8 w-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                                                    onClick={() => deleteBusiness(business.id)}
+                                                >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
                                             </div>
@@ -183,9 +243,55 @@ export default function BusinessesPage() {
                         </TableBody>
                     </Table>
                 </div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
-                    <span>Showing {filteredBusinesses.length} businesses</span>
-                    <span>Sorted by newest first</span>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-between px-1">
+                    <span className="text-sm text-gray-500">
+                        Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, filteredBusinesses.length)} of {filteredBusinesses.length}
+                    </span>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="rounded-lg"
+                        >
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                            let pageNum
+                            if (totalPages <= 5) {
+                                pageNum = i + 1
+                            } else if (currentPage <= 3) {
+                                pageNum = i + 1
+                            } else if (currentPage >= totalPages - 2) {
+                                pageNum = totalPages - 4 + i
+                            } else {
+                                pageNum = currentPage - 2 + i
+                            }
+                            return (
+                                <Button
+                                    key={pageNum}
+                                    variant={currentPage === pageNum ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setCurrentPage(pageNum)}
+                                    className={`rounded-lg w-9 ${currentPage === pageNum ? 'bg-[#FF5200] hover:bg-[#E04800]' : ''}`}
+                                >
+                                    {pageNum}
+                                </Button>
+                            )
+                        })}
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                            className="rounded-lg"
+                        >
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                    </div>
                 </div>
             </div>
         </AdminPageTransition>
