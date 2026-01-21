@@ -22,7 +22,7 @@ export default async function EnquiriesPage({ params }: EnquiriesPageProps) {
     }
 
     // Get provider details and verify ownership
-    const { data: provider, error } = await supabase
+    const { data: provider, error } = await (supabase as any)
         .from('providers')
         .select('id, business_name, user_id')
         .eq('id', id)
