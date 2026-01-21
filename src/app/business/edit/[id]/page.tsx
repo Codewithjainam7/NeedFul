@@ -30,7 +30,9 @@ export default async function EditBusinessPage({ params }: { params: { id: strin
     }
 
     // 3. Verify Ownership
-    if (provider.user_id !== user.id) {
+    // TYPE FIX: Explicitly cast provider to handle 'never' inference
+    const providerData = provider as { user_id: string };
+    if (providerData.user_id !== user.id) {
         // Prevent unauthorized editing
         redirect('/profile')
     }
