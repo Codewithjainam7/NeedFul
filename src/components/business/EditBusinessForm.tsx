@@ -56,14 +56,14 @@ export function EditBusinessForm({ provider, categories }: EditBusinessFormProps
             address: provider.address || '',
             operating_hours: provider.operating_hours || '',
             email: provider.email || '',
-            website: provider.website || '',
-            gst_number: provider.gst_number || '',
-            area: provider.area || '',
-            pricing: provider.pricing || '',
-            tags: provider.tags?.join(', ') || '',
-            social_instagram: provider.social_instagram || '',
-            social_facebook: provider.social_facebook || '',
-            social_twitter: provider.social_twitter || '',
+            website: (provider as any).website || '',
+            gst_number: (provider as any).gst_number || '',
+            area: (provider as any).area || '',
+            pricing: (provider as any).pricing || '',
+            tags: (provider as any).tags?.join(', ') || '',
+            social_instagram: (provider as any).social_instagram || '',
+            social_facebook: (provider as any).social_facebook || '',
+            social_twitter: (provider as any).social_twitter || '',
         }
     })
 
