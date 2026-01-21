@@ -28,7 +28,8 @@ export function BusinessTable({ businesses }: { businesses: Business[] }) {
         setLoadingId(id);
         try {
             const { error } = await supabase
-                .from('providers' as any)
+                .from('providers')
+                // @ts-ignore
                 .update({ status: newStatus })
                 .eq('id', id);
 
