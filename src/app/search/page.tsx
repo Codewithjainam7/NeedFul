@@ -8,6 +8,7 @@ import { Header } from '@/components/layout/Header'
 import { cn } from '@/lib/utils'
 import { Footer } from '@/components/layout/Footer'
 import { ServiceCard, ServiceCardSkeleton } from '@/components/listing/ServiceCard'
+import { WorkerCard } from '@/components/listing/WorkerCard'
 import { FilterSidebar, ActiveFilters } from '@/components/listing/FilterSidebar'
 import { EnquiryForm, RelatedSearches, LocationChips } from '@/components/listing/SidebarWidgets'
 import { Button } from '@/components/ui/button'
@@ -472,12 +473,30 @@ function SearchPageContent() {
                                 <>
                                     {filteredProviders.length > 0 ? (
                                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
-                                            {filteredProviders.map((provider) => (
-                                                <ServiceCard
-                                                    key={provider.id}
-                                                    provider={provider}
-                                                />
-                                            ))}
+                                            {filteredProviders.map((provider) => {
+                                                // Check if category is a "Worker" type
+                                                const workerCategories = ['plumbers', 'electricians', 'carpenters', 'painters', 'ac-repair', 'cleaning', 'salon', 'massage']
+                                                const isWorker = workerCategories.includes(provider.categories?.slug || '')
+
+                                                // Generate mock jobs done count (stable per provider ID)
+                                                const jobsDone = 50 + (provider.id.charCodeAt(0) % 450)
+
+                                                if (isWorker) {
+                                                    return (
+                                                        <WorkerCard
+                                                            key={provider.id}
+                                                            provider={provider}
+                                                            jobsDone={jobsDone}
+                                                        />
+                                                    )
+                                                }
+                                                return (
+                                                    <ServiceCard
+                                                        key={provider.id}
+                                                        provider={provider}
+                                                    />
+                                                )
+                                            })}
                                         </div>
                                     ) : (
                                         <div className="text-center py-16">

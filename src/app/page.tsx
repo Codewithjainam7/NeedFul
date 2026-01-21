@@ -3,6 +3,7 @@ import { Footer } from '@/components/layout/Footer'
 import { HeroSearch } from '@/components/home/HeroSearch'
 import { SuperGrid } from '@/components/home/SuperGrid'
 import { UtilitySections } from '@/components/home/UtilitySections'
+import { ServiceProviders } from '@/components/home/ServiceProviders'
 import { FeaturedCarousel } from '@/components/home/FeaturedProviders'
 import { HowItWorks } from '@/components/home/HowItWorks'
 import { TestimonialsMarquee } from '@/components/home/TestimonialsMarquee'
@@ -41,6 +42,9 @@ export default async function HomePage() {
 
         {/* Utilities & Travel */}
         <UtilitySections />
+
+        {/* Service Providers */}
+        <ServiceProviders />
 
         {/* Community & App */}
         <TestimonialsMarquee />
