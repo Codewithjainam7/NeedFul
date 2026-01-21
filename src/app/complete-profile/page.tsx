@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Phone, MapPin, Loader2, ArrowRight, User } from 'lucide-react'
+import { Phone, MapPin, Loader2, ArrowRight, User, Store } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { AnimatedBackgroundLight, ParticleBackground } from '@/components/auth/AnimatedBackground'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 const cities = [
     'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai',
@@ -25,6 +26,8 @@ export default function CompleteProfilePage() {
     const [user, setUser] = useState<any>(null)
 
     const [formData, setFormData] = useState({
+        accountType: 'user',
+        businessName: '',
         name: '',
         phone: '',
         city: ''
@@ -78,7 +81,9 @@ export default function CompleteProfilePage() {
                 name: formData.name,
                 phone: formData.phone,
                 city: formData.city,
-                profile_completed: true
+                profile_completed: true,
+                business_name: formData.accountType === 'business' ? formData.businessName : undefined,
+                account_type: formData.accountType
             }
         })
 
@@ -140,8 +145,55 @@ export default function CompleteProfilePage() {
                         </div>
                     )}
 
+                    {/* Account Type Toggle */}
+                    <div className="flex justify-center mb-6">
+                        <div className="bg-gray-100 p-1 rounded-full flex relative w-64">
+                            <motion.div
+                                className="absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-full shadow-sm"
+                                initial={false}
+                                animate={{
+                                    x: formData.accountType === 'user' ? 0 : '100%'
+                                }}
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setFormData({ ...formData, accountType: 'user' })}
+                                className={`flex-1 relative z-10 text-sm font-semibold py-2 rounded-full transition-colors duration-200 ${formData.accountType === 'user' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                User
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setFormData({ ...formData, accountType: 'business' })}
+                                className={`flex-1 relative z-10 text-sm font-semibold py-2 rounded-full transition-colors duration-200 ${formData.accountType === 'business' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                Business
+                            </button>
+                        </div>
+                    </div>
+
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* Business Name (Conditionally Rendered) */}
+                        {formData.accountType === 'business' && (
+                            <div>
+                                <Label htmlFor="businessName" className="text-gray-700 font-semibold text-sm">Business Name</Label>
+                                <div className="relative mt-1">
+                                    <Store className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                    <Input
+                                        id="businessName"
+                                        type="text"
+                                        placeholder="Awesome Service Co."
+                                        value={formData.businessName}
+                                        onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                                        className="pl-10 h-11 bg-gray-50/50 border-2 border-gray-100 text-gray-900 placeholder:text-gray-400 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        )}
+
                         <div>
                             <Label htmlFor="name" className="text-gray-700 font-semibold text-sm">Full Name</Label>
                             <div className="relative mt-1">
@@ -205,7 +257,7 @@ export default function CompleteProfilePage() {
                                 <Loader2 className="h-5 w-5 animate-spin" />
                             ) : (
                                 <>
-                                    Get Started
+                                    Complete {formData.accountType === 'business' ? 'Business ' : ''}Profile
                                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                 </>
                             )}

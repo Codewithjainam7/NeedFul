@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, Mail, Lock, User, Phone, Loader2, ArrowRight, CheckCircle, Heart, Zap, Gift, Headphones, MapPin, Sparkles, UserPlus, Scissors, Wrench, Palette, Hammer, Pin } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, Phone, Loader2, ArrowRight, CheckCircle, Heart, Zap, Gift, Headphones, MapPin, Sparkles, UserPlus, Scissors, Wrench, Palette, Hammer, Pin, Store } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,6 +24,8 @@ export default function SignupPage() {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
     const [formData, setFormData] = useState({
+        accountType: 'user',
+        businessName: '',
         name: '',
         email: '',
         phone: '',
@@ -75,7 +77,9 @@ export default function SignupPage() {
                 data: {
                     name: formData.name,
                     phone: formData.phone,
-                    city: formData.city
+                    city: formData.city,
+                    business_name: formData.accountType === 'business' ? formData.businessName : undefined,
+                    account_type: formData.accountType
                 }
             }
         })
@@ -343,6 +347,34 @@ export default function SignupPage() {
                                 <p className="text-gray-500 text-sm mt-1">Fill in your details to get started</p>
                             </div>
 
+                            {/* Account Type Toggle */}
+                            <div className="flex justify-center mb-6">
+                                <div className="bg-gray-100 p-1 rounded-full flex relative w-64">
+                                    <motion.div
+                                        className="absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-full shadow-sm"
+                                        initial={false}
+                                        animate={{
+                                            x: formData.accountType === 'user' ? 0 : '100%'
+                                        }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, accountType: 'user' })}
+                                        className={`flex-1 relative z-10 text-sm font-semibold py-2 rounded-full transition-colors duration-200 ${formData.accountType === 'user' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                                    >
+                                        User
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, accountType: 'business' })}
+                                        className={`flex-1 relative z-10 text-sm font-semibold py-2 rounded-full transition-colors duration-200 ${formData.accountType === 'business' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                                    >
+                                        Business
+                                    </button>
+                                </div>
+                            </div>
+
                             {/* Google Signup Button */}
                             <Button
                                 type="button"
@@ -378,6 +410,30 @@ export default function SignupPage() {
 
                             {/* Signup Form */}
                             <form onSubmit={handleSignup} className="space-y-4">
+                                {/* Business Name (Conditionally Rendered) */}
+                                {formData.accountType === 'business' && (
+                                    <div className="space-y-1.5">
+                                        <Label htmlFor="businessName" className="text-gray-700 font-semibold text-xs">Business Name</Label>
+                                        <div className={`relative transition-all duration-300 ${focusedField === 'businessName' ? 'scale-[1.02]' : ''}`}>
+                                            <div className={`absolute -inset-0.5 bg-gradient-to-r from-orange-400 to-amber-400 rounded-xl blur opacity-0 transition-opacity duration-300 ${focusedField === 'businessName' ? 'opacity-40' : ''}`} />
+                                            <div className="relative">
+                                                <Store className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors duration-300 ${focusedField === 'businessName' ? 'text-orange-500' : 'text-gray-400'}`} />
+                                                <Input
+                                                    id="businessName"
+                                                    type="text"
+                                                    placeholder="Awesome Service Co."
+                                                    value={formData.businessName}
+                                                    onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                                                    onFocus={() => setFocusedField('businessName')}
+                                                    onBlur={() => setFocusedField(null)}
+                                                    className="pl-10 h-11 bg-white border-2 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-500/20 text-sm cursor-pointer"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Name + Email Row */}
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="space-y-1.5">
@@ -530,7 +586,7 @@ export default function SignupPage() {
                                         <Loader2 className="h-5 w-5 animate-spin" />
                                     ) : (
                                         <>
-                                            Create Account
+                                            Create {formData.accountType === 'business' ? 'Business ' : ''}Account
                                             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                                         </>
                                     )}

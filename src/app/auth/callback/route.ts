@@ -13,6 +13,12 @@ export async function GET(request: Request) {
         const { error } = await supabase.auth.exchangeCodeForSession(code)
 
         if (!error) {
+            const { data: { user } } = await supabase.auth.getUser()
+
+            if (user && (!user.user_metadata?.phone || !user.user_metadata?.city)) {
+                return NextResponse.redirect(new URL('/complete-profile', requestUrl.origin))
+            }
+
             return NextResponse.redirect(new URL(next, requestUrl.origin))
         }
     }
