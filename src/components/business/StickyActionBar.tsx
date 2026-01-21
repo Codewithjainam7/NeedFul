@@ -6,9 +6,10 @@ import { toast } from 'sonner'
 
 interface StickyActionBarProps {
     provider: any
+    onBook?: () => void
 }
 
-export function StickyActionBar({ provider }: StickyActionBarProps) {
+export function StickyActionBar({ provider, onBook }: StickyActionBarProps) {
     const handleCall = () => {
         if (provider?.phone) {
             window.location.href = `tel:${provider.phone}`
@@ -43,7 +44,12 @@ export function StickyActionBar({ provider }: StickyActionBarProps) {
                     <MessageCircle className="w-4 h-4 mr-2" />
                     WhatsApp
                 </Button>
-                <Button variant="outline" size="icon" className="h-11 w-11 shrink-0 rounded-xl border-gray-300">
+                <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-11 w-11 shrink-0 rounded-xl border-gray-300"
+                    onClick={onBook}
+                >
                     <Calendar className="w-5 h-5 text-gray-700" />
                 </Button>
             </div>

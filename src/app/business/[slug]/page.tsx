@@ -23,11 +23,14 @@ type ProviderWithDetails = Provider & {
     longitude?: number
 }
 
+import { BookingModal } from '@/components/business/BookingModal'
+
 export default function BusinessDetailPage() {
     const params = useParams()
     const slug = params.slug as string
     const [provider, setProvider] = useState<ProviderWithDetails | null>(null)
     const [loading, setLoading] = useState(true)
+    const [isBookingOpen, setIsBookingOpen] = useState(false)
 
     useEffect(() => {
         if (!slug) return
@@ -130,6 +133,12 @@ export default function BusinessDetailPage() {
                                     <button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-10 rounded-lg flex items-center justify-center gap-2 transition-colors">
                                         WhatsApp
                                     </button>
+                                    <button
+                                        onClick={() => setIsBookingOpen(true)}
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-10 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                                    >
+                                        Check Availability
+                                    </button>
                                 </div>
                             </div>
 
@@ -148,7 +157,12 @@ export default function BusinessDetailPage() {
                 </div>
             </main>
 
-            <StickyActionBar provider={provider} />
+            <StickyActionBar provider={provider} onBook={() => setIsBookingOpen(true)} />
+            <BookingModal
+                isOpen={isBookingOpen}
+                onClose={() => setIsBookingOpen(false)}
+                businessName={provider.business_name}
+            />
             <Footer />
         </div>
     )
