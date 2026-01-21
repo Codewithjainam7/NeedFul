@@ -10,7 +10,8 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ServiceCard } from '@/components/listing/ServiceCard'
-import { User, LogOut, Heart, Settings, Shield, Store } from 'lucide-react'
+import { WorkerCard } from '@/components/listing/WorkerCard'
+import { User, LogOut, Heart, Settings, Shield, Briefcase, Building2, Store } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -333,18 +334,57 @@ export function ProfilePageContent({ favorites: initialFavorites, user, myBusine
                                     </SectionHeading>
 
                                     {favorites.length > 0 ? (
-                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                            {favorites.map(provider => (
-                                                <ServiceCard
-                                                    key={provider.id}
-                                                    provider={provider}
-                                                    isSaved={true}
-                                                    // Optional: Pass a callback if we want to remove it when toggled off
-                                                    // For now, ServiceCard toggles state internally. 
-                                                    // If we want it to vanish:
-                                                    onSave={() => handleUnfavorite(provider.id)}
-                                                />
-                                            ))}
+                                        <div className="space-y-8">
+                                            {/* Logic to split favorites */}
+                                            {(() => {
+                                                const workerCategories = ['plumbers', 'electricians', 'carpenters', 'painters', 'ac-repair', 'cleaning', 'salon', 'massage']
+                                                const workers = favorites.filter(p => workerCategories.includes(p.categories?.slug || ''))
+                                                const businesses = favorites.filter(p => !workerCategories.includes(p.categories?.slug || ''))
+
+                                                return (
+                                                    <>
+                                                        {workers.length > 0 && (
+                                                            <div>
+                                                                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                                                    <Briefcase className="w-5 h-5 text-[#FF5200]" />
+                                                                    Your Favorite Workers
+                                                                </h3>
+                                                                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                                                                    {workers.map(provider => (
+                                                                        <WorkerCard
+                                                                            key={provider.id}
+                                                                            provider={provider}
+                                                                            isSaved={true}
+                                                                            onSave={() => handleUnfavorite(provider.id)}
+                                                                            // Generate mock jobs done count (stable per provider ID)
+                                                                            jobsDone={50 + (provider.id.charCodeAt(0) % 450)}
+                                                                        />
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {businesses.length > 0 && (
+                                                            <div>
+                                                                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                                                    <Building2 className="w-5 h-5 text-[#FF5200]" />
+                                                                    Favorite Businesses
+                                                                </h3>
+                                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                                                    {businesses.map(provider => (
+                                                                        <ServiceCard
+                                                                            key={provider.id}
+                                                                            provider={provider}
+                                                                            isSaved={true}
+                                                                            onSave={() => handleUnfavorite(provider.id)}
+                                                                        />
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                )
+                                            })()}
                                         </div>
                                     ) : (
                                         <Card className="border-0 shadow-sm py-16 text-center">

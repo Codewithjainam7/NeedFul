@@ -474,7 +474,7 @@ function SearchPageContent() {
                             {!loading && !error && (
                                 <>
                                     {filteredProviders.length > 0 ? (
-                                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                                             {filteredProviders.map((provider) => {
                                                 // Check if category is a "Worker" type
                                                 const workerCategories = ['plumbers', 'electricians', 'carpenters', 'painters', 'ac-repair', 'cleaning', 'salon', 'massage']

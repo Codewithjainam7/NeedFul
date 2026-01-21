@@ -72,9 +72,9 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
             }
             // Still call onSave if parent provided it (for list management etc)
             onSave?.(provider.id)
-        } catch (err) {
+        } catch (err: any) {
             setIsFavorited(!newState)
-            toast.error("Failed to update favorite")
+            toast.error(err.message || "Failed to update favorite")
         }
     }
 

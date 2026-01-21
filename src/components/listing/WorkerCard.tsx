@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { MapPin, Star, Heart, Phone, Zap, Briefcase, User, CheckCircle2 } from 'lucide-react'
+import { MapPin, Star, Heart, Phone, Zap, Briefcase, User, CheckCircle2, BadgeCheck } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -42,9 +42,10 @@ export function WorkerCard({ provider, jobsDone = 0, onSave, isSaved = false, cl
             const result = await toggleFavorite(provider.id)
             if (result.error) throw new Error(result.error)
             onSave?.(provider.id)
-        } catch (err) {
+        } catch (err: any) {
             setIsFavorited(!newState)
-            toast.error("Failed to update favorite")
+            // Show the actual error message from the server
+            toast.error(err.message || "Failed to update favorite")
         }
     }
 
@@ -65,106 +66,95 @@ export function WorkerCard({ provider, jobsDone = 0, onSave, isSaved = false, cl
         <Card
             onClick={handleCardClick}
             className={cn(
-                'group bg-white shadow-sm hover:shadow-md transition-all duration-300 rounded-xl cursor-pointer border border-gray-100 overflow-hidden relative',
+                'group bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 rounded-2xl cursor-pointer border border-gray-100 overflow-hidden relative',
                 className
             )}
         >
-            {/* Top Pattern / Banner Effect (Optional, subtle background) */}
-            <div className="h-16 bg-gradient-to-r from-orange-50 to-orange-100/50 absolute top-0 w-full z-0" />
+            <div className="p-5 relative z-10 flex flex-col gap-4 items-start">
 
-            <div className="p-4 relative z-10 flex flex-col md:flex-row gap-4 items-start md:items-center">
-
-                {/* Profile Avatar Section */}
-                <div className="flex-shrink-0 mx-auto md:mx-0 relative">
-                    <div className="w-24 h-24 md:w-20 md:h-20 rounded-full border-4 border-white shadow-sm overflow-hidden bg-gray-100 relative">
-                        {profileImage ? (
-                            <Image
-                                src={profileImage.url}
-                                alt={provider.business_name}
-                                fill
-                                className="object-cover"
-                                unoptimized
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                <User className="w-10 h-10" />
-                            </div>
-                        )}
-                    </div>
-                    {/* Verified Badge Absolute */}
-                    {provider.is_verified && (
-                        <div className="absolute bottom-0 right-0 bg-white rounded-full p-0.5 shadow-sm">
-                            <CheckCircle2 className="w-5 h-5 text-blue-500 fill-white" />
-                        </div>
-                    )}
-                </div>
-
-                {/* Content Section */}
-                <div className="flex-1 min-w-0 text-center md:text-left w-full">
-                    <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                            <h3 className="font-bold text-lg text-gray-900 group-hover:text-[#FF5200] transition-colors truncate">
-                                {provider.business_name}
-                            </h3>
-                            <p className="text-xs text-gray-500 font-medium mb-2 flex items-center justify-center md:justify-start gap-1">
-                                {provider.categories?.name}
-                                <span className="w-1 h-1 rounded-full bg-gray-300" />
-                                <MapPin className="w-3 h-3" /> {provider.city || 'Mumbai'}
-                            </p>
-                        </div>
-
-                        {/* Favorite Pulse */}
-                        <button onClick={handleFavorite} className="absolute top-4 right-4 md:static md:p-1 hover:bg-gray-50 rounded-full transition-colors">
-                            <Heart className={cn("w-5 h-5", isFavorited ? "fill-red-500 text-red-500" : "text-gray-300")} />
-                        </button>
-                    </div>
-
-                    {/* Trust Stats Row */}
-                    <div className="flex items-center justify-center md:justify-start gap-4 my-3 text-xs">
-                        <div className="flex flex-col items-center md:items-start group/stat">
-                            <div className="flex items-center gap-1 font-bold text-gray-800 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
-                                {provider.rating} <Star className="w-3 h-3 fill-green-600 text-green-600" />
-                            </div>
-                            <span className="text-[10px] text-gray-400 mt-0.5">Rating</span>
-                        </div>
-
-                        <div className="w-px h-6 bg-gray-100" />
-
-                        <div className="flex flex-col items-center md:items-start">
-                            <span className="font-bold text-gray-800">{jobsDone > 0 ? `${jobsDone}+` : 'New'}</span>
-                            <span className="text-[10px] text-gray-400 mt-0.5">Jobs Done</span>
-                        </div>
-
-                        <div className="w-px h-6 bg-gray-100" />
-
-                        <div className="flex flex-col items-center md:items-start">
-                            <span className="font-bold text-gray-800">{provider.experience_years || 2}+ Yrs</span>
-                            <span className="text-[10px] text-gray-400 mt-0.5">Experience</span>
-                        </div>
-                    </div>
-
-                    {/* Action Row */}
-                    <div className="flex items-center justify-center md:justify-start gap-2 mt-2">
-                        <Button
-                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                            className="h-8 text-xs font-bold bg-[#FF5200] hover:bg-[#E04800] rounded-full px-5"
-                        >
-                            Book Now
-                        </Button>
-                        <Button
-                            variant="outline"
-                            onClick={handleShowNumber}
-                            className={cn(
-                                "h-8 text-xs font-semibold rounded-full border-gray-200 px-4",
-                                showNumber && "bg-gray-50 text-gray-900"
+                {/* Header: Avatar + Info */}
+                <div className="flex w-full gap-4 items-start">
+                    <div className="flex-shrink-0 relative">
+                        <div className="w-16 h-16 rounded-full border-[3px] border-white shadow-md overflow-hidden bg-gray-50 relative ring-1 ring-gray-100">
+                            {profileImage ? (
+                                <Image
+                                    src={profileImage.url}
+                                    alt={provider.business_name}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                    unoptimized
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                    <User className="w-8 h-8" />
+                                </div>
                             )}
-                        >
-                            <Phone className="w-3 h-3 mr-1.5" />
-                            {showNumber ? provider.phone : 'Call'}
-                        </Button>
+                        </div>
                     </div>
 
+                    <div className="flex-1 min-w-0 pt-1">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h3 className="font-bold text-lg text-gray-900 group-hover:text-[#FF5200] transition-colors truncate flex items-center gap-1.5">
+                                    {provider.business_name}
+                                    {provider.is_verified && (
+                                        <BadgeCheck className="w-5 h-5 text-blue-500 fill-blue-500 text-white" />
+                                    )}
+                                </h3>
+                                <p className="text-sm text-gray-500 font-medium flex items-center gap-1.5 mt-1">
+                                    <span className="text-gray-900 font-semibold">{provider.categories?.name}</span>
+                                    <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                    <span className="flex items-center gap-0.5"><MapPin className="w-3.5 h-3.5 text-gray-400" /> {provider.city || 'Mumbai'}</span>
+                                </p>
+                            </div>
+                            <button onClick={handleFavorite} className="p-2 -mr-2 -mt-2 hover:bg-red-50 rounded-full transition-colors group/heart">
+                                <Heart className={cn("w-5 h-5 transition-transform group-hover/heart:scale-110", isFavorited ? "fill-red-500 text-red-500" : "text-gray-300")} />
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
+                {/* Trust Stats Row - Full Width */}
+                <div className="w-full grid grid-cols-3 gap-2 py-3 border-y border-gray-50">
+                    <div className="flex flex-col items-center justify-center border-r border-gray-50 last:border-0">
+                        <div className="flex items-center gap-1.5 font-bold text-white bg-[#0F9D58] px-2.5 py-0.5 rounded-[6px] text-xs shadow-sm">
+                            {provider.rating} <Star className="w-3 h-3 fill-white text-white" />
+                        </div>
+                        <span className="text-[10px] text-gray-400 mt-1.5 font-medium tracking-wide uppercase">Rating</span>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center border-r border-gray-50 last:border-0">
+                        <span className="font-bold text-gray-900 text-sm">{jobsDone > 0 ? `${jobsDone}+` : 'New'}</span>
+                        <span className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide uppercase">Jobs</span>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center">
+                        <span className="font-bold text-gray-900 text-sm">5+ Yrs</span>
+                        <span className="text-[10px] text-gray-400 mt-1 font-medium tracking-wide uppercase">Exp</span>
+                    </div>
+                </div>
+
+                {/* Action Row */}
+                <div className="flex w-full gap-3 mt-1">
+                    <Button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        className="flex-1 h-10 text-sm font-bold bg-[#FF5200] hover:bg-[#E04800] text-white rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95"
+                    >
+                        Book Now
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={handleShowNumber}
+                        className={cn(
+                            "h-10 w-12 flex-shrink-0 rounded-xl border-gray-200 hover:bg-gray-50 hover:text-gray-900 text-gray-700 transition-all p-0 flex items-center justify-center",
+                            showNumber && "w-auto px-4 bg-gray-100 text-gray-900 border-gray-300"
+                        )}
+                    >
+                        <Phone className={cn("w-4 h-4", showNumber && "mr-2")} />
+                        {showNumber && provider.phone}
+                    </Button>
+                </div>
+
             </div>
         </Card>
     )
