@@ -25,7 +25,10 @@ export default async function AdminLayout({
         .eq('id', session.user.id)
         .single();
 
-    if (!userProfile || userProfile.role !== 'admin') {
+    // Type assertion to fix build error
+    const profile = userProfile as { role: string } | null;
+
+    if (!profile || profile.role !== 'admin') {
         // Optionally redirect to a "unauthorized" page or just home
         redirect('/');
     }
