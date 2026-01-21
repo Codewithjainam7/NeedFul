@@ -1,4 +1,4 @@
--- Seed data for providers and users
+ -- Seed data for providers and users
 
 SET session_replication_role = 'replica';
 

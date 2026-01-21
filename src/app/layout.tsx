@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
-import { AIChatbox } from '@/components/chat/AIChatbox'
 import { AnimatedBackground } from '@/components/layout/AnimatedBackground'
 import { ClientBootAnimation } from '@/components/layout/ClientBootAnimation'
 
@@ -47,7 +46,6 @@ export default function RootLayout({
         <AnimatedBackground />
 
         {children}
-        <AIChatbox />
         <Toaster position="top-right" />
       </body>
     </html>
