@@ -14,11 +14,56 @@ export default async function BlogPage() {
         userData = data
     }
 
-    // Mock Posts
+    // Blog Posts with real images
     const posts = [
-        { title: "10 Tips for Home Maintenance", category: "Home Care", date: "Jan 12, 2026", bg: "bg-orange-50" },
-        { title: "How to Choose the Right Electrician", category: "Expert Advice", date: "Jan 08, 2026", bg: "bg-blue-50" },
-        { title: "Top Wedding Venues in Mumbai", category: "Events", date: "Jan 05, 2026", bg: "bg-pink-50" },
+        {
+            slug: "home-maintenance-tips",
+            title: "10 Tips for Home Maintenance",
+            category: "Home Care",
+            date: "Jan 12, 2026",
+            image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=800&auto=format&fit=crop",
+            excerpt: "Keep your home in top shape with these essential maintenance tips that every homeowner should know."
+        },
+        {
+            slug: "choose-right-electrician",
+            title: "How to Choose the Right Electrician",
+            category: "Expert Advice",
+            date: "Jan 08, 2026",
+            image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=800&auto=format&fit=crop",
+            excerpt: "Finding a qualified electrician doesn't have to be daunting. Here's your complete guide to hiring the best."
+        },
+        {
+            slug: "wedding-venues-mumbai",
+            title: "Top Wedding Venues in Mumbai",
+            category: "Events",
+            date: "Jan 05, 2026",
+            image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
+            excerpt: "Discover the most stunning wedding venues in Mumbai for your dream celebration."
+        },
+        {
+            slug: "plumbing-emergency-guide",
+            title: "What to Do in a Plumbing Emergency",
+            category: "Home Care",
+            date: "Jan 02, 2026",
+            image: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=800&auto=format&fit=crop",
+            excerpt: "Learn how to handle common plumbing emergencies before the professionals arrive."
+        },
+        {
+            slug: "ac-maintenance-summer",
+            title: "Preparing Your AC for Summer",
+            category: "Seasonal Tips",
+            date: "Dec 28, 2025",
+            image: "https://images.unsplash.com/photo-1631545806609-35d4ae440431?q=80&w=800&auto=format&fit=crop",
+            excerpt: "Essential maintenance tips to ensure your air conditioning runs efficiently all summer long."
+        },
+        {
+            slug: "best-restaurants-bangalore",
+            title: "Best Restaurants in Bangalore 2026",
+            category: "Food & Dining",
+            date: "Dec 20, 2025",
+            image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
+            excerpt: "Our curated list of the best restaurants in Bangalore for every occasion and cuisine."
+        },
     ]
 
     return (
@@ -44,33 +89,33 @@ export default async function BlogPage() {
 
                     <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         {posts.map((post, idx) => (
-                            <article key={idx} className="group cursor-pointer">
-                                <div className={`aspect-[4/3] rounded-3xl ${post.bg} mb-6 overflow-hidden relative`}>
-                                    {/* Placeholder for real image */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-medium opacity-50">
-                                        Image Placeholder
+                            <Link href={`/blog/${post.slug}`} key={idx}>
+                                <article className="group cursor-pointer bg-white rounded-3xl overflow-hidden shadow-lg shadow-gray-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                    <div className="aspect-[4/3] overflow-hidden relative">
+                                        <img
+                                            src={post.image}
+                                            alt={post.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                        <div className="absolute top-4 left-4">
+                                            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-[#FF5200] text-xs font-bold rounded-full">
+                                                {post.category}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
-                                </div>
-                                <div className="flex items-center gap-3 text-sm font-medium mb-3">
-                                    <span className="text-[#FF5200]">{post.category}</span>
-                                    <span className="text-gray-300">•</span>
-                                    <span className="text-gray-500">{post.date}</span>
-                                </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-[#FF5200] transition-colors">
-                                    {post.title}
-                                </h3>
-                                <div className="flex items-center gap-2 text-gray-500 font-medium group-hover:gap-3 transition-all">
-                                    Read Article <ArrowRight className="w-4 h-4" />
-                                </div>
-                            </article>
+                                    <div className="p-6">
+                                        <div className="text-sm text-gray-400 mb-2">{post.date}</div>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#FF5200] transition-colors line-clamp-2">
+                                            {post.title}
+                                        </h3>
+                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{post.excerpt}</p>
+                                        <div className="flex items-center gap-2 text-[#FF5200] font-bold text-sm group-hover:gap-3 transition-all">
+                                            Read More <ArrowRight className="w-4 h-4" />
+                                        </div>
+                                    </div>
+                                </article>
+                            </Link>
                         ))}
-                    </div>
-
-                    <div className="mt-16 text-center">
-                        <div className="inline-block px-8 py-4 bg-gray-50 rounded-full text-gray-500 font-medium border border-gray-100">
-                            More articles coming soon...
-                        </div>
                     </div>
                 </div>
             </main>
