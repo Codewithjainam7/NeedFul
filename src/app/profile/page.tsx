@@ -15,10 +15,22 @@ export default async function ProfilePage() {
 
     const favorites = await getFavorites() as ProviderWithDetails[]
 
+    // Fetch user's own provider listings
+    const { data: myBusiness } = await supabase
+        .from('providers')
+        .select(`
+            *,
+            categories (*),
+            services (*),
+            provider_images (*)
+        `)
+        .eq('user_id', user.id)
+
     return (
         <ProfilePageContent
             user={user}
             favorites={favorites}
+            myBusiness={myBusiness as ProviderWithDetails[] | null}
         />
     )
 }

@@ -26,14 +26,14 @@ const cities = ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pune", 
 
 // Hardcoded IDs to ensure consistency
 const categories = [
-    { name: 'Plumber', slug: 'plumbers', icon: 'Wrench', id: 'c101-plumber' },
-    { name: 'Electrician', slug: 'electricians', icon: 'Zap', id: 'c102-electrician' },
-    { name: 'Carpenter', slug: 'carpenters', icon: 'Hammer', id: 'c103-carpenter' },
-    { name: 'Painter', slug: 'painters', icon: 'Paintbrush', id: 'c104-painter' },
-    { name: 'AC Repair', slug: 'ac-repair', icon: 'Armchair', id: 'c105-ac-repair' },
-    { name: 'Cleaning', slug: 'cleaning', icon: 'Shirt', id: 'c106-cleaning' },
-    { name: 'Salon', slug: 'salon', icon: 'Scissors', id: 'c107-salon' },
-    { name: 'Massage', slug: 'massage', icon: 'Smile', id: 'c108-massage' } 
+    { name: 'Plumber', slug: 'plumbers', icon: 'Wrench', id: '10000000-0000-0000-0000-000000000101' },
+    { name: 'Electrician', slug: 'electricians', icon: 'Zap', id: '10000000-0000-0000-0000-000000000102' },
+    { name: 'Carpenter', slug: 'carpenters', icon: 'Hammer', id: '10000000-0000-0000-0000-000000000103' },
+    { name: 'Painter', slug: 'painters', icon: 'Paintbrush', id: '10000000-0000-0000-0000-000000000104' },
+    { name: 'AC Repair', slug: 'ac-repair', icon: 'Armchair', id: '10000000-0000-0000-0000-000000000105' },
+    { name: 'Cleaning', slug: 'cleaning', icon: 'Shirt', id: '10000000-0000-0000-0000-000000000106' },
+    { name: 'Salon', slug: 'salon', icon: 'Scissors', id: '10000000-0000-0000-0000-000000000107' },
+    { name: 'Massage', slug: 'massage', icon: 'Smile', id: '10000000-0000-0000-0000-000000000108' }
 ];
 
 function getRandomItem(arr) {
@@ -54,21 +54,33 @@ function seed() {
 
     // 1. Categories
     sqlContent += `-- Categories\n`;
+
+    // Delete existing categories with these slugs to force insertion with correct UUIDs
+    const slugs = categories.map(c => `'${c.slug}'`).join(', ');
+    sqlContent += `DELETE FROM public.categories WHERE slug IN (${slugs});\n\n`;
+
     sqlContent += `INSERT INTO public.categories (id, name, slug, icon, display_order) VALUES\n`;
-    const catValues = categories.map((cat, idx) => 
+    const catValues = categories.map((cat, idx) =>
         `('${cat.id}', '${cat.name}', '${cat.slug}', '${cat.icon}', ${idx + 1})`
     ).join(',\n');
+
     sqlContent += catValues + `\nON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name;\n\n`;
+
+    // Dummy User ID
+    const dummyUserId = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
+
+    // Insert into auth.users to satisfy FK constraint and trigger public.users creation
+    sqlContent += `-- Ensure Dummy Auth User Exists\n`;
+    sqlContent += `INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, recovery_sent_at, last_sign_in_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+VALUES ('${dummyUserId}', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'mock_provider@example.com', '$2a$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0123456789', NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"name": "Mock Provider"}', NOW(), NOW(), '', '', '', '')
+ON CONFLICT (id) DO NOTHING;\n\n`;
+
+    sqlContent += `-- Ensure Dummy User Exists (in case trigger didn't run or we need to update)\n`;
+    sqlContent += `INSERT INTO public.users (id, email, role, created_at) \nVALUES ('${dummyUserId}', 'mock_provider@example.com', 'provider', NOW()) \nON CONFLICT (id) DO UPDATE SET role = 'provider';\n\n`;
 
     // 2. Providers
     sqlContent += `-- Providers\n`;
     sqlContent += `INSERT INTO public.providers (id, user_id, business_name, slug, description, address, city, phone, whatsapp, email, category_id, is_verified, is_responsive, is_available, operating_hours, rating, review_count, views, created_at) VALUES\n`;
-    
-    // Dummy User ID
-    const dummyUserId = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
-    
-    sqlContent += `-- Ensure Dummy User Exists\n`;
-    sqlContent += `INSERT INTO public.users (id, email, role, created_at) \nVALUES ('${dummyUserId}', 'mock_provider@example.com', 'provider', NOW()) \nON CONFLICT (id) DO NOTHING;\n\n`;
 
     const providerValues = [];
     const imageValues = [];
@@ -82,16 +94,16 @@ function seed() {
         const cat = getRandomItem(categories);
         const city = getRandomItem(cities);
         const providerId = crypto.randomUUID();
-        
+
         const isVerified = Math.random() > 0.2;
         const isResponsive = Math.random() > 0.3;
-        
-        const slug = `${firstName.toLowerCase()}-${lastName.toLowerCase()}-${Math.floor(Math.random()*1000)}`;
+
+        const slug = `${firstName.toLowerCase()}-${lastName.toLowerCase()}-${Math.floor(Math.random() * 1000)}`;
         const description = `Professional ${cat.name} with over ${Math.floor(Math.random() * 10) + 2} years of experience. Specializing in all kinds of ${cat.name} works. Reliable and affordable.`.replace(/'/g, "''");
         const address = `${Math.floor(Math.random() * 100) + 1}, ${getRandomItem(['Main Road', 'Market', 'Colony', 'Nagar', 'Street'])}`;
         const phone = generatePhone();
-        const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}.${Math.floor(Math.random()*1000)}@example.com`;
-        
+        const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}.${Math.floor(Math.random() * 1000)}@example.com`;
+
         providerValues.push(
             `('${providerId}', '${dummyUserId}', '${escapeSql(fullName)}', '${slug}', '${escapeSql(description)}', '${escapeSql(address)}', '${city}', '${phone}', '${phone}', '${email}', '${cat.id}', ${isVerified}, ${isResponsive}, true, '9:00 AM - 8:00 PM', ${parseFloat((Math.random() * (5.0 - 3.5) + 3.5).toFixed(1))}, ${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 1000)}, NOW())`
         );
@@ -99,7 +111,7 @@ function seed() {
         // Images
         const numImages = Math.floor(Math.random() * 3) + 1;
         for (let j = 0; j < numImages; j++) {
-            const imgId = Math.floor(Math.random() * 70); 
+            const imgId = Math.floor(Math.random() * 70);
             imageValues.push(
                 `('${crypto.randomUUID()}', '${providerId}', 'https://i.pravatar.cc/300?img=${imgId + j}', ${j}, ${j === 0})`
             );

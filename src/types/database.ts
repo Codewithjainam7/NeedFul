@@ -73,7 +73,7 @@ export type Database = {
                     phone: string | null
                     whatsapp: string | null
                     email: string | null
-                    category_id: string
+                    category_id: string | null
                     is_verified: boolean
                     is_responsive: boolean
                     is_available: boolean
@@ -94,7 +94,7 @@ export type Database = {
                     phone?: string | null
                     whatsapp?: string | null
                     email?: string | null
-                    category_id: string
+                    category_id?: string | null
                     is_verified?: boolean
                     is_responsive?: boolean
                     is_available?: boolean

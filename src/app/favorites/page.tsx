@@ -133,7 +133,7 @@ export default async function FavoritesPage() {
                                 Save service providers you like to easily find them later.
                             </p>
                             <Link href="/search">
-                                <Button className="bg-primary hover:bg-primary/90">
+                                <Button className="bg-primary hover:bg-primary/90 w-fit px-6">
                                     Explore Services
                                 </Button>
                             </Link>

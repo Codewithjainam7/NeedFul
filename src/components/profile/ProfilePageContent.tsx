@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ServiceCard } from '@/components/listing/ServiceCard'
 import { WorkerCard } from '@/components/listing/WorkerCard'
-import { User, LogOut, Heart, Settings, Shield, Briefcase, Building2 } from 'lucide-react'
+import { User, LogOut, Heart, Settings, Shield, Briefcase, Building2, Store } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -20,14 +20,15 @@ import type { ProviderWithDetails } from '@/types/database'
 interface ProfilePageContentProps {
     favorites: ProviderWithDetails[]
     user: any // Supabase user object
+    myBusiness: ProviderWithDetails[] | null
 }
 
-export function ProfilePageContent({ favorites: initialFavorites, user }: ProfilePageContentProps) {
+export function ProfilePageContent({ favorites: initialFavorites, user, myBusiness }: ProfilePageContentProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
 
     // Determine default tab from URL
-    const defaultTab = searchParams.get('tab') === 'favorites' ? 'favorites' : 'profile'
+    const defaultTab = searchParams.get('tab') || 'profile'
 
     const [favorites, setFavorites] = useState<ProviderWithDetails[]>(initialFavorites)
     const [isLoading, setIsLoading] = useState(false)
@@ -37,6 +38,8 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
     const [phone, setPhone] = useState(user?.user_metadata?.phone || '')
     const [city, setCity] = useState(user?.user_metadata?.city || 'Mumbai')
     const [isSaving, setIsSaving] = useState(false)
+
+    const isProfileIncomplete = !user?.user_metadata?.profile_completed
 
     // Handle profile save
     const handleSaveProfile = async () => {
@@ -101,6 +104,23 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
                 />
 
                 <div className="container mx-auto px-4 pt-32 pb-8 relative z-10">
+
+                    {/* Incomplete Profile Warning */}
+                    {isProfileIncomplete && (
+                        <div className="mb-8 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-xl shadow-sm flex items-center justify-between animate-in slide-in-from-top-4 duration-500">
+                            <div>
+                                <h3 className="font-bold text-amber-800">Complete your profile</h3>
+                                <p className="text-sm text-amber-700">Add your phone number and city to get better recommendations.</p>
+                            </div>
+                            <Button
+                                onClick={() => router.push('/complete-profile')}
+                                className="bg-amber-500 hover:bg-amber-600 text-white"
+                            >
+                                Complete Now
+                            </Button>
+                        </div>
+                    )}
+
                     <div className="flex flex-col md:flex-row gap-8 items-start">
 
                         {/* Sidebar / User Card */}
@@ -150,8 +170,10 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
                                             <p className="text-xs text-gray-500">Favorites</p>
                                         </div>
                                         <div className="text-center">
-                                            <p className="text-2xl font-bold text-gray-900">0</p>
-                                            <p className="text-xs text-gray-500">Reviews</p>
+                                            <p className="text-2xl font-bold text-gray-900">
+                                                {myBusiness?.length || 0}
+                                            </p>
+                                            <p className="text-xs text-gray-500">Listings</p>
                                         </div>
                                     </div>
                                 </div>
@@ -168,6 +190,20 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
                                         </div>
                                         Personal Information
                                     </button>
+
+                                    {/* My Business Tab */}
+                                    {myBusiness && myBusiness.length > 0 && (
+                                        <button
+                                            onClick={() => router.push('/profile?tab=business')}
+                                            className={`w-full text-left px-5 py-4 flex items-center gap-4 transition-all cursor-pointer ${defaultTab === 'business' ? 'text-[#FF5200] bg-orange-50 border-l-4 border-[#FF5200]' : 'text-gray-700 hover:bg-gray-50 border-l-4 border-transparent'}`}
+                                        >
+                                            <div className={`p-2 rounded-lg ${defaultTab === 'business' ? 'bg-orange-100' : 'bg-gray-100'}`}>
+                                                <Store className={`h-4 w-4 ${defaultTab === 'business' ? 'text-[#FF5200]' : 'text-gray-500'}`} />
+                                            </div>
+                                            My Business
+                                        </button>
+                                    )}
+
                                     <button
                                         onClick={() => router.push('/profile?tab=favorites')}
                                         className={`w-full text-left px-5 py-4 flex items-center gap-4 transition-all cursor-pointer ${defaultTab === 'favorites' ? 'text-[#FF5200] bg-orange-50 border-l-4 border-[#FF5200]' : 'text-gray-700 hover:bg-gray-50 border-l-4 border-transparent'}`}
@@ -261,6 +297,34 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
                                             </div>
                                         </CardContent>
                                     </Card>
+                                </TabsContent>
+
+                                <TabsContent value="business" className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                    <SectionHeading subtitle="Manage your business listings and services.">
+                                        My Business Listings
+                                    </SectionHeading>
+
+                                    {myBusiness && myBusiness.length > 0 ? (
+                                        <div className="grid grid-cols-1 gap-6">
+                                            {myBusiness.map(provider => (
+                                                <ServiceCard
+                                                    key={provider.id}
+                                                    provider={provider}
+                                                    isSaved={false} // Can't save your own
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <Card className="border-0 shadow-sm py-16 text-center">
+                                            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <Store className="h-8 w-8 text-gray-400" />
+                                            </div>
+                                            <h3 className="text-lg font-bold text-gray-900 mb-2">No business listings found</h3>
+                                            <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+                                                If you are a service provider, complete your profile to get listed.
+                                            </p>
+                                        </Card>
+                                    )}
                                 </TabsContent>
 
                                 <TabsContent value="favorites" className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">

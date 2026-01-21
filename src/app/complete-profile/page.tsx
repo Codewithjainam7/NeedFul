@@ -65,6 +65,14 @@ export default function CompleteProfilePage() {
         setCheckingAuth(false)
     }
 
+    const generateSlug = (name: string) => {
+        return name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)+/g, '') +
+            '-' + Math.floor(Math.random() * 1000)
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
@@ -73,28 +81,74 @@ export default function CompleteProfilePage() {
             return
         }
 
-        setLoading(true)
-
-        const supabase = createClient()
-        const { error } = await supabase.auth.updateUser({
-            data: {
-                name: formData.name,
-                phone: formData.phone,
-                city: formData.city,
-                profile_completed: true,
-                business_name: formData.accountType === 'business' ? formData.businessName : undefined,
-                account_type: formData.accountType
-            }
-        })
-
-        if (error) {
-            toast.error(error.message)
-            setLoading(false)
+        if (formData.accountType === 'business' && !formData.businessName) {
+            toast.error('Please enter your business name')
             return
         }
 
-        toast.success('Profile completed!')
-        router.push('/')
+        setLoading(true)
+
+        const supabase = createClient()
+
+        try {
+            // 1. Update User Profile
+            const { error: userError } = await supabase.auth.updateUser({
+                data: {
+                    name: formData.name,
+                    phone: formData.phone,
+                    city: formData.city,
+                    profile_completed: true,
+                    // Store business name in metadata too for easy access
+                    business_name: formData.accountType === 'business' ? formData.businessName : undefined,
+                    account_type: formData.accountType
+                }
+            })
+
+            if (userError) throw userError
+
+            // 2. If Business, Create Provider Record
+            if (formData.accountType === 'business') {
+                const slug = generateSlug(formData.businessName)
+
+                // Update User Role to 'provider' in public.users table
+                // This is often handled by triggers, but explicit update ensures immediate consistency for the app
+                const { error: roleError } = await supabase
+                    .from('users')
+                    // @ts-ignore
+                    .update({ role: 'provider' } as any)
+                    .eq('id', user.id)
+
+                if (roleError) {
+                    console.error('Error updating role:', roleError)
+                    // Continue anyway as the metadata holds the truth for now, but log it
+                }
+
+                // Insert Provider
+                const { error: providerError } = await supabase
+                    .from('providers')
+                    // @ts-ignore
+                    .insert({
+                        user_id: user.id,
+                        business_name: formData.businessName,
+                        slug: slug,
+                        city: formData.city,
+                        phone: formData.phone,
+                        email: user.email,
+                        is_available: true
+                    } as any)
+
+                if (providerError) throw providerError
+            }
+
+            toast.success('Profile completed! Welcome to NeedFul.')
+            router.push('/')
+
+        } catch (error: any) {
+            console.error('Signup error:', error)
+            toast.error(error.message || 'Failed to update profile')
+        } finally {
+            setLoading(false)
+        }
     }
 
     if (checkingAuth) {
