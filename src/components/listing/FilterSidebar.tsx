@@ -111,6 +111,7 @@ interface FilterSidebarProps {
     onClearAll: () => void
     resultCount?: number
     onCollapseChange?: (isCollapsed: boolean) => void
+    isCollapsed?: boolean
     isMobile?: boolean
 }
 
@@ -154,9 +155,12 @@ export function FilterSidebar({
     onClearAll,
     resultCount,
     onCollapseChange,
+    isCollapsed: controlledCollapsed,
     isMobile = false
 }: FilterSidebarProps) {
-    const [isCollapsed, setIsCollapsed] = useState(false)
+    const [internalCollapsed, setInternalCollapsed] = useState(false)
+    const isCollapsed = controlledCollapsed ?? internalCollapsed
+
     const [gridView, setGridView] = useState(false)
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
         sortBy: true,
@@ -201,7 +205,11 @@ export function FilterSidebar({
             {/* Minimize Toggle Button - Hide on mobile */}
             {!isMobile && (
                 <button
-                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    onClick={() => {
+                        const newState = !isCollapsed
+                        setInternalCollapsed(newState)
+                        onCollapseChange?.(newState)
+                    }}
                     className="absolute -right-3 top-1/2 -translate-y-1/2 z-50 w-6 h-6 rounded-full bg-[#FF5200] hover:bg-[#E04800] text-white hidden md:flex items-center justify-center shadow-lg transition-all duration-300"
                     aria-label={isCollapsed ? "Expand filters" : "Collapse filters"}
                 >

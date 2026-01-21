@@ -391,6 +391,7 @@ function SearchPageContent() {
                                     onSortChange={setSortBy}
                                     onClearAll={clearAllFilters}
                                     resultCount={filteredProviders.length}
+                                    isCollapsed={sidebarCollapsed}
                                     onCollapseChange={setSidebarCollapsed}
                                 />
                             </div>
@@ -475,19 +476,28 @@ function SearchPageContent() {
                                 <>
                                     {filteredProviders.length > 0 ? (
                                         <div className={cn(
-                                            "grid gap-4",
+                                            "grid gap-4 transition-all duration-300",
                                             (() => {
                                                 const workerCategories = ['plumbers', 'electricians', 'carpenters', 'painters', 'ac-repair', 'cleaning', 'salon', 'massage']
-                                                // Check if we are in a "worker" context (based on selected category or if mixed content is predominantly workers)
-                                                // For now, if any selected category is a worker category, use the 3-col layout.
-                                                // Or better: check if the first provider is a worker (since list is usually homogeneous)
+
+                                                // Determine if we are showing worker cards (compact) or service cards
+                                                let isWorkerContext = false
                                                 if (filteredProviders.length > 0) {
                                                     const firstSlug = filteredProviders[0].categories?.slug || ''
-                                                    if (workerCategories.includes(firstSlug)) {
-                                                        return "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
-                                                    }
+                                                    isWorkerContext = workerCategories.includes(firstSlug)
                                                 }
-                                                return "grid-cols-1 xl:grid-cols-2"
+
+                                                if (sidebarCollapsed) {
+                                                    // Extended layout when sidebar is collapsed
+                                                    return isWorkerContext
+                                                        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                                                        : "grid-cols-1 lg:grid-cols-2"
+                                                } else {
+                                                    // Standard layout - Limit to 2 columns max for service cards to ensure button space
+                                                    return isWorkerContext
+                                                        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                                                        : "grid-cols-1 lg:grid-cols-2"
+                                                }
                                             })()
                                         )}>
                                             {filteredProviders.map((provider) => {

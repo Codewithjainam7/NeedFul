@@ -20,8 +20,8 @@ export async function submitEnquiry(data: z.infer<typeof enquirySchema>) {
         const supabase = await createClient()
 
         // Insert enquiry
-        const { error } = await supabase
-            .from('enquiries')
+        const { error } = await (supabase
+            .from('enquiries') as any)
             .insert({
                 provider_id: validatedData.provider_id,
                 customer_name: validatedData.customer_name,
@@ -35,8 +35,8 @@ export async function submitEnquiry(data: z.infer<typeof enquirySchema>) {
 
         // Track analytics event
         try {
-            await supabase
-                .from('analytics_events')
+            await (supabase
+                .from('analytics_events') as any)
                 .insert({
                     provider_id: validatedData.provider_id,
                     event_type: 'enquiry_click',
@@ -75,8 +75,8 @@ export async function getEnquiries(providerId: string) {
 export async function updateEnquiryStatus(enquiryId: string, status: 'new' | 'contacted' | 'closed') {
     const supabase = await createClient()
 
-    const { error } = await supabase
-        .from('enquiries')
+    const { error } = await (supabase
+        .from('enquiries') as any)
         .update({ status, updated_at: new Date().toISOString() })
         .eq('id', enquiryId)
 

@@ -41,8 +41,8 @@ export default function ReportsPage() {
 
     const fetchReports = async () => {
         try {
-            const { data, error } = await supabase
-                .from('reports')
+            const { data, error } = await (supabase
+                .from('reports') as any)
                 .select('*')
                 .order('created_at', { ascending: false });
 
@@ -60,8 +60,8 @@ export default function ReportsPage() {
 
     const handleUpdateStatus = async (id: string, status: string) => {
         try {
-            const { error } = await supabase
-                .from('reports')
+            const { error } = await (supabase
+                .from('reports') as any)
                 .update({ status })
                 .eq('id', id);
 
@@ -76,8 +76,8 @@ export default function ReportsPage() {
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this report?')) return;
         try {
-            const { error } = await supabase
-                .from('reports')
+            const { error } = await (supabase
+                .from('reports') as any)
                 .delete()
                 .eq('id', id);
 

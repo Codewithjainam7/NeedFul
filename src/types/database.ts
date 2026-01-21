@@ -231,6 +231,64 @@ export type Database = {
                     created_at?: string
                 }
             }
+            enquiries: {
+                Row: {
+                    id: string
+                    provider_id: string
+                    customer_name: string
+                    customer_phone: string
+                    customer_email: string | null
+                    message: string
+                    status: 'new' | 'contacted' | 'closed'
+                    created_at: string
+                    updated_at: string
+                }
+                Insert: {
+                    id?: string
+                    provider_id: string
+                    customer_name: string
+                    customer_phone: string
+                    customer_email?: string | null
+                    message: string
+                    status?: 'new' | 'contacted' | 'closed'
+                    created_at?: string
+                    updated_at?: string
+                }
+                Update: {
+                    id?: string
+                    provider_id?: string
+                    customer_name?: string
+                    customer_phone?: string
+                    customer_email?: string | null
+                    message?: string
+                    status?: 'new' | 'contacted' | 'closed'
+                    created_at?: string
+                    updated_at?: string
+                }
+            }
+            analytics_events: {
+                Row: {
+                    id: string
+                    provider_id: string
+                    event_type: string
+                    metadata: Json
+                    created_at: string
+                }
+                Insert: {
+                    id?: string
+                    provider_id: string
+                    event_type: string
+                    metadata?: Json
+                    created_at?: string
+                }
+                Update: {
+                    id?: string
+                    provider_id?: string
+                    event_type?: string
+                    metadata?: Json
+                    created_at?: string
+                }
+            }
         }
         Views: {
             [_ in never]: never
