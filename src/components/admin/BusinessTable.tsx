@@ -29,7 +29,7 @@ export function BusinessTable({ businesses }: { businesses: Business[] }) {
         try {
             const { error } = await supabase
                 .from('providers')
-                .update({ status: newStatus })
+                .update({ status: newStatus } as any)
                 .eq('id', id);
 
             if (error) throw error;
