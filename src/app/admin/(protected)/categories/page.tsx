@@ -125,6 +125,7 @@ export default function CategoriesPage() {
             .eq('id', editingCategory.id)
 
         if (error) {
+            console.error('Error updating category:', error)
             toast.error('Failed to update category')
         } else {
             toast.success('Category updated successfully!')
