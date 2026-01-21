@@ -244,57 +244,56 @@ export default function BusinessesPage() {
                     </Table>
                 </div>
 
-                {/* Pagination */}
-                <div className="flex items-center justify-between px-1 bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-gray-100">
-                    <span className="text-sm text-gray-500 font-medium">
-                        Showing <span className="text-gray-900 font-semibold">{startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, filteredBusinesses.length)}</span> of <span className="text-gray-900 font-semibold">{filteredBusinesses.length}</span>
-                    </span>
-                    <div className="flex items-center gap-1">
-                        <Button
-                            variant="outline"
-                            size="sm"
+                {/* Pagination - Premium Design */}
+                <div className="flex items-center justify-center mt-8">
+                    <div className="inline-flex items-center gap-2 bg-white rounded-2xl p-2 shadow-xl shadow-gray-200/50 border border-gray-100">
+                        <button
                             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                             disabled={currentPage === 1}
-                            className="rounded-xl h-10 w-10 border-gray-200 hover:border-[#FF5200] hover:bg-orange-50 hover:text-[#FF5200] disabled:opacity-40"
+                            className="h-11 w-11 rounded-xl flex items-center justify-center text-gray-400 hover:text-[#FF5200] hover:bg-orange-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 transition-all duration-200"
                         >
-                            <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                            let pageNum
-                            if (totalPages <= 5) {
-                                pageNum = i + 1
-                            } else if (currentPage <= 3) {
-                                pageNum = i + 1
-                            } else if (currentPage >= totalPages - 2) {
-                                pageNum = totalPages - 4 + i
-                            } else {
-                                pageNum = currentPage - 2 + i
-                            }
-                            return (
-                                <Button
-                                    key={pageNum}
-                                    variant={currentPage === pageNum ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => setCurrentPage(pageNum)}
-                                    className={`rounded-xl h-10 w-10 font-semibold transition-all ${currentPage === pageNum
-                                            ? 'bg-gradient-to-r from-[#FF5200] to-orange-500 hover:from-orange-600 hover:to-[#FF5200] text-white shadow-lg shadow-orange-500/30 border-0'
-                                            : 'border-gray-200 hover:border-[#FF5200] hover:bg-orange-50 hover:text-[#FF5200]'
-                                        }`}
-                                >
-                                    {pageNum}
-                                </Button>
-                            )
-                        })}
-                        <Button
-                            variant="outline"
-                            size="sm"
+                            <ChevronLeft className="h-5 w-5" />
+                        </button>
+
+                        <div className="flex items-center gap-1.5 px-1">
+                            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                let pageNum
+                                if (totalPages <= 5) {
+                                    pageNum = i + 1
+                                } else if (currentPage <= 3) {
+                                    pageNum = i + 1
+                                } else if (currentPage >= totalPages - 2) {
+                                    pageNum = totalPages - 4 + i
+                                } else {
+                                    pageNum = currentPage - 2 + i
+                                }
+                                return (
+                                    <button
+                                        key={pageNum}
+                                        onClick={() => setCurrentPage(pageNum)}
+                                        className={`h-11 min-w-[44px] px-4 rounded-xl font-bold text-sm transition-all duration-200 ${currentPage === pageNum
+                                                ? 'bg-gradient-to-br from-[#FF5200] via-orange-500 to-amber-500 text-white shadow-lg shadow-orange-400/40 scale-105'
+                                                : 'text-gray-600 hover:text-[#FF5200] hover:bg-orange-50'
+                                            }`}
+                                    >
+                                        {pageNum}
+                                    </button>
+                                )
+                            })}
+                        </div>
+
+                        <button
                             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                             disabled={currentPage === totalPages || totalPages === 0}
-                            className="rounded-xl h-10 w-10 border-gray-200 hover:border-[#FF5200] hover:bg-orange-50 hover:text-[#FF5200] disabled:opacity-40"
+                            className="h-11 w-11 rounded-xl flex items-center justify-center text-gray-400 hover:text-[#FF5200] hover:bg-orange-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 transition-all duration-200"
                         >
-                            <ChevronRight className="h-4 w-4" />
-                        </Button>
+                            <ChevronRight className="h-5 w-5" />
+                        </button>
                     </div>
+                </div>
+
+                <div className="text-center text-sm text-gray-400 mt-3">
+                    Page {currentPage} of {totalPages} • {filteredBusinesses.length} businesses
                 </div>
             </div>
         </AdminPageTransition>
