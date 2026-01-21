@@ -11,10 +11,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { Check, ChevronRight, ChevronLeft, Building2, Utensils, Stethoscope, Store, Loader2, Upload } from 'lucide-react'
+import { Check, ChevronRight, ChevronLeft, Building2, Utensils, Stethoscope, Store, Loader2, Upload, X, Image as ImageIcon } from 'lucide-react'
 import { createBusiness } from '@/app/actions/business'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { createClient } from '@/lib/supabase/client'
 
 type Category = {
     id: string;
@@ -48,9 +49,48 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
         let fieldsToValidate: any[] = []
         if (step === 1) fieldsToValidate = ['business_name', 'description', 'city', 'area', 'address', 'phone']
         if (step === 2) fieldsToValidate = ['category_id']
+        if (step === 3) {
+            // Validate specific details based on category logic or just validate 'details' object if schema permits
+            // For now, we'll validate the entire 'details' path
+            fieldsToValidate = ['details']
+        }
 
         const result = await form.trigger(fieldsToValidate)
         if (result) setStep(s => s + 1)
+    }
+
+    const [uploading, setUploading] = useState(false)
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        try {
+            if (!e.target.files || e.target.files.length === 0) return
+            setUploading(true)
+            const file = e.target.files[0]
+            const fileExt = file.name.split('.').pop()
+            const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`
+            const filePath = `${fileName}`
+
+            const supabase = createClient()
+            const { error: uploadError } = await supabase.storage
+                .from('business-images')
+                .upload(filePath, file)
+
+            if (uploadError) {
+                toast.error('Error uploading image: ' + uploadError.message)
+                return
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('business-images')
+                .getPublicUrl(filePath)
+
+            const currentImages = form.getValues('images') || []
+            form.setValue('images', [...currentImages, publicUrl])
+            toast.success('Image uploaded!')
+        } catch (error) {
+            toast.error('Error uploading image')
+        } finally {
+            setUploading(false)
+        }
     }
 
     const onSubmit = async (data: CreateBusinessInput) => {
@@ -124,7 +164,10 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
 
             {/* Form Content - Solid White Card Main */}
             <div className="flex-1 p-6 md:p-8 relative z-20 bg-white">
-                <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-xl mx-auto space-y-6">
+                <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                    console.error("Form Validation Errors:", errors)
+                    toast.error("Please check the form for errors. Some required fields might be missing.")
+                })} className="max-w-xl mx-auto space-y-6">
                     <AnimatePresence mode="wait">
 
                         {/* STEP 1: BASIC INFO */}
@@ -159,7 +202,7 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                             <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">City</Label>
                                             <Select onValueChange={(val) => setValue('city', val)} defaultValue={watch('city')}>
                                                 <SelectTrigger className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm"><SelectValue placeholder="Select City" /></SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent position="popper">
                                                     <SelectItem value="Mumbai">Mumbai</SelectItem>
                                                     <SelectItem value="Delhi">Delhi</SelectItem>
                                                     <SelectItem value="Bangalore">Bangalore</SelectItem>
@@ -354,7 +397,7 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                             <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Type</Label>
                                             <Select onValueChange={(val) => setValue('details.veg_non_veg', val)}>
                                                 <SelectTrigger className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm"><SelectValue placeholder="Select Type" /></SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent position="popper">
                                                     <SelectItem value="Veg">Pure Veg</SelectItem>
                                                     <SelectItem value="Non-Veg">Non-Veg</SelectItem>
                                                     <SelectItem value="Both">Both</SelectItem>
@@ -387,7 +430,7 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                             <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Star Rating</Label>
                                             <Select onValueChange={(val) => setValue('details.star_rating', parseInt(val))}>
                                                 <SelectTrigger className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm"><SelectValue placeholder="Select Star Rating" /></SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent position="popper">
                                                     {[1, 2, 3, 4, 5].map(n => <SelectItem key={n} value={n.toString()}>{n} Star</SelectItem>)}
                                                 </SelectContent>
                                             </Select>
@@ -456,14 +499,52 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                         <span className="text-gray-800 font-medium">{watch('phone')}</span>
                                     </div>
                                 </div>
-                                <div className="bg-blue-50 p-5 rounded-xl border border-blue-100 text-sm text-blue-900 flex gap-4 items-center shadow-sm">
-                                    <div className="bg-blue-200 p-2 rounded-full">
-                                        <Upload className="w-5 h-5 text-blue-700" />
+                                <div className="space-y-3">
+                                    <div className="bg-blue-50 p-5 rounded-xl border border-blue-100 text-sm text-blue-900 flex flex-col md:flex-row gap-4 items-center shadow-sm">
+                                        <div className="bg-white p-3 rounded-full shadow-sm border border-blue-100">
+                                            <Upload className="w-5 h-5 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1 text-center md:text-left">
+                                            <p className="font-bold text-base mb-0.5 text-blue-900">Upload Photos</p>
+                                            <p className="text-blue-700/80 text-xs">Add images to make your listing attractive. (Max 5MB)</p>
+                                        </div>
+                                        <div className="relative">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                disabled={uploading}
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                                            />
+                                            <Button type="button" variant="secondary" disabled={uploading} className="bg-white text-blue-700 hover:bg-blue-100 border border-blue-200">
+                                                {uploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ImageIcon className="w-4 h-4 mr-2" />}
+                                                {uploading ? 'Uploading...' : 'Select Image'}
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-bold text-base mb-0.5">Image Upload</p>
-                                        <p className="text-blue-700/80 text-xs">You can upload images after listing creation.</p>
-                                    </div>
+
+                                    {/* Image Previews */}
+                                    {watch('images') && watch('images')!.length > 0 && (
+                                        <div className="grid grid-cols-3 gap-3">
+                                            {watch('images')?.map((url, idx) => (
+                                                <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group">
+                                                    <img src={url} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
+                                                    <Button
+                                                        type="button"
+                                                        variant="destructive"
+                                                        size="icon"
+                                                        className="absolute top-1 right-1 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        onClick={() => {
+                                                            const newImages = watch('images')?.filter((_, i) => i !== idx)
+                                                            setValue('images', newImages)
+                                                        }}
+                                                    >
+                                                        <X className="h-3 w-3" />
+                                                    </Button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         )}
@@ -490,6 +571,6 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                     </div>
                 </form>
             </div>
-        </div>
+        </div >
     )
 }
