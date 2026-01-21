@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useSearchParams } from 'next/navigation'
 import {
@@ -14,12 +14,13 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search, Loader2, Trash2, Shield, UserX, UserCheck, Mail, MapPin } from 'lucide-react'
+import { Search, Loader2, Trash2, Shield, Mail, MapPin } from 'lucide-react'
 import { toast } from 'sonner'
 import { User } from '@/types/database'
 import { AdminPageTransition } from '@/components/admin/AdminPageTransition'
 
-export default function UsersPage() {
+// Main content component that uses useSearchParams
+function UsersContent() {
     const searchParams = useSearchParams()
     const initialQuery = searchParams.get('q') || ''
 
@@ -32,7 +33,6 @@ export default function UsersPage() {
         fetchUsers()
     }, [])
 
-    // Update search query if URL changes
     useEffect(() => {
         const query = searchParams.get('q')
         if (query !== null) {
@@ -170,5 +170,18 @@ export default function UsersPage() {
                 </div>
             </div>
         </AdminPageTransition>
+    )
+}
+
+// Wrapper component with Suspense boundary
+export default function UsersPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+                <Loader2 className="h-8 w-8 animate-spin text-[#FF5200]" />
+            </div>
+        }>
+            <UsersContent />
+        </Suspense>
     )
 }
