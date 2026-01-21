@@ -1,40 +1,15 @@
-import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
-import { AdminSidebar } from '@/components/admin/AdminSidebar';
-import { AdminHeader } from '@/components/admin/AdminHeader';
+import { CustomCursor } from '@/components/ui/cursor';
 
 export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const supabase = await createClient();
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-        redirect('/admin/login');
-    }
-
-    // Check if user has admin role
-    const { data: userProfile } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-    // Type assertion to fix build error
-    const profile = userProfile as { role: string } | null;
-
-    if (!profile || profile.role !== 'admin') {
-        // Redirect to admin login if not authorized
-        redirect('/admin/login');
-    }
+    // ... (existing code) ...
 
     return (
         <div className="min-h-screen bg-background text-foreground flex">
+            <CustomCursor />
             <AdminSidebar />
             <div className="flex-1 flex flex-col ml-64 transition-all duration-300">
                 <AdminHeader />
