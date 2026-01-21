@@ -224,7 +224,7 @@ export function ProfilePageContent({ favorites: initialFavorites, user }: Profil
                                                         id="name"
                                                         value={fullName}
                                                         onChange={(e) => setFullName(e.target.value)}
-                                                        placeholder="John Doe"
+                                                        placeholder="Rahul Sharma"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">

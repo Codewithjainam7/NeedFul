@@ -274,19 +274,12 @@ function LoginForm() {
                         </Link>
                     </div>
 
-                    {/* Form Card with 3D Tilt */}
+                    {/* Form Card */}
                     <motion.div
                         className="relative group"
-                        style={{
-                            rotateX: mousePosition.y * 5,
-                            rotateY: mousePosition.x * -5,
-                            perspective: 1000
-                        }}
-                        whileHover={{ scale: 1.01 }}
-                        transition={{ type: 'spring', stiffness: 150, damping: 25 }}
                     >
                         {/* Animated gradient border */}
-                        <div className="absolute -inset-1 bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 rounded-[2rem] opacity-30 blur-lg group-hover:opacity-50 transition-opacity duration-500" />
+                        <div className="absolute -inset-1 bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 rounded-[2rem] opacity-30 blur-lg transition-opacity duration-500" />
 
                         <div className="relative bg-white/80 backdrop-blur-xl rounded-[2rem] p-8 shadow-2xl shadow-orange-100/40 border border-white/60">
                             {/* Header with icon */}

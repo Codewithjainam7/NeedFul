@@ -80,7 +80,7 @@ export default function ContactPage() {
                                                 <label className="text-sm font-bold text-gray-700 ml-1">Your Name</label>
                                                 <input
                                                     type="text"
-                                                    placeholder="John Doe"
+                                                    placeholder="Rahul Sharma"
                                                     className="w-full h-14 px-6 rounded-xl bg-gradient-to-r from-gray-50 to-orange-50/30 border-2 border-gray-100 focus:bg-white focus:border-[#FF5200]/30 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 cursor-pointer"
                                                 />
                                             </div>
