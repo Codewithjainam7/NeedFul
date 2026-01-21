@@ -139,16 +139,16 @@ export default function BusinessesPage() {
                     </div>
                 </div>
 
-                <div className="border border-gray-100 rounded-2xl bg-white shadow-sm overflow-hidden">
+                <div className="border border-white/20 rounded-3xl bg-white/70 backdrop-blur-xl shadow-2xl shadow-orange-500/5 overflow-hidden ring-1 ring-black/5">
                     <Table>
-                        <TableHeader className="bg-gray-50/50">
-                            <TableRow className="hover:bg-transparent border-gray-100">
-                                <TableHead className="w-[300px]">Business</TableHead>
-                                <TableHead>Location</TableHead>
-                                <TableHead>Contact</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Joined</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                        <TableHeader className="bg-gradient-to-r from-orange-50/50 to-white backdrop-blur-md sticky top-0 z-10">
+                            <TableRow className="hover:bg-transparent border-gray-100/50">
+                                <TableHead className="w-[300px] font-bold text-gray-700">Business</TableHead>
+                                <TableHead className="font-semibold text-gray-700">Location</TableHead>
+                                <TableHead className="font-semibold text-gray-700">Contact</TableHead>
+                                <TableHead className="font-semibold text-gray-700">Status</TableHead>
+                                <TableHead className="font-semibold text-gray-700">Joined</TableHead>
+                                <TableHead className="text-right font-semibold text-gray-700">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -272,8 +272,8 @@ export default function BusinessesPage() {
                                         key={pageNum}
                                         onClick={() => setCurrentPage(pageNum)}
                                         className={`h-11 min-w-[44px] px-4 rounded-xl font-bold text-sm transition-all duration-200 ${currentPage === pageNum
-                                                ? 'bg-gradient-to-br from-[#FF5200] via-orange-500 to-amber-500 text-white shadow-lg shadow-orange-400/40 scale-105'
-                                                : 'text-gray-600 hover:text-[#FF5200] hover:bg-orange-50'
+                                            ? 'bg-gradient-to-br from-[#FF5200] via-orange-500 to-amber-500 text-white shadow-lg shadow-orange-400/40 scale-105'
+                                            : 'text-gray-600 hover:text-[#FF5200] hover:bg-orange-50'
                                             }`}
                                     >
                                         {pageNum}

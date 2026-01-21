@@ -267,52 +267,76 @@ export default function CategoriesPage() {
 
                 {/* Edit Modal */}
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                    <DialogContent className="sm:max-w-[425px] bg-white rounded-2xl">
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-bold text-gray-900">Edit Category</DialogTitle>
+                    <DialogContent className="sm:max-w-[480px] bg-white/95 backdrop-blur-xl border-0 shadow-2xl rounded-3xl p-0 overflow-hidden">
+                        <DialogHeader className="p-6 bg-gradient-to-r from-[#FF5200] to-orange-400">
+                            <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
+                                <Edit2 className="w-5 h-5 text-white/80" />
+                                Edit Category
+                            </DialogTitle>
+                            <p className="text-white/80 text-sm mt-1">Make changes to the category details below.</p>
                         </DialogHeader>
-                        <div className="space-y-4 py-4">
+                        <div className="space-y-5 p-6">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name" className="text-gray-700 font-medium ml-1">Name</Label>
                                 <Input
                                     id="name"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="rounded-xl"
+                                    className="rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 h-11 bg-gray-50/50"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="slug">Slug</Label>
+                                <Label htmlFor="slug" className="text-gray-700 font-medium ml-1">Slug</Label>
                                 <Input
                                     id="slug"
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                    className="rounded-xl"
+                                    className="rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 h-11 bg-gray-50/50"
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="icon">Icon Name</Label>
-                                <Input
-                                    id="icon"
-                                    value={formData.icon}
-                                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                                    placeholder="e.g., Wrench, Car, Home"
-                                    className="rounded-xl"
-                                />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="icon" className="text-gray-700 font-medium ml-1">Icon Name</Label>
+                                    <Input
+                                        id="icon"
+                                        value={formData.icon}
+                                        onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                                        placeholder="e.g., Car"
+                                        className="rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 h-11 bg-gray-50/50"
+                                    />
+                                </div>
+                                <div className="flex items-end pb-1">
+                                    {formData.icon && iconMap[formData.icon] && (
+                                        <div className="flex items-center gap-3 bg-orange-50 px-4 py-2 rounded-xl border border-orange-100 w-full h-11">
+                                            {getIcon(formData.icon)}
+                                            <span className="text-sm font-medium text-gray-600">Preview</span>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
+                                <Label htmlFor="description" className="text-gray-700 font-medium ml-1">Description</Label>
                                 <Input
                                     id="description"
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="rounded-xl"
+                                    className="rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 h-11 bg-gray-50/50"
                                 />
                             </div>
                         </div>
-                        <DialogFooter>
-                            <Button variant="outline" onClick={() => setIsEditOpen(false)} className="rounded-xl">Cancel</Button>
-                            <Button onClick={handleSaveEdit} disabled={isSaving} className="bg-[#FF5200] hover:bg-[#E04800] text-white rounded-xl">
+                        <DialogFooter className="p-6 pt-0 gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsEditOpen(false)}
+                                className="rounded-xl h-11 border-gray-200 hover:bg-gray-50 hover:text-gray-900 font-medium flex-1"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleSaveEdit}
+                                disabled={isSaving}
+                                className="bg-gradient-to-r from-[#FF5200] to-orange-500 hover:from-orange-600 hover:to-[#FF5200] text-white rounded-xl h-11 shadow-lg shadow-orange-500/20 font-medium flex-1"
+                            >
                                 {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                                 Save Changes
                             </Button>
@@ -322,54 +346,78 @@ export default function CategoriesPage() {
 
                 {/* Add Modal */}
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                    <DialogContent className="sm:max-w-[425px] bg-white rounded-2xl">
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-bold text-gray-900">Add New Category</DialogTitle>
+                    <DialogContent className="sm:max-w-[480px] bg-white/95 backdrop-blur-xl border-0 shadow-2xl rounded-3xl p-0 overflow-hidden">
+                        <DialogHeader className="p-6 bg-gradient-to-r from-[#FF5200] to-orange-400">
+                            <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
+                                <Plus className="w-6 h-6 text-white/80" />
+                                Add New Category
+                            </DialogTitle>
+                            <p className="text-white/80 text-sm mt-1">Create a new business category.</p>
                         </DialogHeader>
-                        <div className="space-y-4 py-4">
+                        <div className="space-y-5 p-6">
                             <div className="space-y-2">
-                                <Label htmlFor="add-name">Name *</Label>
+                                <Label htmlFor="add-name" className="text-gray-700 font-medium ml-1">Name *</Label>
                                 <Input
                                     id="add-name"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     placeholder="e.g., Plumbing"
-                                    className="rounded-xl"
+                                    className="rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 h-11 bg-gray-50/50"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="add-slug">Slug *</Label>
+                                <Label htmlFor="add-slug" className="text-gray-700 font-medium ml-1">Slug *</Label>
                                 <Input
                                     id="add-slug"
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                     placeholder="e.g., plumbing"
-                                    className="rounded-xl"
+                                    className="rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 h-11 bg-gray-50/50"
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="add-icon">Icon Name</Label>
-                                <Input
-                                    id="add-icon"
-                                    value={formData.icon}
-                                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                                    placeholder="e.g., Wrench"
-                                    className="rounded-xl"
-                                />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="add-icon" className="text-gray-700 font-medium ml-1">Icon Name</Label>
+                                    <Input
+                                        id="add-icon"
+                                        value={formData.icon}
+                                        onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                                        placeholder="e.g., Wrench"
+                                        className="rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 h-11 bg-gray-50/50"
+                                    />
+                                </div>
+                                <div className="flex items-end pb-1">
+                                    {formData.icon && iconMap[formData.icon] && (
+                                        <div className="flex items-center gap-3 bg-orange-50 px-4 py-2 rounded-xl border border-orange-100 w-full h-11">
+                                            {getIcon(formData.icon)}
+                                            <span className="text-sm font-medium text-gray-600">Preview</span>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="add-description">Description</Label>
+                                <Label htmlFor="add-description" className="text-gray-700 font-medium ml-1">Description</Label>
                                 <Input
                                     id="add-description"
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="rounded-xl"
+                                    className="rounded-xl border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/20 h-11 bg-gray-50/50"
                                 />
                             </div>
                         </div>
-                        <DialogFooter>
-                            <Button variant="outline" onClick={() => setIsAddOpen(false)} className="rounded-xl">Cancel</Button>
-                            <Button onClick={handleAdd} disabled={isSaving} className="bg-[#FF5200] hover:bg-[#E04800] text-white rounded-xl">
+                        <DialogFooter className="p-6 pt-0 gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsAddOpen(false)}
+                                className="rounded-xl h-11 border-gray-200 hover:bg-gray-50 hover:text-gray-900 font-medium flex-1"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleAdd}
+                                disabled={isSaving}
+                                className="bg-gradient-to-r from-[#FF5200] to-orange-500 hover:from-orange-600 hover:to-[#FF5200] text-white rounded-xl h-11 shadow-lg shadow-orange-500/20 font-medium flex-1"
+                            >
                                 {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                                 Add Category
                             </Button>
