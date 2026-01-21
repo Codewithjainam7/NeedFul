@@ -30,6 +30,7 @@ const trafficData = [
 
 export default function AnalyticsPage() {
     const [stats, setStats] = useState({ users: 0, businesses: 0, reviews: 0 })
+    const [chartData, setChartData] = useState<any[]>(monthlyData)
     const supabase = createClient()
 
     useEffect(() => {
@@ -37,16 +38,61 @@ export default function AnalyticsPage() {
     }, [])
 
     const fetchStats = async () => {
-        const [usersRes, businessesRes, reviewsRes] = await Promise.all([
-            (supabase as any).from('users').select('id', { count: 'exact', head: true }),
-            (supabase as any).from('providers').select('id', { count: 'exact', head: true }),
-            (supabase as any).from('reviews').select('id', { count: 'exact', head: true }),
-        ])
-        setStats({
-            users: usersRes.count || 0,
-            businesses: businessesRes.count || 0,
-            reviews: reviewsRes.count || 0,
-        })
+        try {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Fetch real data
+            const [usersRes, businessesRes, reviewsRes] = await Promise.all([
+                (supabase as any).from('users').select('id, created_at', { count: 'exact' }),
+                (supabase as any).from('providers').select('id, created_at', { count: 'exact' }),
+                (supabase as any).from('reviews').select('id, created_at', { count: 'exact' }),
+            ])
+
+            setStats({
+                users: usersRes.count || 0,
+                businesses: businessesRes.count || 0,
+                reviews: reviewsRes.count || 0,
+            })
+
+            // Process Monthly Data for Charts
+            // Note: This logic duplicates DashboardCharts, ideal for refactoring into a hook later
+            const months: any = {};
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            for (let i = 5; i >= 0; i--) {
+                const d = new Date();
+                d.setMonth(d.getMonth() - i);
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                months[key] = { month: monthNames[d.getMonth()], users: 0, businesses: 0, reviews: 0, sortDate: d };
+            }
+
+            (usersRes.data || []).forEach((u: any) => {
+                const d = new Date(u.created_at);
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                if (months[key]) months[key].users++;
+            });
+            (businessesRes.data || []).forEach((p: any) => {
+                const d = new Date(p.created_at);
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                if (months[key]) months[key].businesses++;
+            });
+            (reviewsRes.data || []).forEach((r: any) => {
+                const d = new Date(r.created_at);
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                if (months[key]) months[key].reviews++;
+            });
+
+            // If empty, use demo
+            if (!usersRes.count && !businessesRes.count) {
+                // Keep mock data defined at top
+                setChartData(monthlyData);
+            } else {
+                setChartData(Object.values(months).sort((a: any, b: any) => a.sortDate - b.sortDate));
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -128,7 +174,7 @@ export default function AnalyticsPage() {
                         </CardHeader>
                         <CardContent>
                             <ResponsiveContainer width="100%" height={300}>
-                                <AreaChart data={monthlyData}>
+                                <AreaChart data={chartData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                                     <XAxis dataKey="month" stroke="#888" fontSize={12} />
                                     <YAxis stroke="#888" fontSize={12} />

@@ -19,33 +19,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, Clock, CheckCircle, XCircle, Star } from "lucide-react";
 
-const monthlyData = [
-    { name: "Jan", users: 120, reviews: 45, businesses: 12 },
-    { name: "Feb", users: 150, reviews: 62, businesses: 18 },
-    { name: "Mar", users: 200, reviews: 89, businesses: 24 },
-    { name: "Apr", users: 180, reviews: 78, businesses: 20 },
-    { name: "May", users: 220, reviews: 95, businesses: 28 },
-    { name: "Jun", users: 280, reviews: 120, businesses: 35 },
-    { name: "Jul", users: 320, reviews: 145, businesses: 42 },
-];
 
-const weeklyData = [
-    { day: "Mon", signups: 12, reviews: 8 },
-    { day: "Tue", signups: 18, reviews: 12 },
-    { day: "Wed", signups: 15, reviews: 10 },
-    { day: "Thu", signups: 22, reviews: 15 },
-    { day: "Fri", signups: 28, reviews: 20 },
-    { day: "Sat", signups: 14, reviews: 8 },
-    { day: "Sun", signups: 10, reviews: 5 },
-];
-
-const reviewDistribution = [
-    { name: "5 Stars", value: 45, color: "#22c55e" },
-    { name: "4 Stars", value: 30, color: "#84cc16" },
-    { name: "3 Stars", value: 15, color: "#eab308" },
-    { name: "2 Stars", value: 7, color: "#f97316" },
-    { name: "1 Star", value: 3, color: "#ef4444" },
-];
 
 export function DashboardCharts() {
     const [stats, setStats] = useState({
@@ -54,6 +28,11 @@ export function DashboardCharts() {
         avgRating: 0,
         todaySignups: 0,
     });
+    const [monthlyData, setMonthlyData] = useState<any[]>([]);
+    const [weeklyData, setWeeklyData] = useState<any[]>([]);
+    const [reviewDistribution, setReviewDistribution] = useState<any[]>([]);
+    const [topCities, setTopCities] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const supabase = createClient();
 
     useEffect(() => {
@@ -61,33 +40,190 @@ export function DashboardCharts() {
     }, []);
 
     const fetchStats = async () => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        try {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-        const [pending, verified, reviews, todayUsers] = await Promise.all([
-            (supabase as any).from('providers').select('id', { count: 'exact', head: true }).eq('is_verified', false),
-            (supabase as any).from('providers').select('id', { count: 'exact', head: true }).eq('is_verified', true),
-            (supabase as any).from('reviews').select('rating'),
-            (supabase as any).from('users').select('id', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
-        ]);
+            // 1. Fetch raw data needed for charts
+            const [
+                { data: providers },
+                { data: users },
+                { data: reviews }
+            ] = await Promise.all([
+                (supabase as any).from('providers').select('id, created_at, is_verified, city, rating'),
+                (supabase as any).from('users').select('id, created_at'),
+                (supabase as any).from('reviews').select('id, created_at, rating')
+            ]);
 
-        const avgRating = reviews.data?.length > 0
-            ? (reviews.data.reduce((acc: number, r: any) => acc + r.rating, 0) / reviews.data.length).toFixed(1)
-            : 0;
+            const safeProviders = providers || [];
+            const safeUsers = users || [];
+            const safeReviews = reviews || [];
 
-        setStats({
-            pendingCount: pending.count || 0,
-            verifiedCount: verified.count || 0,
-            avgRating: Number(avgRating),
-            todaySignups: todayUsers.count || 0,
-        });
+            // --- Demo Data Fallback ---
+            if (safeProviders.length === 0 && safeUsers.length === 0 && safeReviews.length === 0) {
+                 const demoMonthly = [
+                    { name: "Jan", users: 120, reviews: 45, businesses: 12 },
+                    { name: "Feb", users: 150, reviews: 62, businesses: 18 },
+                    { name: "Mar", users: 200, reviews: 89, businesses: 24 },
+                    { name: "Apr", users: 180, reviews: 78, businesses: 20 },
+                    { name: "May", users: 220, reviews: 95, businesses: 28 },
+                    { name: "Jun", users: 280, reviews: 120, businesses: 35 },
+                 ];
+                 setMonthlyData(demoMonthly);
+                 setWeeklyData([
+                    { day: "Mon", signups: 12, reviews: 8 },
+                    { day: "Tue", signups: 18, reviews: 12 },
+                    { day: "Wed", signups: 15, reviews: 10 },
+                    { day: "Thu", signups: 22, reviews: 15 },
+                    { day: "Fri", signups: 28, reviews: 20 },
+                    { day: "Sat", signups: 14, reviews: 8 },
+                    { day: "Sun", signups: 10, reviews: 5 },
+                 ]);
+                 setReviewDistribution([
+                    { name: "5 Stars", value: 45, color: "#22c55e" },
+                    { name: "4 Stars", value: 30, color: "#84cc16" },
+                    { name: "3 Stars", value: 15, color: "#eab308" },
+                 ]);
+                 setTopCities([
+                     { name: "New York", value: 24 },
+                     { name: "Los Angeles", value: 18 },
+                     { name: "Chicago", value: 12 },
+                 ]);
+                 setStats({ pendingCount: 4, verifiedCount: 12, avgRating: 4.8, todaySignups: 5 });
+                 setLoading(false);
+                 return;
+            }
+
+            // --- Stats Logic ---
+            const pendingCount = safeProviders.filter((p: any) => !p.is_verified).length;
+            const verifiedCount = safeProviders.filter((p: any) => p.is_verified).length;
+            const avgRatingVal = safeReviews.length > 0
+                ? (safeReviews.reduce((acc: number, r: any) => acc + (r.rating || 0), 0) / safeReviews.length).toFixed(1)
+                : 0;
+            const todaySignups = safeUsers.filter((u: any) => new Date(u.created_at) >= today).length;
+
+            setStats({
+                pendingCount,
+                verifiedCount,
+                avgRating: Number(avgRatingVal),
+                todaySignups
+            });
+
+            // --- Monthly Growth Logic (Last 6 Months) ---
+            const months: any = {};
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            // Initialize last 6 months
+            for (let i = 5; i >= 0; i--) {
+                const d = new Date();
+                d.setMonth(d.getMonth() - i);
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`; // Unique key
+                months[key] = { name: monthNames[d.getMonth()], users: 0, reviews: 0, businesses: 0, sortDate: d };
+            }
+
+            safeUsers.forEach((u: any) => {
+                const d = new Date(u.created_at);
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                if (months[key]) months[key].users++;
+            });
+            safeProviders.forEach((p: any) => {
+                const d = new Date(p.created_at);
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                if (months[key]) months[key].businesses++;
+            });
+            safeReviews.forEach((r: any) => {
+                const d = new Date(r.created_at);
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                if (months[key]) months[key].reviews++;
+            });
+
+            // Convert to array and sort
+            const growthChartData = Object.values(months).sort((a: any, b: any) => a.sortDate - b.sortDate);
+            setMonthlyData(growthChartData);
+
+            // --- Weekly Activity Logic (Last 7 Days) ---
+            const days: any = {};
+            const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dayName = dayNames[d.getDay()];
+                const dateKey = d.toISOString().split('T')[0];
+                days[dateKey] = { day: dayName, signups: 0, reviews: 0 };
+            }
+
+            safeUsers.forEach((u: any) => {
+                const dateKey = new Date(u.created_at).toISOString().split('T')[0];
+                if (days[dateKey]) days[dateKey].signups++;
+            });
+            safeReviews.forEach((r: any) => {
+                const dateKey = new Date(r.created_at).toISOString().split('T')[0];
+                if (days[dateKey]) days[dateKey].reviews++;
+            });
+            setWeeklyData(Object.values(days));
+
+            // --- Review Distribution Logic ---
+            const dist = [0, 0, 0, 0, 0, 0]; // 0 index unused, 1-5 stars
+            safeReviews.forEach((r: any) => {
+                const rating = Math.round(r.rating || 0);
+                if (rating >= 1 && rating <= 5) dist[rating]++;
+            });
+
+            const distChartData = [
+                { name: "5 Stars", value: dist[5], color: "#22c55e" },
+                { name: "4 Stars", value: dist[4], color: "#84cc16" },
+                { name: "3 Stars", value: dist[3], color: "#eab308" },
+                { name: "2 Stars", value: dist[2], color: "#f97316" },
+                { name: "1 Star", value: dist[1], color: "#ef4444" },
+            ].filter(d => d.value > 0);
+
+            // Fallback for empty data to show structure
+            if (distChartData.length === 0) {
+                distChartData.push({ name: "No Reviews", value: 1, color: "#e5e7eb" });
+            }
+            setReviewDistribution(distChartData);
+
+            // --- Top Cities Logic ---
+            const cityCounts: any = {};
+            safeProviders.forEach((p: any) => {
+                if (p.city) {
+                    const c = p.city.trim();
+                    cityCounts[c] = (cityCounts[c] || 0) + 1;
+                }
+            });
+            const sortedCities = Object.entries(cityCounts)
+                .map(([name, value]) => ({ name, value }))
+                .sort((a: any, b: any) => b.value - a.value)
+                .slice(0, 5); // Top 5
+            setTopCities(sortedCities);
+
+        } catch (error) {
+            console.error("Error fetching dashboard stats:", error);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (loading) {
+        return (
+            <div className="space-y-6 animate-pulse">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-32">
+                    {[1, 2, 3, 4].map(i => <div key={i} className="bg-gray-100 rounded-2xl"></div>)}
+                </div>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 h-[300px]">
+                    <div className="col-span-4 bg-gray-100 rounded-2xl"></div>
+                    <div className="col-span-3 bg-gray-100 rounded-2xl"></div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
             {/* Quick Stats Row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Card className="border-orange-100 bg-gradient-to-br from-orange-50 to-white">
+                <Card className="border-orange-100 bg-gradient-to-br from-orange-50 to-white hover:scale-[1.02] transition-transform duration-300 shadow-sm hover:shadow-md">
                     <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
@@ -101,7 +237,7 @@ export function DashboardCharts() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-green-100 bg-gradient-to-br from-green-50 to-white">
+                <Card className="border-green-100 bg-gradient-to-br from-green-50 to-white hover:scale-[1.02] transition-transform duration-300 shadow-sm hover:shadow-md">
                     <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
@@ -115,7 +251,7 @@ export function DashboardCharts() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-yellow-100 bg-gradient-to-br from-yellow-50 to-white">
+                <Card className="border-yellow-100 bg-gradient-to-br from-yellow-50 to-white hover:scale-[1.02] transition-transform duration-300 shadow-sm hover:shadow-md">
                     <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-yellow-100 flex items-center justify-center">
@@ -129,7 +265,7 @@ export function DashboardCharts() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-blue-100 bg-gradient-to-br from-blue-50 to-white">
+                <Card className="border-blue-100 bg-gradient-to-br from-blue-50 to-white hover:scale-[1.02] transition-transform duration-300 shadow-sm hover:shadow-md">
                     <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
@@ -146,7 +282,7 @@ export function DashboardCharts() {
 
             {/* Main Charts */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4 border-gray-100 shadow-sm">
+                <Card className="col-span-4 border-white/60 bg-white/60 backdrop-blur-xl shadow-md hover:shadow-lg transition-all duration-300">
                     <CardHeader>
                         <CardTitle className="text-lg font-bold text-gray-900">Platform Growth</CardTitle>
                     </CardHeader>
@@ -176,7 +312,7 @@ export function DashboardCharts() {
                     </CardContent>
                 </Card>
 
-                <Card className="col-span-3 border-gray-100 shadow-sm">
+                <Card className="col-span-3 border-white/60 bg-white/60 backdrop-blur-xl shadow-md hover:shadow-lg transition-all duration-300">
                     <CardHeader>
                         <CardTitle className="text-lg font-bold text-gray-900">Review Distribution</CardTitle>
                     </CardHeader>
@@ -205,26 +341,52 @@ export function DashboardCharts() {
                 </Card>
             </div>
 
-            {/* Weekly Activity */}
-            <Card className="border-gray-100 shadow-sm">
-                <CardHeader>
-                    <CardTitle className="text-lg font-bold text-gray-900">Weekly Activity</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="h-[200px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={weeklyData}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                                <XAxis dataKey="day" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                                <Tooltip contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb' }} />
-                                <Bar dataKey="signups" fill="#FF5200" radius={[4, 4, 0, 0]} name="Signups" />
-                                <Bar dataKey="reviews" fill="#10b981" radius={[4, 4, 0, 0]} name="Reviews" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </CardContent>
-            </Card>
+            <div className="grid gap-4 md:grid-cols-2">
+                {/* Weekly Activity */}
+                <Card className="border-white/60 bg-white/60 backdrop-blur-xl shadow-md hover:shadow-lg transition-all duration-300">
+                    <CardHeader>
+                        <CardTitle className="text-lg font-bold text-gray-900">Weekly Activity</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[200px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={weeklyData}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                                    <XAxis dataKey="day" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                                    <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                                    <Tooltip contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb' }} />
+                                    <Bar dataKey="signups" fill="#FF5200" radius={[4, 4, 0, 0]} name="Signups" />
+                                    <Bar dataKey="reviews" fill="#10b981" radius={[4, 4, 0, 0]} name="Reviews" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Top Cities */}
+                <Card className="border-white/60 bg-white/60 backdrop-blur-xl shadow-md hover:shadow-lg transition-all duration-300">
+                    <CardHeader>
+                        <CardTitle className="text-lg font-bold text-gray-900">Top Locations</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[200px]">
+                            {topCities.length > 0 ? (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={topCities} layout="vertical">
+                                        <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f0f0f0" />
+                                        <XAxis type="number" stroke="#888" fontSize={12} hide />
+                                        <YAxis dataKey="name" type="category" stroke="#666" fontSize={12} tickLine={false} axisLine={false} width={100} />
+                                        <Tooltip contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb' }} />
+                                        <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} name="Businesses" barSize={20} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <div className="flex h-full items-center justify-center text-gray-500 text-sm">No location data available</div>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }
