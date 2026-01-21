@@ -106,7 +106,7 @@ export function EditBusinessForm({ provider, categories }: EditBusinessFormProps
                 .getPublicUrl(filePath)
 
             // Insert into provider_images table
-            const { data: newImage, error: dbError } = await supabase
+            const { data: newImage, error: dbError } = await (supabase as any)
                 .from('provider_images')
                 .insert({
                     provider_id: provider.id,
@@ -138,7 +138,7 @@ export function EditBusinessForm({ provider, categories }: EditBusinessFormProps
     const handleDeleteImage = async (imageId: string) => {
         try {
             const supabase = createClient()
-            const { error } = await supabase
+            const { error } = await (supabase as any)
                 .from('provider_images')
                 .delete()
                 .eq('id', imageId)
@@ -160,13 +160,13 @@ export function EditBusinessForm({ provider, categories }: EditBusinessFormProps
             const supabase = createClient()
 
             // Set all images to non-primary
-            await supabase
+            await (supabase as any)
                 .from('provider_images')
                 .update({ is_primary: false })
                 .eq('provider_id', provider.id)
 
             // Set selected image as primary
-            const { error } = await supabase
+            const { error } = await (supabase as any)
                 .from('provider_images')
                 .update({ is_primary: true })
                 .eq('id', imageId)
@@ -194,7 +194,7 @@ export function EditBusinessForm({ provider, categories }: EditBusinessFormProps
             // Process tags if provided
             const tagsArray = data.tags ? data.tags.split(',').map((t: string) => t.trim()).filter(Boolean) : []
 
-            const { error } = await supabase
+            const { error } = await (supabase as any)
                 .from('providers')
                 .update({
                     business_name: data.business_name,
