@@ -191,8 +191,8 @@ function SearchPageContent() {
                 .from('providers')
                 .select(`
                     *,
-                    categories:category_id(*),
-                    provider_images(*)
+                    categories(*),
+                    provider_images:provider_images(*)
                 `)
                 .eq('status', 'approved')
 
