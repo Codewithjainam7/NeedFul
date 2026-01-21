@@ -47,7 +47,7 @@ export default async function HowItWorksPage() {
     return (
         <div className="min-h-screen flex flex-col bg-white">
             <Header user={userData} />
-            <main className="flex-1 bg-[#FFFBF7] py-20 lg:py-32 relative overflow-hidden">
+            <main className="flex-1 bg-[#FFFBF7] pt-32 pb-20 lg:pt-40 lg:pb-32 relative overflow-hidden">
                 {/* Background Gradient Blobs */}
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-100/60 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-100/60 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
