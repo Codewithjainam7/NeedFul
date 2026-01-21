@@ -25,7 +25,11 @@ export default async function AnalyticsPage({ params }: { params: { id: string }
         .single()
 
     if (!provider) return notFound()
-    if (provider.user_id !== user.id) redirect('/profile')
+
+    // TYPE FIX: Explicitly cast provider to handle 'never' inference
+    const providerData = provider as { user_id: string; business_name: string; review_count: number };
+
+    if (providerData.user_id !== user.id) redirect('/profile')
 
     // 2. Fetch Analytics Data
     // We'll try to fetch, but handle if table doesn't exist yet
@@ -48,7 +52,7 @@ export default async function AnalyticsPage({ params }: { params: { id: string }
     const whatsappClicks = events.filter((e: any) => e.event_type === 'whatsapp_click').length
 
     // Fallback using legacy counters if no events found (and to show *something*)
-    const displayViews = totalViews > 0 ? totalViews : (provider.review_count * 10) + 5 // Mock logic if 0
+    const displayViews = totalViews > 0 ? totalViews : (providerData.review_count * 10) + 5 // Mock logic if 0
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
@@ -62,7 +66,7 @@ export default async function AnalyticsPage({ params }: { params: { id: string }
                                 <ArrowLeft className="w-4 h-4 mr-1" /> Back to Profile
                             </Link>
                             <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-                            <p className="text-gray-500">{provider.business_name}</p>
+                            <p className="text-gray-500">{providerData.business_name}</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <Select defaultValue="30d">
