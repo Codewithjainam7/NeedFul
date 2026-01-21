@@ -46,7 +46,7 @@ const banners: Banner[] = [
         title: "Home Cleaning",
         subtitle: "Deep Cleaning & Disinfection Services",
         gradient: "from-teal-600/90 via-teal-600/60 to-transparent",
-        image: "https://images.unsplash.com/photo-1581578731117-104f2a8d23e9?auto=format&fit=crop&q=80&w=600",
+        image: "/assets/home-cleaning.png",
         cta: "Book Now",
         link: "/search?category=cleaning",
         icon: Sparkles
