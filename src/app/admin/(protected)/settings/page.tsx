@@ -22,7 +22,6 @@ export default function SettingsPage() {
     }
 
     return (
-    return (
         <AdminPageTransition>
             <div className="max-w-4xl space-y-8">
                 <div>

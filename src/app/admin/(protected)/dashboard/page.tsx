@@ -36,7 +36,6 @@ export default async function DashboardPage() {
     const businesses = await getBusinesses(supabase);
 
     return (
-    return (
         <AdminPageTransition>
             <div className="space-y-8">
                 <div className="flex flex-col gap-1">
