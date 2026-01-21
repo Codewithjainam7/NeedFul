@@ -11,6 +11,11 @@ import { AnalyticsCharts } from '@/components/business/AnalyticsCharts'
 import { EventTypeChart } from '@/components/business/EventTypeChart'
 import { EngagementFunnel } from '@/components/business/EngagementFunnel'
 
+// Force dynamic rendering and disable caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+
 export default async function AnalyticsPage({ params }: { params: Promise<{ id: string }> }) {
     const supabase = await createClient()
     const { id } = await params

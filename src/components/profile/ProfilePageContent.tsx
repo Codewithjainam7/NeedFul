@@ -305,7 +305,7 @@ export function ProfilePageContent({ favorites: initialFavorites, user, myBusine
                                     </SectionHeading>
 
                                     {myBusiness && myBusiness.length > 0 ? (
-                                        <div className="grid grid-cols-1 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             {myBusiness.map(provider => (
                                                 <ServiceCard
                                                     key={provider.id}

@@ -16,6 +16,15 @@ import { createBusiness } from '@/app/actions/business'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
+import { LocationAutocomplete } from '@/components/ui/location-autocomplete'
+import dynamic from 'next/dynamic'
+import { MapPin } from 'lucide-react'
+
+// Dynamically import MapPicker with no SSR to avoid Leaflet window issues
+const MapPicker = dynamic(() => import('@/components/ui/map-picker'), {
+    ssr: false,
+    loading: () => null
+})
 
 type Category = {
     id: string;
@@ -28,6 +37,8 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
     const [step, setStep] = useState(1)
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
+    const [isMapOpen, setIsMapOpen] = useState(false)
+
 
     const form = useForm<CreateBusinessInput>({
         resolver: zodResolver(createBusinessSchema),
@@ -198,6 +209,8 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                         <Textarea {...register('description')} placeholder="Tell us about your business..." className="min-h-[100px] rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm resize-none" />
                                         {errors.description && <p className="text-red-500 text-xs font-semibold mt-1">{errors.description.message}</p>}
                                     </div>
+
+
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         <div className="space-y-2">
                                             <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">City</Label>
@@ -212,18 +225,58 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                         </div>
                                         <div className="space-y-2">
                                             <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Area / Locality</Label>
-                                            <Input {...register('area')} placeholder="e.g. Bandra West" className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm" />
+                                            <Controller
+                                                control={control}
+                                                name="area"
+                                                render={({ field }) => (
+                                                    <LocationAutocomplete
+                                                        value={field.value}
+                                                        onChange={field.onChange}
+                                                        placeholder="Select or type area..."
+                                                    />
+                                                )}
+                                            />
                                             {errors.area && <p className="text-red-500 text-xs font-semibold mt-1">{errors.area.message}</p>}
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Full Address</Label>
-                                        <Input {...register('address')} placeholder="Shop No, Building, Street..." className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm" />
+                                        <div className="flex justify-between items-center">
+                                            <Label className="font-bold text-gray-700 text-xs uppercase tracking-wide">Full Address</Label>
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-6 text-orange-600 hover:text-orange-700 hover:bg-orange-50 text-xs font-medium px-2"
+                                                onClick={() => setIsMapOpen(true)}
+                                            >
+                                                <MapPin className="w-3 h-3 mr-1" />
+                                                Pick on Map
+                                            </Button>
+                                        </div>
+                                        <div className="relative">
+                                            <Input {...register('address')} placeholder="Shop No, Building, Street..." className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-sm pr-10" />
+                                            <MapPin
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 cursor-pointer hover:text-orange-500 transition-colors"
+                                                onClick={() => setIsMapOpen(true)}
+                                            />
+                                        </div>
                                         {errors.address && <p className="text-red-500 text-xs font-semibold mt-1">{errors.address.message}</p>}
                                     </div>
                                 </div>
                             </motion.div>
                         )}
+
+                        {/* Map Picker Modal */}
+                        <MapPicker
+                            isOpen={isMapOpen}
+                            onClose={() => setIsMapOpen(false)}
+                            onConfirm={(location) => {
+                                setValue('address', location.address, { shouldDirty: true })
+                                // If we had lat/lng fields in the form, we would set them here too
+                                // setValue('latitude', location.lat)
+                                // setValue('longitude', location.lng)
+                            }}
+                        />
 
                         {/* STEP 2: CATEGORY Selection with Search */}
                         {step === 2 && (

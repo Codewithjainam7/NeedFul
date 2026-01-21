@@ -11,6 +11,7 @@ import { BusinessTabs } from '@/components/business/BusinessTabs'
 import { StickyActionBar } from '@/components/business/StickyActionBar'
 import { EnquiryForm } from '@/components/listing/SidebarWidgets'
 import { BusinessMapWrapper } from '@/components/business/BusinessMapWrapper'
+import { AnalyticsTracker } from '@/components/business/AnalyticsTracker'
 import { createClient } from '@/lib/supabase/client'
 import { Provider, Category, Service } from '@/types/database'
 import { Loader2 } from 'lucide-react'
@@ -104,6 +105,7 @@ export default function BusinessDetailPage() {
     return (
         <div className="min-h-screen bg-white">
             <Header />
+            <AnalyticsTracker providerId={provider.id} />
 
             <main className="container mx-auto px-4 pt-20 pb-12 max-w-7xl">
                 {/* 1. Header Section */}

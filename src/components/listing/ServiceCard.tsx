@@ -15,6 +15,7 @@ import { useState } from 'react'
 import type { Provider, Category, Service } from '@/types/database'
 import { toggleFavorite } from '@/app/actions/favorites'
 import { deleteBusiness } from '@/app/actions/business'
+import { trackAnalyticsEvent } from '@/app/actions/analytics'
 import { toast } from 'sonner'
 import {
     AlertDialog,
@@ -78,7 +79,7 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
         }
     }
 
-    const handleWhatsApp = (e: React.MouseEvent) => {
+    const handleWhatsApp = async (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
 
@@ -86,6 +87,10 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
             toast.error("No phone number available")
             return
         }
+
+        // Track analytics
+        trackAnalyticsEvent(provider.id, 'whatsapp_click').catch(console.error)
+
 
         // Clean number (remove spaces, dashes, etc)
         const cleanNumber = provider.phone.replace(/\D/g, '')
@@ -95,9 +100,15 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
         window.open(`https://wa.me/${finalNumber}`, '_blank')
     }
 
-    const handleShowNumber = (e: React.MouseEvent) => {
+    const handleShowNumber = async (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
+
+        // Track analytics on first click only
+        if (!showNumber) {
+            trackAnalyticsEvent(provider.id, 'phone_click').catch(console.error)
+        }
+
         setShowNumber(true)
     }
 
@@ -262,6 +273,20 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
                                     Analytics
                                 </Button>
 
+                                <Button
+                                    variant="outline"
+                                    className="flex-1 border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 font-semibold h-9 text-xs sm:text-sm px-3 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap transition-all active:scale-[0.98]"
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        router.push(`/business/enquiries/${provider.id}`)
+                                    }}
+                                >
+                                    <MessageCircle className="w-4 h-4" />
+                                    Enquiries
+                                </Button>
+
+
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
                                         <Button
@@ -347,6 +372,7 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
                 isOpen={isEnquireModalOpen}
                 onClose={() => setIsEnquireModalOpen(false)}
                 businessName={provider.business_name}
+                providerId={provider.id}
             />
         </Card >
     )
