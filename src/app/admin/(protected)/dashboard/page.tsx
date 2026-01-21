@@ -67,7 +67,7 @@ export default async function DashboardPage() {
                                 <Store className="h-5 w-5 text-white" />
                             </div>
                         </div>
-                        <div className="text-3xl font-bold">{stats.businessCount.toLocaleString()}</div>
+                        <div className="text-3xl font-bold font-[family-name:var(--font-space-grotesk)]">{stats.businessCount.toLocaleString()}</div>
                         <div className="flex items-center gap-1 mt-2">
                             <TrendingUp className="w-3 h-3" />
                             <span className="text-xs text-white/80">+2 from last month</span>
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
                                 <Users className="h-5 w-5 text-blue-500" />
                             </div>
                         </div>
-                        <div className="text-3xl font-bold text-gray-900">{stats.userCount.toLocaleString()}</div>
+                        <div className="text-3xl font-bold text-gray-900 font-[family-name:var(--font-space-grotesk)]">{stats.userCount.toLocaleString()}</div>
                         <div className="flex items-center gap-1 mt-2">
                             <TrendingUp className="w-3 h-3 text-green-500" />
                             <span className="text-xs text-gray-500">+12% from last month</span>
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
                                 <Star className="h-5 w-5 text-yellow-500" />
                             </div>
                         </div>
-                        <div className="text-3xl font-bold text-gray-900">{stats.reviewCount.toLocaleString()}</div>
+                        <div className="text-3xl font-bold text-gray-900 font-[family-name:var(--font-space-grotesk)]">{stats.reviewCount.toLocaleString()}</div>
                         <div className="flex items-center gap-1 mt-2">
                             <TrendingUp className="w-3 h-3 text-green-500" />
                             <span className="text-xs text-gray-500">+4% from last month</span>
@@ -109,7 +109,7 @@ export default async function DashboardPage() {
                                 <Activity className="h-5 w-5 text-green-500" />
                             </div>
                         </div>
-                        <div className="text-3xl font-bold text-gray-900">+573</div>
+                        <div className="text-3xl font-bold text-gray-900 font-[family-name:var(--font-space-grotesk)]">+573</div>
                         <div className="flex items-center gap-1 mt-2">
                             <TrendingUp className="w-3 h-3 text-green-500" />
                             <span className="text-xs text-gray-500">+201 since last hour</span>

@@ -94,7 +94,7 @@ export function DashboardCharts() {
                                 <Clock className="w-5 h-5 text-orange-600" />
                             </div>
                             <div>
-                                <p className="text-3xl font-bold text-gray-900">{stats.pendingCount}</p>
+                                <p className="text-3xl font-bold text-gray-900 font-[family-name:var(--font-space-grotesk)]">{stats.pendingCount}</p>
                                 <p className="text-xs text-gray-500">Pending Approval</p>
                             </div>
                         </div>
@@ -108,7 +108,7 @@ export function DashboardCharts() {
                                 <CheckCircle className="w-5 h-5 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-3xl font-bold text-gray-900">{stats.verifiedCount}</p>
+                                <p className="text-3xl font-bold text-gray-900 font-[family-name:var(--font-space-grotesk)]">{stats.verifiedCount}</p>
                                 <p className="text-xs text-gray-500">Verified Businesses</p>
                             </div>
                         </div>
@@ -122,7 +122,7 @@ export function DashboardCharts() {
                                 <Star className="w-5 h-5 text-yellow-600" />
                             </div>
                             <div>
-                                <p className="text-3xl font-bold text-gray-900">{stats.avgRating}⭐</p>
+                                <p className="text-3xl font-bold text-gray-900 font-[family-name:var(--font-space-grotesk)]">{stats.avgRating}⭐</p>
                                 <p className="text-xs text-gray-500">Avg. Rating</p>
                             </div>
                         </div>
@@ -136,7 +136,7 @@ export function DashboardCharts() {
                                 <TrendingUp className="w-5 h-5 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-3xl font-bold text-gray-900">{stats.todaySignups}</p>
+                                <p className="text-3xl font-bold text-gray-900 font-[family-name:var(--font-space-grotesk)]">{stats.todaySignups}</p>
                                 <p className="text-xs text-gray-500">Today's Signups</p>
                             </div>
                         </div>
