@@ -355,7 +355,7 @@ function LoginForm() {
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 onFocus={() => setFocusedField('email')}
                                                 onBlur={() => setFocusedField(null)}
-                                                className="pl-12 h-14 bg-gray-50/80 border-2 border-gray-100 text-gray-900 placeholder:text-gray-400 rounded-2xl focus:border-orange-400 focus:ring-4 focus:ring-orange-500/20 focus:bg-white transition-all duration-300 cursor-pointer"
+                                                className="pl-12 h-14 bg-white border-2 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-2xl focus:border-orange-400 focus:ring-4 focus:ring-orange-500/20 focus:bg-white transition-all duration-300 cursor-pointer"
                                                 required
                                             />
                                         </div>
@@ -384,7 +384,7 @@ function LoginForm() {
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 onFocus={() => setFocusedField('password')}
                                                 onBlur={() => setFocusedField(null)}
-                                                className="pl-12 pr-12 h-14 bg-gray-50/80 border-2 border-gray-100 text-gray-900 placeholder:text-gray-400 rounded-2xl focus:border-orange-400 focus:ring-4 focus:ring-orange-500/20 focus:bg-white transition-all duration-300 cursor-pointer"
+                                                className="pl-12 pr-12 h-14 bg-white border-2 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-2xl focus:border-orange-400 focus:ring-4 focus:ring-orange-500/20 focus:bg-white transition-all duration-300 cursor-pointer"
                                                 required
                                             />
                                             <button
