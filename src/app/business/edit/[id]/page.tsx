@@ -5,9 +5,9 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { ProviderWithDetails, Category } from '@/types/database'
 
-export default async function EditBusinessPage({ params }: { params: { id: string } }) {
+export default async function EditBusinessPage({ params }: { params: Promise<{ id: string }> }) {
     const supabase = await createClient()
-    const { id } = params
+    const { id } = await params
 
     // 1. Get current user
     const { data: { user } } = await supabase.auth.getUser()

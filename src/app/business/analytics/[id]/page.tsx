@@ -10,9 +10,9 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { AnalyticsCharts } from '@/components/business/AnalyticsCharts'
 
-export default async function AnalyticsPage({ params }: { params: { id: string } }) {
+export default async function AnalyticsPage({ params }: { params: Promise<{ id: string }> }) {
     const supabase = await createClient()
-    const { id } = params
+    const { id } = await params
 
     // 1. Check Auth & Ownership
     const { data: { user } } = await supabase.auth.getUser()

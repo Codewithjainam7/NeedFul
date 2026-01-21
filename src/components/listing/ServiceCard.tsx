@@ -293,7 +293,7 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
                                                         onSave?.(provider.id) // Notify parent to refresh list if needed
                                                     }
                                                 }}
-                                                className="bg-red-600 hover:bg-red-700 text-white"
+                                                className="bg-[#FF5200] hover:bg-[#E04800] text-white"
                                             >
                                                 Delete Business
                                             </AlertDialogAction>
