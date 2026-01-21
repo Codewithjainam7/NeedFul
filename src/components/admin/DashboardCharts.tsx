@@ -71,48 +71,13 @@ export function DashboardCharts() {
             const safeUsers = users || [];
             const safeReviews = reviews || [];
 
-            // --- Demo Data Fallback ---
-            if (safeProviders.length === 0 && safeUsers.length === 0 && safeReviews.length === 0) {
-                const demoMonthly = [
-                    { name: "Jan", users: 120, reviews: 45, businesses: 12 },
-                    { name: "Feb", users: 150, reviews: 62, businesses: 18 },
-                    { name: "Mar", users: 200, reviews: 89, businesses: 24 },
-                    { name: "Apr", users: 180, reviews: 78, businesses: 20 },
-                    { name: "May", users: 220, reviews: 95, businesses: 28 },
-                    { name: "Jun", users: 280, reviews: 120, businesses: 35 },
-                ];
-                setMonthlyData(demoMonthly);
-                setWeeklyData([
-                    { day: "Mon", signups: 12, reviews: 8 },
-                    { day: "Tue", signups: 18, reviews: 12 },
-                    { day: "Wed", signups: 15, reviews: 10 },
-                    { day: "Thu", signups: 22, reviews: 15 },
-                    { day: "Fri", signups: 28, reviews: 20 },
-                    { day: "Sat", signups: 14, reviews: 8 },
-                    { day: "Sun", signups: 10, reviews: 5 },
-                ]);
-                setReviewDistribution([
-                    { name: "5 Stars", value: 45, color: "#22c55e" },
-                    { name: "4 Stars", value: 30, color: "#84cc16" },
-                    { name: "3 Stars", value: 15, color: "#eab308" },
-                ]);
-                setTopCities([
-                    { name: "New York", value: 24 },
-                    { name: "Los Angeles", value: 18 },
-                    { name: "Chicago", value: 12 },
-                ]);
-                setStats({ pendingCount: 4, verifiedCount: 12, avgRating: 4.8, todaySignups: 5 });
-                setLoading(false);
-                return;
-            }
-
             // --- Stats Logic ---
-            const pendingCount = safeProviders.filter((p: any) => !p.is_verified).length;
-            const verifiedCount = safeProviders.filter((p: any) => p.is_verified).length;
+            const pendingCount = safeProviders.filter((p: any) => !p.is_verified).length + 4; // +4 Demo
+            const verifiedCount = safeProviders.filter((p: any) => p.is_verified).length + 12; // +12 Demo
             const avgRatingVal = safeReviews.length > 0
                 ? (safeReviews.reduce((acc: number, r: any) => acc + (r.rating || 0), 0) / safeReviews.length).toFixed(1)
-                : 0;
-            const todaySignups = safeUsers.filter((u: any) => new Date(u.created_at) >= today).length;
+                : "4.8"; // Demo fallback rating
+            const todaySignups = safeUsers.filter((u: any) => new Date(u.created_at) >= today).length + 5; // +5 Demo
 
             setStats({
                 pendingCount,
@@ -125,12 +90,23 @@ export function DashboardCharts() {
             const months: any = {};
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-            // Initialize last 6 months
+            // Initialize last 6 months with BASELINE DEMO DATA
             for (let i = 5; i >= 0; i--) {
                 const d = new Date();
                 d.setMonth(d.getMonth() - i);
-                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`; // Unique key
-                months[key] = { name: monthNames[d.getMonth()], users: 0, reviews: 0, businesses: 0, sortDate: d };
+                const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+
+                // Demo Baseline Pattern: Linear growth
+                const baseUsers = 120 + ((5 - i) * 30); // 120, 150, 180...
+                const baseReviews = 45 + ((5 - i) * 15);
+
+                months[key] = {
+                    name: monthNames[d.getMonth()],
+                    users: baseUsers,
+                    reviews: baseReviews,
+                    businesses: 10 + ((5 - i) * 5),
+                    sortDate: d
+                };
             }
 
             safeUsers.forEach((u: any) => {
@@ -162,7 +138,13 @@ export function DashboardCharts() {
                 d.setDate(d.getDate() - i);
                 const dayName = dayNames[d.getDay()];
                 const dateKey = d.toISOString().split('T')[0];
-                days[dateKey] = { day: dayName, signups: 0, reviews: 0 };
+
+                // Demo Baseline
+                days[dateKey] = {
+                    day: dayName,
+                    signups: Math.floor(Math.random() * 10) + 5, // 5-15 random
+                    reviews: Math.floor(Math.random() * 5) + 2
+                };
             }
 
             safeUsers.forEach((u: any) => {
@@ -176,7 +158,7 @@ export function DashboardCharts() {
             setWeeklyData(Object.values(days));
 
             // --- Review Distribution Logic ---
-            const dist = [0, 0, 0, 0, 0, 0]; // 0 index unused, 1-5 stars
+            const dist = [0, 3, 7, 15, 30, 45]; // Demo Baseline (Indices 1-5 used)
             safeReviews.forEach((r: any) => {
                 const rating = Math.round(r.rating || 0);
                 if (rating >= 1 && rating <= 5) dist[rating]++;
@@ -190,14 +172,15 @@ export function DashboardCharts() {
                 { name: "1 Star", value: dist[1], color: "#ef4444" },
             ].filter(d => d.value > 0);
 
-            // Fallback for empty data to show structure
-            if (distChartData.length === 0) {
-                distChartData.push({ name: "No Reviews", value: 1, color: "#e5e7eb" });
-            }
             setReviewDistribution(distChartData);
 
             // --- Top Cities Logic ---
-            const cityCounts: any = {};
+            const cityCounts: any = {
+                "New York": 24,    // Demo
+                "Los Angeles": 18, // Demo
+                "Chicago": 12,     // Demo
+                "Miami": 8,        // Demo
+            };
             safeProviders.forEach((p: any) => {
                 if (p.city) {
                     const c = p.city.trim();

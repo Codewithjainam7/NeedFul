@@ -1,25 +1,13 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Search, User, Store, Star, Shield, Trash2, Clock } from 'lucide-react'
+import { Search, User, Store, Star, Clock, Loader2 } from 'lucide-react'
 import { AdminPageTransition } from '@/components/admin/AdminPageTransition'
-
-// Mock activity logs
-const activityLogs = [
-    { id: 1, action: 'New user registered', user: 'john@example.com', type: 'user', time: '2 minutes ago', icon: User },
-    { id: 2, action: 'Business listing created', user: 'Khushi Kulkarni', type: 'business', time: '15 minutes ago', icon: Store },
-    { id: 3, action: 'Review submitted', user: 'Anonymous', type: 'review', time: '32 minutes ago', icon: Star },
-    { id: 4, action: 'User role changed to admin', user: 'admin@needful.com', type: 'admin', time: '1 hour ago', icon: Shield },
-    { id: 5, action: 'Business verified', user: 'Ahmad Khanna', type: 'business', time: '2 hours ago', icon: Store },
-    { id: 6, action: 'Review deleted', user: 'admin@needful.com', type: 'admin', time: '3 hours ago', icon: Trash2 },
-    { id: 7, action: 'New user registered', user: 'sarah@gmail.com', type: 'user', time: '4 hours ago', icon: User },
-    { id: 8, action: 'Business listing updated', user: 'Swati Joshi', type: 'business', time: '5 hours ago', icon: Store },
-    { id: 9, action: 'Password reset requested', user: 'user123@mail.com', type: 'user', time: '6 hours ago', icon: User },
-    { id: 10, action: 'New review with 5 stars', user: 'happy_customer', type: 'review', time: '7 hours ago', icon: Star },
-]
+import { formatDistanceToNow } from 'date-fns'
 
 const getTypeColor = (type: string) => {
     switch (type) {
@@ -33,8 +21,66 @@ const getTypeColor = (type: string) => {
 
 export default function ActivityLogsPage() {
     const [searchQuery, setSearchQuery] = useState('')
+    const [logs, setLogs] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+    const supabase = createClient()
 
-    const filteredLogs = activityLogs.filter(log =>
+    useEffect(() => {
+        fetchLogs()
+    }, [])
+
+    const fetchLogs = async () => {
+        try {
+            const [users, providers, reviews] = await Promise.all([
+                supabase.from('users').select('id, name, email, created_at').order('created_at', { ascending: false }).limit(20),
+                supabase.from('providers').select('id, business_name, created_at').order('created_at', { ascending: false }).limit(20),
+                supabase.from('reviews').select('id, rating, created_at').order('created_at', { ascending: false }).limit(20)
+            ])
+
+            const userLogs = (users.data || []).map((u: any) => ({
+                id: `u-${u.id}`,
+                action: 'New user registered',
+                user: u.name || u.email || 'Unknown User',
+                type: 'user',
+                time: new Date(u.created_at),
+                rawTime: u.created_at,
+                icon: User
+            }))
+
+            const providerLogs = (providers.data || []).map((p: any) => ({
+                id: `p-${p.id}`,
+                action: 'Business listing created',
+                user: p.business_name || 'Unknown Business',
+                type: 'business',
+                time: new Date(p.created_at),
+                rawTime: p.created_at,
+                icon: Store
+            }))
+
+            const reviewLogs = (reviews.data || []).map((r: any) => ({
+                id: `r-${r.id}`,
+                action: `Review submitted (${r.rating} stars)`,
+                user: 'Anonymous User', // Reviews often link to users, but we'll keep simple for now
+                type: 'review',
+                time: new Date(r.created_at),
+                rawTime: r.created_at,
+                icon: Star
+            }))
+
+            // Merge and sort desc
+            const allLogs = [...userLogs, ...providerLogs, ...reviewLogs]
+                .sort((a, b) => b.time.getTime() - a.time.getTime())
+                .slice(0, 50) // Keep top 50 recent events
+
+            setLogs(allLogs)
+        } catch (error) {
+            console.error('Error fetching logs:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const filteredLogs = logs.filter(log =>
         log.action.toLowerCase().includes(searchQuery.toLowerCase()) ||
         log.user.toLowerCase().includes(searchQuery.toLowerCase())
     )
@@ -58,7 +104,7 @@ export default function ActivityLogsPage() {
                     </div>
                 </div>
 
-                <Card className="border-none shadow-lg">
+                <Card className="border-white/60 bg-white/60 backdrop-blur-xl shadow-md hover:shadow-lg transition-all duration-300">
                     <CardHeader>
                         <CardTitle className="text-lg flex items-center gap-2">
                             <Clock className="w-5 h-5 text-gray-400" />
@@ -66,30 +112,40 @@ export default function ActivityLogsPage() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <div className="divide-y divide-gray-100">
-                            {filteredLogs.map((log) => (
-                                <div key={log.id} className="flex items-center gap-4 p-4 hover:bg-gray-50/50 transition-colors">
-                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${getTypeColor(log.type)}`}>
-                                        <log.icon className="w-5 h-5" />
+                        {loading ? (
+                            <div className="flex justify-center p-8">
+                                <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+                            </div>
+                        ) : filteredLogs.length > 0 ? (
+                            <div className="divide-y divide-gray-100">
+                                {filteredLogs.map((log) => (
+                                    <div key={log.id} className="flex items-center gap-4 p-4 hover:bg-white/50 transition-colors">
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-sm ${getTypeColor(log.type)}`}>
+                                            <log.icon className="w-5 h-5" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="font-medium text-gray-900">{log.action}</p>
+                                            <p className="text-sm text-gray-500">{log.user}</p>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <Badge variant="outline" className={getTypeColor(log.type)}>
+                                                {log.type}
+                                            </Badge>
+                                            <span className="text-xs text-gray-400 whitespace-nowrap">
+                                                {formatDistanceToNow(log.time, { addSuffix: true })}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="flex-1">
-                                        <p className="font-medium text-gray-900">{log.action}</p>
-                                        <p className="text-sm text-gray-500">{log.user}</p>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <Badge variant="outline" className={getTypeColor(log.type)}>
-                                            {log.type}
-                                        </Badge>
-                                        <span className="text-xs text-gray-400 whitespace-nowrap">{log.time}</span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="p-8 text-center text-gray-500">No activity logs found.</div>
+                        )}
                     </CardContent>
                 </Card>
 
                 <div className="text-center text-sm text-gray-500">
-                    Showing {filteredLogs.length} of {activityLogs.length} logs
+                    Showing {filteredLogs.length} of {logs.length} logs
                 </div>
             </div>
         </AdminPageTransition>

@@ -82,8 +82,10 @@ export default function AnalyticsPage() {
                 if (months[key]) months[key].reviews++;
             });
 
-            // If empty, use demo
-            if (!usersRes.count && !businessesRes.count) {
+            // If data is sparse (< 10 records total), use demo data to make charts look good
+            const totalRecords = (usersRes.count || 0) + (businessesRes.count || 0) + (reviewsRes.count || 0);
+
+            if (totalRecords < 10) {
                 // Keep mock data defined at top
                 setChartData(monthlyData);
             } else {

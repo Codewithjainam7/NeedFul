@@ -76,7 +76,7 @@ export function EventTypeChart({ views, phoneClicks, whatsappClicks, enquiries }
                             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                             padding: '12px'
                         }}
-                        formatter={(value: number) => [`${value} events`, '']}
+                        formatter={(value: any) => [`${value} events`, '']}
                     />
                     <Legend
                         verticalAlign="bottom"
