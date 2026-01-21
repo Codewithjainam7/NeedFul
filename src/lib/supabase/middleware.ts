@@ -57,5 +57,17 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
+    // Force profile completion
+    if (user && !request.nextUrl.pathname.startsWith('/complete-profile') && !request.nextUrl.pathname.startsWith('/auth') && !request.nextUrl.pathname.startsWith('/api')) {
+        const phone = user.user_metadata?.phone
+        const city = user.user_metadata?.city
+
+        if (!phone || !city) {
+            const url = request.nextUrl.clone()
+            url.pathname = '/complete-profile'
+            return NextResponse.redirect(url)
+        }
+    }
+
     return supabaseResponse
 }
