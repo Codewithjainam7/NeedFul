@@ -2,22 +2,27 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
-import { CustomCursor } from '@/components/ui/cursor';
+import { AdminBackground } from '@/components/admin/AdminBackground';
 
 export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    // ... (existing code) ...
+    // Auth check would go here if needed
 
     return (
-        <div className="min-h-screen bg-background text-foreground flex">
-            <CustomCursor />
+        <div className="min-h-screen text-foreground flex relative">
+            {/* Animated Background */}
+            <AdminBackground />
+
+            {/* Sidebar */}
             <AdminSidebar />
-            <div className="flex-1 flex flex-col ml-64 transition-all duration-300">
+
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col ml-64 transition-all duration-300 relative z-10">
                 <AdminHeader />
-                <main className="flex-1 p-6 overflow-y-auto bg-secondary/10">
+                <main className="flex-1 p-6 overflow-y-auto">
                     <div className="max-w-7xl mx-auto w-full">
                         {children}
                     </div>
