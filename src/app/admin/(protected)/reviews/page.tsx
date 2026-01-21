@@ -56,65 +56,71 @@ export default function ReviewsPage() {
     )
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Reviews</h1>
-                    <p className="text-muted-foreground">Monitor and manage user reviews.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Reviews</h1>
+                    <p className="text-muted-foreground mt-1">Monitor and manage user feedback.</p>
                 </div>
-                <div className="relative w-64">
+                <div className="relative w-full md:w-72">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
                         placeholder="Search reviews..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9"
+                        className="pl-9 border-gray-200 focus:border-[#FF5200] focus:ring-[#FF5200]/30 rounded-xl bg-white"
                     />
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {loading ? (
-                    <div className="flex justify-center items-center h-40">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <div className="col-span-full flex justify-center items-center h-40">
+                        <Loader2 className="h-8 w-8 animate-spin text-[#FF5200]" />
                     </div>
                 ) : filteredReviews.length === 0 ? (
-                    <div className="text-center py-12 bg-white rounded-xl border border-dashed">
+                    <div className="col-span-full text-center py-12 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
                         <p className="text-muted-foreground">No reviews found.</p>
                     </div>
                 ) : (
                     filteredReviews.map((review) => (
-                        <div key={review.id} className="bg-white p-5 rounded-xl border shadow-sm hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start mb-3">
+                        <div key={review.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:border-orange-100 group">
+                            <div className="flex justify-between items-start mb-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold">
+                                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center text-[#FF5200] font-bold border border-orange-100">
                                         {review.user?.name?.[0] || 'U'}
                                     </div>
                                     <div>
-                                        <p className="font-semibold text-gray-900">{review.user?.name || 'Anonymous'}</p>
-                                        <p className="text-xs text-gray-500">on <span className="font-medium text-gray-700">{review.provider?.business_name || 'Unknown Business'}</span></p>
+                                        <p className="font-bold text-gray-900 group-hover:text-[#FF5200] transition-colors">{review.user?.name || 'Anonymous'}</p>
+                                        <p className="text-xs text-gray-500">
+                                            on <span className="font-medium text-gray-700">{review.provider?.business_name || 'Unknown Business'}</span>
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center px-2.5 py-1 bg-yellow-50 rounded-lg border border-yellow-100">
-                                    <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 mr-1.5" />
-                                    <span className="font-bold text-yellow-700">{review.rating}</span>
+                                <div className="flex items-center px-2 py-1 bg-yellow-50 rounded-lg border border-yellow-100">
+                                    <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 mr-1" />
+                                    <span className="font-bold text-yellow-700 text-sm">{review.rating}</span>
                                 </div>
                             </div>
 
-                            <p className="text-gray-600 text-sm leading-relaxed mb-4 pl-13">
-                                {review.comment || "No written comment."}
-                            </p>
+                            <div className="bg-gray-50/50 p-3 rounded-xl mb-4">
+                                <p className="text-gray-700 text-sm leading-relaxed italic">
+                                    "{review.comment || "No written comment."}"
+                                </p>
+                            </div>
 
-                            <div className="flex items-center justify-between pt-3 border-t border-gray-50">
-                                <span className="text-xs text-gray-400">
-                                    {new Date(review.created_at).toLocaleDateString()}
+                            <div className="flex items-center justify-between pt-2">
+                                <span className="text-xs text-gray-400 font-medium bg-gray-50 px-2 py-1 rounded-md">
+                                    {new Date(review.created_at).toLocaleDateString(undefined, {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                    })}
                                 </span>
-                                <div className="flex gap-2">
-                                    <Button variant="ghost" size="sm" className="text-gray-500 hover:text-red-600">
-                                        <Trash2 className="h-4 w-4 mr-1.5" />
-                                        Delete
-                                    </Button>
-                                </div>
+                                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-red-600 hover:bg-red-50 h-8 rounded-lg transition-colors">
+                                    <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                                    Delete
+                                </Button>
                             </div>
                         </div>
                     ))
