@@ -485,41 +485,9 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                         </div>
                                     </div>
                                 )}
-                            </motion.div>
-                        )}
 
-                        {/* STEP 4: REVIEW */}
-                        {step === 4 && (
-                            <motion.div
-                                key="step4"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                className="space-y-6"
-                            >
-                                <div className="text-center">
-                                    <h3 className="text-2xl font-bold text-gray-800">Review & Submit</h3>
-                                    <p className="text-gray-500 text-sm mt-1">Double check your information.</p>
-                                </div>
-                                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm space-y-4">
-                                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                                        <span className="text-gray-500 font-bold text-xs uppercase tracking-wide">Business Name</span>
-                                        <span className="text-lg font-bold text-gray-800">{watch('business_name')}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                                        <span className="text-gray-500 font-bold text-xs uppercase tracking-wide">Category</span>
-                                        <span className="bg-orange-100 text-orange-700 border border-orange-200 px-3 py-1 rounded-full text-sm font-bold shadow-sm">{selectedCategory?.name}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                                        <span className="text-gray-500 font-bold text-xs uppercase tracking-wide">City</span>
-                                        <span className="text-gray-800 font-medium">{watch('city')}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-500 font-bold text-xs uppercase tracking-wide">Contact</span>
-                                        <span className="text-gray-800 font-medium">{watch('phone')}</span>
-                                    </div>
-                                </div>
-                                <div className="space-y-3">
+                                {/* Image Upload Section */}
+                                <div className="space-y-3 pt-4">
                                     <div className="bg-blue-50 p-5 rounded-xl border border-blue-100 text-sm text-blue-900 flex flex-col md:flex-row gap-4 items-center shadow-sm">
                                         <div className="bg-white p-3 rounded-full shadow-sm border border-blue-100">
                                             <Upload className="w-5 h-5 text-blue-600" />
@@ -566,6 +534,54 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                         </div>
                                     )}
                                 </div>
+                            </motion.div>
+                        )}
+
+                        {/* STEP 4: REVIEW */}
+                        {step === 4 && (
+                            <motion.div
+                                key="step4"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                className="space-y-6"
+                            >
+                                <div className="text-center">
+                                    <h3 className="text-2xl font-bold text-gray-800">Review & Submit</h3>
+                                    <p className="text-gray-500 text-sm mt-1">Double check your information.</p>
+                                </div>
+                                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm space-y-4">
+                                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                                        <span className="text-gray-500 font-bold text-xs uppercase tracking-wide">Business Name</span>
+                                        <span className="text-lg font-bold text-gray-800">{watch('business_name')}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                                        <span className="text-gray-500 font-bold text-xs uppercase tracking-wide">Category</span>
+                                        <span className="bg-orange-100 text-orange-700 border border-orange-200 px-3 py-1 rounded-full text-sm font-bold shadow-sm">{selectedCategory?.name}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                                        <span className="text-gray-500 font-bold text-xs uppercase tracking-wide">City</span>
+                                        <span className="text-gray-800 font-medium">{watch('city')}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-500 font-bold text-xs uppercase tracking-wide">Contact</span>
+                                        <span className="text-gray-800 font-medium">{watch('phone')}</span>
+                                    </div>
+                                </div>
+
+                                {/* Display uploaded images in review */}
+                                {watch('images') && watch('images')!.length > 0 && (
+                                    <div className="space-y-3">
+                                        <p className="text-gray-500 font-bold text-xs uppercase tracking-wide">Uploaded Photos</p>
+                                        <div className="grid grid-cols-3 gap-3">
+                                            {watch('images')?.map((url, idx) => (
+                                                <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200">
+                                                    <img src={url} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </motion.div>
                         )}
                     </AnimatePresence>
