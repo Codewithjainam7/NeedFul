@@ -12,40 +12,50 @@ const enquirySchema = z.object({
     message: z.string().min(10, 'Message must be at least 10 characters'),
 })
 
+type EnquiryInsert = {
+    provider_id: string
+    customer_name: string
+    customer_phone: string
+    customer_email: string | null
+    message: string
+    status: string
+}
+
+type EnquiryUpdate = {
+    status: string
+    updated_at: string
+}
+
 export async function submitEnquiry(data: z.infer<typeof enquirySchema>) {
     try {
-        // Validate input
         const validatedData = enquirySchema.parse(data)
-
         const supabase = await createClient()
 
-        // Insert enquiry - using type assertion to bypass strict typing
-        const { error } = await (supabase as any)
-            .from('enquiries')
-            .insert({
-                provider_id: validatedData.provider_id,
-                customer_name: validatedData.customer_name,
-                customer_phone: validatedData.customer_phone,
-                customer_email: validatedData.customer_email || null,
-                message: validatedData.message,
-                status: 'new'
-            })
+        const insertData: EnquiryInsert = {
+            provider_id: validatedData.provider_id,
+            customer_name: validatedData.customer_name,
+            customer_phone: validatedData.customer_phone,
+            customer_email: validatedData.customer_email || null,
+            message: validatedData.message,
+            status: 'new'
+        }
+
+        const { error } = await supabase
+            .from('enquiries' as any)
+            .insert(insertData as any)
 
         if (error) throw error
 
-        // Track analytics event
         try {
             await supabase
                 .from('analytics_events')
                 .insert({
                     provider_id: validatedData.provider_id,
                     event_type: 'enquiry_click',
-                    metadata: {
-                        customer_name: validatedData.customer_name
-                    }
+                    metadata: { customer_name: validatedData.customer_name }
                 })
-        } catch (analyticsError) {
-            console.warn('Failed to track analytics:', analyticsError)
+        } catch (e) {
+            console.warn('Analytics tracking failed:', e)
         }
 
         return { success: true }
@@ -58,8 +68,8 @@ export async function submitEnquiry(data: z.infer<typeof enquirySchema>) {
 export async function getEnquiries(providerId: string) {
     const supabase = await createClient()
 
-    const { data, error } = await (supabase as any)
-        .from('enquiries')
+    const { data, error } = await supabase
+        .from('enquiries' as any)
         .select('*')
         .eq('provider_id', providerId)
         .order('created_at', { ascending: false })
@@ -75,9 +85,14 @@ export async function getEnquiries(providerId: string) {
 export async function updateEnquiryStatus(enquiryId: string, status: 'new' | 'contacted' | 'closed') {
     const supabase = await createClient()
 
-    const { error } = await (supabase as any)
-        .from('enquiries')
-        .update({ status, updated_at: new Date().toISOString() })
+    const updateData: EnquiryUpdate = {
+        status,
+        updated_at: new Date().toISOString()
+    }
+
+    const { error } = await supabase
+        .from('enquiries' as any)
+        .update(updateData as any)
         .eq('id', enquiryId)
 
     if (error) {
