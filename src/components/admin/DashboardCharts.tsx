@@ -37,6 +37,18 @@ export function DashboardCharts() {
 
     useEffect(() => {
         fetchStats();
+
+        // Subscribe to real-time changes
+        const channel = supabase
+            .channel('dashboard_updates')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'providers' }, () => fetchStats())
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => fetchStats())
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => fetchStats())
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const fetchStats = async () => {
@@ -61,16 +73,16 @@ export function DashboardCharts() {
 
             // --- Demo Data Fallback ---
             if (safeProviders.length === 0 && safeUsers.length === 0 && safeReviews.length === 0) {
-                 const demoMonthly = [
+                const demoMonthly = [
                     { name: "Jan", users: 120, reviews: 45, businesses: 12 },
                     { name: "Feb", users: 150, reviews: 62, businesses: 18 },
                     { name: "Mar", users: 200, reviews: 89, businesses: 24 },
                     { name: "Apr", users: 180, reviews: 78, businesses: 20 },
                     { name: "May", users: 220, reviews: 95, businesses: 28 },
                     { name: "Jun", users: 280, reviews: 120, businesses: 35 },
-                 ];
-                 setMonthlyData(demoMonthly);
-                 setWeeklyData([
+                ];
+                setMonthlyData(demoMonthly);
+                setWeeklyData([
                     { day: "Mon", signups: 12, reviews: 8 },
                     { day: "Tue", signups: 18, reviews: 12 },
                     { day: "Wed", signups: 15, reviews: 10 },
@@ -78,20 +90,20 @@ export function DashboardCharts() {
                     { day: "Fri", signups: 28, reviews: 20 },
                     { day: "Sat", signups: 14, reviews: 8 },
                     { day: "Sun", signups: 10, reviews: 5 },
-                 ]);
-                 setReviewDistribution([
+                ]);
+                setReviewDistribution([
                     { name: "5 Stars", value: 45, color: "#22c55e" },
                     { name: "4 Stars", value: 30, color: "#84cc16" },
                     { name: "3 Stars", value: 15, color: "#eab308" },
-                 ]);
-                 setTopCities([
-                     { name: "New York", value: 24 },
-                     { name: "Los Angeles", value: 18 },
-                     { name: "Chicago", value: 12 },
-                 ]);
-                 setStats({ pendingCount: 4, verifiedCount: 12, avgRating: 4.8, todaySignups: 5 });
-                 setLoading(false);
-                 return;
+                ]);
+                setTopCities([
+                    { name: "New York", value: 24 },
+                    { name: "Los Angeles", value: 18 },
+                    { name: "Chicago", value: 12 },
+                ]);
+                setStats({ pendingCount: 4, verifiedCount: 12, avgRating: 4.8, todaySignups: 5 });
+                setLoading(false);
+                return;
             }
 
             // --- Stats Logic ---
