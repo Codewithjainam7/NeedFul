@@ -307,10 +307,12 @@ export function useStoryAnalytics(storyId: string) {
 
             if (error) throw error
 
+            const views = data as { user_id: string | null }[]
+
             return {
-                total_views: data.length,
-                unique_users: data.filter((v) => v.user_id).length,
-                anonymous_views: data.filter((v) => !v.user_id).length,
+                total_views: views.length,
+                unique_users: views.filter((v) => v.user_id).length,
+                anonymous_views: views.filter((v) => !v.user_id).length,
             }
         },
         enabled: !!storyId,
