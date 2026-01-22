@@ -19,14 +19,14 @@ export default async function HomePage() {
   // Get user session
   const { data: { user } } = await supabase.auth.getUser()
 
-  let userData = null
+  let userData: { name: string | null; email: string; role: string; city: string | null } | null = null
   if (user) {
     const { data } = await supabase
       .from('users')
       .select('name, email, role, city')
       .eq('id', user.id)
       .single()
-    userData = data
+    userData = data as typeof userData
   }
 
   return (
@@ -38,7 +38,7 @@ export default async function HomePage() {
         <HeroSearch />
 
         {/* Business Stories Section */}
-        <StoriesScrollBar userCity={userData?.city as string | undefined} />
+        <StoriesScrollBar userCity={userData?.city ?? undefined} />
 
         {/* Promo Banners */}
         <PromoBanners />
