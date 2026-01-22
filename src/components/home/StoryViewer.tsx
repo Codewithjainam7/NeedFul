@@ -37,6 +37,15 @@ export function StoryViewer({ storyGroup, onClose, isOwner }: StoryViewerProps) 
     const currentStory = storyGroup.stories[currentStoryIndex]
     const storyDuration = currentStory?.media_type === 'video' ? 20000 : 8000 // 20s for video, 8s for image
 
+    // DEBUG: Story Owner Check
+    useEffect(() => {
+        console.log("DEBUG: StoryViewer Owner Check", {
+            isOwner,
+            providerName: storyGroup.provider_name,
+            providerId: storyGroup.provider_id
+        })
+    }, [isOwner, storyGroup])
+
     const handleDelete = async (e: React.MouseEvent) => {
         e.stopPropagation()
         setIsPaused(true)

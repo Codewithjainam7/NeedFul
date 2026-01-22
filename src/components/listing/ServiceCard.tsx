@@ -331,6 +331,7 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
                                                             toast.error(result.error)
                                                         } else {
                                                             toast.success('Business deleted successfully')
+                                                            router.refresh()
                                                         }
                                                     } catch (error) {
                                                         toast.error('An unexpected error occurred')

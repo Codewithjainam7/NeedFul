@@ -156,11 +156,21 @@ export function StoriesScrollBar({
 
             {/* Story Viewer Modal */}
             {selectedStoryGroup && (
-                <StoryViewer
-                    storyGroup={selectedStoryGroup}
-                    onClose={() => setSelectedStoryGroup(null)}
-                    isOwner={currentProviderId === selectedStoryGroup.provider_id}
-                />
+                (() => {
+                    const isOwner = currentProviderId === selectedStoryGroup.provider_id;
+                    console.log("DEBUG: StoriesScrollBar Owner Check", {
+                        currentProviderId,
+                        storyProviderId: selectedStoryGroup.provider_id,
+                        match: isOwner
+                    });
+                    return (
+                        <StoryViewer
+                            storyGroup={selectedStoryGroup}
+                            onClose={() => setSelectedStoryGroup(null)}
+                            isOwner={isOwner}
+                        />
+                    );
+                })()
             )}
         </>
     )

@@ -652,8 +652,8 @@ export function BusinessFormWizard({ categories }: { categories: Category[] }) {
                                 Next <ChevronRight className="w-4 h-4 ml-2" />
                             </Button>
                         ) : (
-                            <Button type="submit" disabled={isLoading} className="bg-gradient-to-r from-[#FF5200] via-orange-500 to-amber-500 hover:from-[#E04800] hover:via-orange-600 hover:to-amber-600 text-white rounded-xl h-12 px-10 w-full md:w-auto shadow-xl shadow-orange-500/30 hover:shadow-orange-500/40 transition-all active:scale-[0.98] text-lg font-semibold cursor-pointer">
-                                {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Check className="w-5 h-5 mr-2" />}
+                            <Button type="submit" disabled={isLoading || form.formState.isSubmitting} className="bg-gradient-to-r from-[#FF5200] via-orange-500 to-amber-500 hover:from-[#E04800] hover:via-orange-600 hover:to-amber-600 text-white rounded-xl h-12 px-10 w-full md:w-auto shadow-xl shadow-orange-500/30 hover:shadow-orange-500/40 transition-all active:scale-[0.98] text-lg font-semibold cursor-pointer">
+                                {isLoading || form.formState.isSubmitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Check className="w-5 h-5 mr-2" />}
                                 Launch Business
                             </Button>
                         )}
