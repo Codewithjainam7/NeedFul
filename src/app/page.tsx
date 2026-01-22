@@ -31,6 +31,22 @@ export default async function HomePage() {
     userCity = (data as any)?.city ?? undefined
   }
 
+  // Get provider ID if user is a provider
+  let currentProviderId: string | undefined = undefined
+  if (user) {
+    const { data: providerData } = await supabase
+      .from('providers')
+      .select('id')
+      .eq('user_id', user.id)
+      .single()
+
+    const provider = providerData as { id: string } | null
+
+    if (provider) {
+      currentProviderId = provider.id
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header user={userData} />
@@ -40,7 +56,7 @@ export default async function HomePage() {
         <HeroSearch />
 
         {/* Business Stories Section */}
-        <StoriesScrollBar userCity={userCity} />
+        <StoriesScrollBar userCity={userCity} currentProviderId={currentProviderId} />
 
         {/* Promo Banners */}
         <PromoBanners />

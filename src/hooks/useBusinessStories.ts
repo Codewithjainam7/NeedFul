@@ -61,13 +61,13 @@ function calculateDistance(
  * @param userCity - User's current city for filtering
  * @param userLat - User's latitude (optional)
  * @param userLon - User's longitude (optional)
- * @param radiusKm - Radius in kilometers for location filtering (default: 50km)
+ * @param radiusKm - Radius in kilometers for location filtering (default: 15km)
  */
 export function useBusinessStories(
     userCity?: string,
     userLat?: number,
     userLon?: number,
-    radiusKm: number = 50
+    radiusKm: number = 15
 ) {
     return useQuery({
         queryKey: ['business-stories', userCity, userLat, userLon, radiusKm],

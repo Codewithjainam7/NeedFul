@@ -11,12 +11,14 @@ interface StoriesScrollBarProps {
     userCity?: string
     userLat?: number
     userLon?: number
+    currentProviderId?: string
 }
 
 export function StoriesScrollBar({
     userCity,
     userLat,
     userLon,
+    currentProviderId,
 }: StoriesScrollBarProps) {
     const { data: groupedStories, isLoading, error } = useBusinessStories(
         userCity,
@@ -156,6 +158,7 @@ export function StoriesScrollBar({
                 <StoryViewer
                     storyGroup={selectedStoryGroup}
                     onClose={() => setSelectedStoryGroup(null)}
+                    isOwner={currentProviderId === selectedStoryGroup.provider_id}
                 />
             )}
         </>

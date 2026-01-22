@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, ExternalLink, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { GroupedStories, BusinessStory, useRecordStoryView } from '@/hooks/useBusinessStories'
+import { GroupedStories, BusinessStory, useRecordStoryView, useDeleteStory } from '@/hooks/useBusinessStories'
+import { toast } from 'sonner'
 
 // Helper function to format time ago
 function formatTimeAgo(date: Date): string {
@@ -20,9 +21,10 @@ function formatTimeAgo(date: Date): string {
 interface StoryViewerProps {
     storyGroup: GroupedStories
     onClose: () => void
+    isOwner?: boolean
 }
 
-export function StoryViewer({ storyGroup, onClose }: StoryViewerProps) {
+export function StoryViewer({ storyGroup, onClose, isOwner }: StoryViewerProps) {
     const [currentStoryIndex, setCurrentStoryIndex] = useState(0)
     const [progress, setProgress] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
@@ -30,9 +32,30 @@ export function StoryViewer({ storyGroup, onClose }: StoryViewerProps) {
     const videoRef = useRef<HTMLVideoElement>(null)
     const progressIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined)
     const recordView = useRecordStoryView()
+    const deleteStory = useDeleteStory()
 
     const currentStory = storyGroup.stories[currentStoryIndex]
-    const storyDuration = currentStory?.media_type === 'video' ? 15000 : 5000 // 15s for video, 5s for image
+    const storyDuration = currentStory?.media_type === 'video' ? 20000 : 8000 // 20s for video, 8s for image
+
+    const handleDelete = async (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setIsPaused(true)
+
+        if (!confirm('Are you sure you want to delete this story?')) {
+            setIsPaused(false)
+            return
+        }
+
+        try {
+            await deleteStory.mutateAsync(currentStory.id)
+            toast.success('Story deleted')
+            onClose() // Close viewer to refresh state
+        } catch (error) {
+            console.error('Delete error:', error)
+            toast.error('Failed to delete story')
+            setIsPaused(false)
+        }
+    }
 
     // Record view when story is shown
     useEffect(() => {
@@ -202,17 +225,30 @@ export function StoryViewer({ storyGroup, onClose }: StoryViewerProps) {
                             </div>
                         </div>
 
-                        {/* Close Button */}
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                onClose()
-                            }}
-                            className="w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors backdrop-blur-sm"
-                            aria-label="Close"
-                        >
-                            <X className="w-5 h-5 text-white" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                            {/* Delete Button (Owner) */}
+                            {isOwner && (
+                                <button
+                                    onClick={handleDelete}
+                                    className="w-10 h-10 rounded-full bg-red-500/20 hover:bg-red-500/40 flex items-center justify-center transition-colors backdrop-blur-sm group"
+                                    title="Delete Story"
+                                >
+                                    <Trash2 className="w-4 h-4 text-red-100 group-hover:text-white" />
+                                </button>
+                            )}
+
+                            {/* Close Button */}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onClose()
+                                }}
+                                className="w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors backdrop-blur-sm"
+                                aria-label="Close"
+                            >
+                                <X className="w-5 h-5 text-white" />
+                            </button>
+                        </div>
                     </div>
                 </div>
 

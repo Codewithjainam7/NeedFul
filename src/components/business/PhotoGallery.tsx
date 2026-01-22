@@ -22,7 +22,7 @@ export function PhotoGallery({ images = [] }: PhotoGalleryProps) {
                     <img
                         src={images[0].url}
                         alt="Main View"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-contain bg-gray-800 transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                     <Button
@@ -72,7 +72,7 @@ export function PhotoGallery({ images = [] }: PhotoGalleryProps) {
                         <img
                             src={images[0]?.url || 'https://via.placeholder.com/600'}
                             alt="Main View"
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="w-full h-full object-contain bg-gray-800 transition-transform duration-500 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
                     </div>
