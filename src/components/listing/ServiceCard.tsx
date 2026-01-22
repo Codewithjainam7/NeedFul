@@ -304,34 +304,36 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
                                     <AlertDialogTrigger asChild>
                                         <Button
                                             variant="outline"
-                                            className="w-9 flex-shrink-0 border-red-200 text-red-600 bg-red-50 hover:bg-red-100 font-semibold h-9 text-xs px-0 rounded-lg flex items-center justify-center transition-all active:scale-[0.98]"
-                                            onClick={(e) => {
-                                                e.preventDefault()
-                                                e.stopPropagation()
-                                            }}
+                                            size="icon"
+                                            className="h-9 w-9 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                            onClick={(e) => e.stopPropagation()}
                                             title="Delete"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent onClick={(e) => e.stopPropagation()}>
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>Delete Business?</AlertDialogTitle>
                                             <AlertDialogDescription>
-                                                This will permanently delete "{provider.business_name}" and all its data. This action cannot be undone.
+                                                This action cannot be undone. This will permanently delete your business listing and all associated data.
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Cancel</AlertDialogCancel>
                                             <AlertDialogAction
-                                                className="bg-red-600 hover:bg-red-700"
-                                                onClick={async () => {
+                                                className="bg-red-500 hover:bg-red-600"
+                                                onClick={async (e) => {
+                                                    e.stopPropagation()
                                                     try {
-                                                        await deleteBusiness(provider.id)
-                                                        toast.success('Business deleted successfully')
-                                                        router.refresh()
+                                                        const result = await deleteBusiness(provider.id)
+                                                        if (result.error) {
+                                                            toast.error(result.error)
+                                                        } else {
+                                                            toast.success('Business deleted successfully')
+                                                        }
                                                     } catch (error) {
-                                                        toast.error('Failed to delete business')
+                                                        toast.error('An unexpected error occurred')
                                                     }
                                                 }}
                                             >

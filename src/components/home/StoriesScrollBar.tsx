@@ -6,6 +6,7 @@ import { StoryViewer } from './StoryViewer'
 import { useState, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { SectionHeading } from '@/components/ui/SectionHeading'
 
 interface StoriesScrollBarProps {
     userCity?: string
@@ -78,12 +79,12 @@ export function StoriesScrollBar({
                 <div className="max-w-7xl mx-auto px-4">
                     {/* Section Header */}
                     <div className="mb-4">
-                        <h2 className="text-lg md:text-xl font-bold text-gray-900">
-                            Local Business Stories
-                        </h2>
-                        <p className="text-sm text-gray-500">
-                            Discover exclusive offers and updates from businesses near you
-                        </p>
+                        <SectionHeading
+                            subtitle="Discover exclusive offers and updates from businesses near you"
+                            className="mb-2"
+                        >
+                            What's happening around you
+                        </SectionHeading>
                     </div>
 
                     {/* Stories Container */}

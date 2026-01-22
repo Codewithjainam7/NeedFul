@@ -128,6 +128,6 @@ export async function deleteBusiness(businessId: string) {
         return { error: "Failed to delete business" };
     }
 
-    revalidatePath('/admin/dashboard');
+    revalidatePath('/', 'layout'); // Revalidate everything to be safe
     return { success: true };
 }
