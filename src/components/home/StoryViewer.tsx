@@ -217,7 +217,7 @@ export function StoryViewer({ storyGroup, onClose }: StoryViewerProps) {
                 </div>
 
                 {/* Story Content */}
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center bg-black">
                     {currentStory.media_type === 'image' ? (
                         <Image
                             src={currentStory.media_url}
