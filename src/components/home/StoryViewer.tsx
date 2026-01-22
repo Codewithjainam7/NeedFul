@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, ExternalLink, Trash2 } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, ExternalLink, Trash2, MapPin } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { GroupedStories, BusinessStory, useRecordStoryView, useDeleteStory } from '@/hooks/useBusinessStories'
@@ -196,32 +196,29 @@ export function StoryViewer({ storyGroup, onClose, isOwner }: StoryViewerProps) 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             {/* Business Logo */}
-                            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-lg">
-                                {storyGroup.provider_logo ? (
-                                    <Image
-                                        src={storyGroup.provider_logo}
-                                        alt={storyGroup.provider_name}
-                                        width={40}
-                                        height={40}
-                                        className="object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
-                                        <span className="text-sm font-bold text-[#FF5200]">
-                                            {storyGroup.provider_name.charAt(0).toUpperCase()}
-                                        </span>
-                                    </div>
-                                )}
+                            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20">
+                                <Image
+                                    src={storyGroup.provider_logo || 'https://via.placeholder.com/40'}
+                                    alt={storyGroup.provider_name}
+                                    fill
+                                    className="object-cover"
+                                />
                             </div>
 
                             {/* Business Info */}
                             <div>
-                                <p className="text-white font-semibold text-sm drop-shadow-lg">
+                                <h3 className="text-white font-semibold text-sm leading-tight drop-shadow-md">
                                     {storyGroup.provider_name}
-                                </p>
-                                <p className="text-white/80 text-xs drop-shadow-lg">
-                                    {formatTimeAgo(new Date(currentStory.created_at))}
-                                </p>
+                                </h3>
+                                <div className="flex items-center gap-1 text-white/90 text-xs drop-shadow-md">
+                                    <MapPin className="w-3 h-3" />
+                                    <span>
+                                        {storyGroup.city}
+                                        {storyGroup.area ? `, ${storyGroup.area}` : ''}
+                                    </span>
+                                    <span className="mx-1">•</span>
+                                    <span>{formatTimeAgo(new Date(currentStory.created_at))}</span>
+                                </div>
                             </div>
                         </div>
 

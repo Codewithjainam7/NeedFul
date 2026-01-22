@@ -20,6 +20,7 @@ export interface BusinessStory {
         business_name: string
         slug: string
         city: string
+        area: string
         latitude?: number
         longitude?: number
         provider_images?: { url: string; is_primary: boolean }[]
@@ -32,6 +33,7 @@ export interface GroupedStories {
     provider_slug: string
     provider_logo?: string
     city: string
+    area: string
     stories: BusinessStory[]
     has_unviewed: boolean
 }
@@ -85,6 +87,7 @@ export function useBusinessStories(
             business_name,
             slug,
             city,
+            area,
             latitude,
             longitude,
             provider_images (
@@ -141,6 +144,7 @@ export function useBusinessStories(
                         provider_slug: story.provider?.slug || '',
                         provider_logo: primaryImage?.url,
                         city: story.provider?.city || '',
+                        area: story.provider?.area || '',
                         stories: [],
                         has_unviewed: false,
                     }
