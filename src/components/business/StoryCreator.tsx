@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef, ChangeEvent } from 'react'
+import { useState, useRef, useEffect, ChangeEvent } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Upload, Image as ImageIcon, Video, Loader2, Check } from 'lucide-react'
 import { useCreateStory } from '@/hooks/useBusinessStories'
@@ -26,8 +27,15 @@ export function StoryCreator({
     const [caption, setCaption] = useState('')
     const [isUploading, setIsUploading] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0)
+    const [mounted, setMounted] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const createStory = useCreateStory()
+
+    // Mount check for portal
+    useEffect(() => {
+        setMounted(true)
+        return () => setMounted(false)
+    }, [])
 
     const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -112,14 +120,24 @@ export function StoryCreator({
 
     const mediaType = selectedFile?.type.startsWith('video/') ? 'video' : 'image'
 
-    return (
+    // Use portal to render modal outside parent hierarchy
+    if (!mounted) return null
+
+    const modalContent = (
         <AnimatePresence>
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-                onClick={onClose}
+                className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+                onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onClose()
+                }}
+                onMouseMove={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+                onMouseUp={(e) => e.stopPropagation()}
             >
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
@@ -127,6 +145,9 @@ export function StoryCreator({
                     exit={{ scale: 0.9, opacity: 0 }}
                     className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
                     onClick={(e) => e.stopPropagation()}
+                    onMouseMove={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onMouseUp={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
                     <div className="bg-gradient-to-r from-[#FF5200] to-orange-600 p-6 relative">
@@ -283,4 +304,6 @@ export function StoryCreator({
             </motion.div>
         </AnimatePresence>
     )
+
+    return createPortal(modalContent, document.body)
 }
