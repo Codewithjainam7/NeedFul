@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/server'
+import { StoryCreatorButton } from '@/components/business/StoryCreatorButton'
 
 interface ProviderData {
     id: string
@@ -223,6 +224,10 @@ export default async function DashboardPage() {
                                     <CardTitle className="text-lg">Quick Actions</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
+                                    <StoryCreatorButton
+                                        providerId={providerData.id}
+                                        providerName={providerData.business_name}
+                                    />
                                     <Button variant="outline" className="w-full justify-start gap-2">
                                         <Edit className="h-4 w-4" />
                                         Edit Profile
