@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { MapPin, Star, MoreHorizontal, CheckCircle, Heart, Phone, Send, PhoneCall, ImageIcon, Zap, Edit, Trash2, BarChart3, MessageCircle } from 'lucide-react'
+import { MapPin, Star, MoreHorizontal, CheckCircle, Heart, Phone, Send, PhoneCall, ImageIcon, Zap, Edit, Trash2, BarChart3, MessageCircle, PlusCircle } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { RatingBadge } from '@/components/shared/RatingStars'
@@ -28,6 +28,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { StoryCreator } from '@/components/business/StoryCreator'
 
 interface ServiceCardProps {
     provider: Provider & {
@@ -45,6 +46,7 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
     const [isEnquireModalOpen, setIsEnquireModalOpen] = useState(false)
     const [showNumber, setShowNumber] = useState(false)
     const [isFavorited, setIsFavorited] = useState(isSaved)
+    const [isStoryOpen, setIsStoryOpen] = useState(false)
 
     const images = provider.provider_images || []
     const sortedImages = [...images].sort((a, b) => (Number(b.is_primary) - Number(a.is_primary)))
@@ -261,6 +263,19 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
 
                                 <Button
                                     variant="outline"
+                                    className="w-9 flex-shrink-0 border-orange-200 text-orange-700 bg-orange-50 hover:bg-orange-100 font-semibold h-9 text-xs px-0 rounded-lg flex items-center justify-center transition-all active:scale-[0.98]"
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        setIsStoryOpen(true)
+                                    }}
+                                    title="Create Story"
+                                >
+                                    <PlusCircle className="w-4 h-4" />
+                                </Button>
+
+                                <Button
+                                    variant="outline"
                                     className="w-9 flex-shrink-0 border-gray-200 text-gray-700 bg-white hover:bg-gray-50 font-semibold h-9 text-xs px-0 rounded-lg flex items-center justify-center transition-all active:scale-[0.98]"
                                     onClick={(e) => {
                                         e.preventDefault()
@@ -333,6 +348,15 @@ export function ServiceCard({ provider, onSave, isSaved = false, isOwner = false
                 businessName={provider.business_name}
                 providerId={provider.id}
             />
+
+            {isStoryOpen && (
+                <StoryCreator
+                    providerId={provider.id}
+                    providerName={provider.business_name}
+                    onClose={() => setIsStoryOpen(false)}
+                    onSuccess={() => setIsStoryOpen(false)}
+                />
+            )}
         </Card >
     )
 }
